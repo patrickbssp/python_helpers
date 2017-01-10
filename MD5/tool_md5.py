@@ -1,5 +1,11 @@
 #! /usr/bin/python3
 
+# md5summer toolbox
+#
+# md5summer is a useful but dated tool for Windows to create MD5 hashes of files/folders.
+# Main disadvantages are, that the output is encoded in latin-1 and files/folders are
+# not sorted always, i.e. they might be processed in random order if served by a NAS.
+#
 # This script serves two purposes:
 #
 # 1. With operation argument 'convert', it opens the file given as parameter
@@ -16,6 +22,7 @@ table = [];
 
 if len(sys.argv) != 3:
 	print("wrong arguments")
+	print("Usage: {} convert|sort <file>".format(sys.argv[0]))
 	sys.exit(0)
 
 
