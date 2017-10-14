@@ -36,7 +36,7 @@ elif op == 'sort':
 	out_fname = root+"_sorted"+ext;
 	out_f = open(out_fname, 'w')
 
-	with open(in_fname, encoding='latin-1') as in_f:
+	with open(in_fname, encoding='utf-8') as in_f:
 		lines = in_f.read().splitlines()
 		for line in lines:
 			pattern = re.compile("([0-9a-f]{32}) \*(.*)")
