@@ -16,30 +16,38 @@ def get_md5(fname):
 	return md5
 
 def md5_rar(fname):
+	if not rarfile.is_rarfile(fname):
+		# Silently ignoring non-RAR files
+		return
+
+	# hash the RAR file itself
+	md5 = get_md5(fname)
+	print('{}  {}'.format(md5, fname))
+
+	# hash the content of the file
 	rf = rarfile.RarFile(fname)
 	for f in rf.infolist():
 		tmp_dir = '/tmp'
 		tmp_path = os.path.join(tmp_dir, f.filename)
 
-		# Extract current file to temp folder
+		# Extract current file to temp folder, calculate MD5 hash, then delete temp file
 		rf.extract(f.filename, path=tmp_dir)
-
-		# Calculate MD5 hash
 		md5 = get_md5(tmp_path)
-
-		# Delete temp file
 		os.remove(tmp_path)
-
-		str = '{}    {}'.format(md5, f.filename)
-		print(str)
-
+		print('{}    {}'.format(md5, f.filename))
 
 if __name__ == '__main__':
+	if len(sys.argv) != 2:
+		print('Error: Invalid number of arguments.')
+		sys.exit()
+
 	fname = sys.argv[1]
+	if os.path.isdir(fname):
+		for dirpath, dirnames, filenames in os.walk(fname):
+			for file in filenames:
+				fname = os.path.join(dirpath, file)
+				md5_rar(fname)
 
-	md5 = get_md5(fname)
-	str = '{}  {}'.format(md5, fname)
-	print(str)
-
-	md5_rar(fname)
+	elif os.path.isfile(fname):
+		md5_rar(fname)
 
