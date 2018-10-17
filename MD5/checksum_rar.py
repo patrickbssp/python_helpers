@@ -8,6 +8,7 @@ import rarfile
 MIN_PYTHON = (3, 6)
 if sys.version_info < MIN_PYTHON:
     sys.exit("Python %s.%s or later is required.\n" % MIN_PYTHON)
+TMP_DIR = '/tmp/unrar'
 
 # Return MD5 hash of file
 def get_md5(fname):
@@ -27,11 +28,12 @@ def md5_rar(fname):
 	# hash the content of the file
 	rf = rarfile.RarFile(fname)
 	for f in rf.infolist():
-		tmp_dir = '/tmp'
-		tmp_path = os.path.join(tmp_dir, f.filename)
+		if f.isdir():
+			return
+		tmp_path = os.path.join(TMP_DIR, f.filename)
 
 		# Extract current file to temp folder, calculate MD5 hash, then delete temp file
-		rf.extract(f.filename, path=tmp_dir)
+		rf.extract(f.filename, path=TMP_DIR)
 		md5 = get_md5(tmp_path)
 		os.remove(tmp_path)
 		print('{}    {}'.format(md5, f.filename))
@@ -51,3 +53,4 @@ if __name__ == '__main__':
 	elif os.path.isfile(fname):
 		md5_rar(fname)
 
+	os.remove(TMP_DIR)
