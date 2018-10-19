@@ -4,11 +4,12 @@
 
 import sys, os, subprocess
 import rarfile
+import shutil
 
 MIN_PYTHON = (3, 6)
 if sys.version_info < MIN_PYTHON:
     sys.exit("Python %s.%s or later is required.\n" % MIN_PYTHON)
-TMP_DIR = '/tmp/unrar'
+TMP_DIR = '/run/unrar'
 
 # Return MD5 hash of file
 def get_md5(fname):
@@ -53,4 +54,4 @@ if __name__ == '__main__':
 	elif os.path.isfile(fname):
 		md5_rar(fname)
 
-	os.remove(TMP_DIR)
+	shutil.rmtree(TMP_DIR)
