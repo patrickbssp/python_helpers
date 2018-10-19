@@ -11,6 +11,8 @@ if sys.version_info < MIN_PYTHON:
     sys.exit("Python %s.%s or later is required.\n" % MIN_PYTHON)
 TMP_DIR = '/run/unrar'
 
+num_errors = 0
+
 # Return MD5 hash of file
 def get_md5(fname):
 	cp = subprocess.run(["md5sum", fname], stdout=subprocess.PIPE, encoding='UTF-8')
@@ -18,6 +20,8 @@ def get_md5(fname):
 	return md5
 
 def md5_rar(fname):
+	global num_errors
+
 	if not rarfile.is_rarfile(fname):
 		# Silently ignoring non-RAR files
 		return
@@ -34,10 +38,14 @@ def md5_rar(fname):
 		tmp_path = os.path.join(TMP_DIR, f.filename)
 
 		# Extract current file to temp folder, calculate MD5 hash, then delete temp file
-		rf.extract(f.filename, path=TMP_DIR)
-		md5 = get_md5(tmp_path)
-		os.remove(tmp_path)
-		print('{}    {}'.format(md5, f.filename))
+		try:
+			rf.extract(f.filename, path=TMP_DIR)
+			md5 = get_md5(tmp_path)
+			os.remove(tmp_path)
+			print('{}    {}'.format(md5, f.filename))
+		except rarfile.RarCRCError:
+			print('{}    {}'.format('ERROR: Bad CRC', f.filename))
+			num_errors += 1
 
 if __name__ == '__main__':
 	if len(sys.argv) != 2:
@@ -55,3 +63,4 @@ if __name__ == '__main__':
 		md5_rar(fname)
 
 	shutil.rmtree(TMP_DIR)
+	print('FINISHED with {} error(s)'.format(num_errors))
