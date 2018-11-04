@@ -50,7 +50,6 @@ def detect_type(fname):
 	if wrong_ext:
 		report_warning('Type of file {} is {} but extension is {}'.format(fname, ftype, ext))
 
-	print('{} {} {}'.format(fname, ftype, ext))
 	return ftype
 
 def md5_rar(fname):
