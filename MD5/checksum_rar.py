@@ -89,6 +89,8 @@ def md5_rar(fname):
 			report_error('{} {}'.format('Bad CRC', f.filename))
 
 if __name__ == '__main__':
+	file_list = []
+
 	if len(sys.argv) != 2:
 		print('Error: Invalid number of arguments.')
 		sys.exit()
@@ -98,9 +100,13 @@ if __name__ == '__main__':
 		for dirpath, dirnames, filenames in os.walk(fname):
 			for file in filenames:
 				fname = os.path.join(dirpath, file)
-				md5_rar(fname)
+				file_list.append(fname)
 
 	elif os.path.isfile(fname):
+		file_list.append(fname)
+
+	file_list.sort()
+	for fname in file_list:
 		md5_rar(fname)
 
 	shutil.rmtree(TMP_DIR)
