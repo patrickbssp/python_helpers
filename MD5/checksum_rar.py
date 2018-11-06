@@ -94,6 +94,9 @@ if __name__ == '__main__':
 		print('Error: Invalid number of arguments.')
 		sys.exit()
 
+	if not os.path.exists(TMP_DIR):
+		os.makedirs(TMP_DIR)
+
 	fname = sys.argv[1]
 	if os.path.isdir(fname):
 		for dirpath, dirnames, filenames in os.walk(fname):
