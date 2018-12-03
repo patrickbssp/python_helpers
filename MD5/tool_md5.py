@@ -9,6 +9,7 @@
 # History:
 #	2017-10-06	Improved recognition/treatment of white-space.
 #	2018-10-09	Merged convert and sort modes
+#	2018-12-03	Removed obsolete regex
 #
 
 import sys,re,os.path
@@ -18,10 +19,6 @@ def sort_file(in_f, out_f):
 	table = [];
 	lines = in_f.read().splitlines()
 	for line in lines:
-		pattern = re.compile("([0-9a-f]{32}) \*(.*)")
-		m = re.search(pattern, line)
-		if m:
-			item = {'hash': m.group(1), 'file': m.group(2)}
 		pattern = re.compile("([0-9a-f]{32})(\s+\**)(.*)")
 		m = re.search(pattern, line)
 		if m:
