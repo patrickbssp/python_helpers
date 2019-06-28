@@ -19,15 +19,10 @@ def analyse_file(in_f):
 			if not m_hash in result:
 				# First file with this hash
 				result[m_hash] = [m_file]
-				print(result)
 
 			else:
 				# Add file to hash array
 				result[m_hash].append(m_file)
-				print(result)
-
-
-	print(result)
 
 	# Iterate over array and dump dupes
 	for m_hash in result:
