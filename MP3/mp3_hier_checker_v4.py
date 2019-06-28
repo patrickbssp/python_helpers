@@ -48,19 +48,89 @@ unique_albums = set()
 debug = False
 
 report_mismatch = {}
-report_mismatch['artist'] = False
+report_mismatch['artist'] = True
+report_mismatch['artist2'] = True
 report_mismatch['album'] = False
 report_mismatch['track'] = True
 report_mismatch['title'] = False
 generate_md5 = False
 
+substitutions = {
+	'artist' : {
+
+		'Bahntier'				: ':Bahntier//',
+		'Charles Lindbergh N.E.V'		: 'Charles Lindbergh N.E.V.',
+		'Crisk'					: 'Crisk.',
+		'De-Vision'				: 'De/Vision',
+		'D.I.D'					: 'D.I.D.',
+		'D.N.S'					: 'D.N.S.',
+		'F-A-V'					: 'F/A/V',
+		'Fïx8-Sëd8'				: 'Fïx8:Sëd8',
+		'Fixmer-McCarthy'			: 'Fixmer/McCarthy',
+		'Goethes Erben - Peter Heppner'		: 'Goethes Erben / Peter Heppner',
+		'Golgatha'				: ':Golgatha:',
+		'Golgatha And Dawn & Dusk Entwined'	: ':Golgatha: And Dawn & Dusk Entwined',
+		'Joy-Disaster'				: 'Joy/Disaster',
+		'L.E.A.K'				: 'L.E.A.K.',
+		'L.I.N'					: 'L.I.N.',
+		'L.S.G'					: 'L.S.G.',
+		'Lipps Inc'				: 'Lipps Inc.',
+		'Liquid G'				: 'Liquid G.',
+		'Mono Inc'				: 'Mono Inc.',
+		'O Quam Tristis'			: 'O Quam Tristis...',
+		'Of The Wand & The Moon'		: ':Of The Wand & The Moon:',
+		'Patenbrigade Wolff'			: 'Patenbrigade: Wolff',
+		'[SITD]'				: '[:SITD:]',
+		'Six Comm - Freya Aswynn'		: 'Six Comm / Freya Aswynn',
+		'Sixth Comm - Mother Destruction'	: 'Sixth Comm / Mother Destruction',
+		'Soon'					: '[Soon]',
+		'S.P.O.C.K'				: 'S.P.O.C.K.',
+		'Star Inc'				: 'Star Inc.',
+		'Still Patient'				: 'Still Patient?',
+		'System-Eyes'				: 'System\\Eyes',
+		'Test Dept. - Brith Gof'		: 'Test Dept. / Brith Gof',
+		'T.A.C'					: 'T.A.C.',
+		'T.C'					: 'T.C.',
+		'T.C.H'					: 'T.C.H.',
+		'T.G.V.T'				: 'T.G.V.T.',
+		'T.H.D'					: 'T.H.D.',
+		'T.H.E'					: 'T.H.E.',
+		'T.O.Y'					: 'T.O.Y.',
+		'T.O.Y'					: 'T.O.Y.',
+		'U.D.O'					: 'U.D.O.',
+		'Undergod'				: 'Undergod.',
+		'V.28'					: 'V:28',
+		'V.S.B'					: 'V.S.B.',
+		'W.A.S.P'				: 'W.A.S.P.',
+		'Welle Erdball'				: 'Welle: Erdball',
+		'Witt - Heppner'			: 'Witt / Heppner',
+		'Wumpscut'				: ':Wumpscut:',
+		'Zos Kia - Coil'			: 'Zos Kia/Coil'
+	}
+}
+
 ### files
 unique_artists_file = "unique_artists.txt"
 unique_albums_file = "unique_albums.txt"
 
-def compare_tag(item, fn, tag):
-	if (tag[item] != fn[item]) and report_mismatch[item]:
-		print('Mismatch in {}, file: {}, id: {}'.format(item, fn[item], tag[item]))
+def compare_tag(fname, item, fn, tag):
+
+
+	t_item = tag[item]
+	if item == 'artist2':
+		f_item = fn['artist']
+		if t_item == 'Various Artists' or t_item == 'N/A':
+			### Skip compilations or missing TPE2 fields
+			return
+	else:
+		f_item = fn[item]
+
+	if (item == 'artist' or item == 'artist2') and f_item in substitutions['artist']:
+		f_item = substitutions['artist'][f_item]
+
+
+	if (t_item != f_item) and report_mismatch[item]:
+		print('Mismatch in {}, file: {} tag: {} (file: {})'.format(item, f_item, t_item, fname))
 
 # fname is filename including path
 def check_file(full_path):
@@ -98,7 +168,7 @@ def check_file(full_path):
 			has_missing_fields = False
 
 			for k in required_fields:
-				if k not in f:
+				if k not in f and k != 'TPE2':
 					print('missing field: {}'.format(k))
 					has_missing_fields = True
 
@@ -107,6 +177,10 @@ def check_file(full_path):
 				print('violation: One or more missing fields in file: {}'.format(full_path))
 			else:
 				tag['artist'] = f['TPE1'].text[0]
+				if 'TPE2' in f:
+					tag['artist2'] = f['TPE2'].text[0]
+				else:
+					tag['artist2'] = 'N/A'
 				tag['album'] = f['TALB'].text[0]
 				tag['title'] = f['TIT2'].text[0]
 				tag['track'] = f['TRCK'].text[0]
@@ -114,16 +188,17 @@ def check_file(full_path):
 		if not has_missing_fields:
 			unique_artists.add(tag['artist'])
 			unique_albums.add(tag['album'])
-			for item in ['track', 'artist', 'album', 'title']:
-				compare_tag(item, fn, tag)
+			for item in ['track', 'artist', 'artist2', 'album', 'title']:
+				compare_tag(path_rel, item, fn, tag)
 
 			if debug:
 				print('-----------------------------')
 				print(fn['track'])
-				print(fn['title'])
 				print(fn['artist'])
 				print(fn['album'])
+				print(fn['title'])
 				print(tag['artist'])
+				print(tag['artist2'])
 				print(tag['album'])
 
 
@@ -140,7 +215,6 @@ def main():
 		sys.exit(1)
 		
 	start_dir = pathlib.PurePath(sys.argv[1])
-#	check_dir(sys.argv[1])
 	check_dir(str(start_dir))
 	print('-------------------------------------------------------------')
 	print("{} file(s) checked".format(num_files))
