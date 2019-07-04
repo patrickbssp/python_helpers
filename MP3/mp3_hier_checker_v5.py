@@ -63,7 +63,7 @@ all_tags = list()
 debug = True
 
 report_mismatch_flags = {
-	'artist'	: True,
+	'artist'	: False,
 	'artist2'	: True,
 	'album'		: False,
 	'track'		: True,		# Don't change this entry!
@@ -140,7 +140,7 @@ substitutions = {
 		'O Quam Tristis'				: 'O Quam Tristis...',
 		'Of The Wand & The Moon'		: ':Of The Wand & The Moon:',
 		'P1-E'										: 'P1/E',
-#		'Patenbrigade Wolff'						: 'Patenbrigade: Wolff',
+		'Patenbrigade Wolff'						: 'Patenbrigade: Wolff',
 		'Patenbrigade Wolff Feat. André Hartung'	: 'Patenbrigade: Wolff Feat. André Hartung',
 		'PP'							: 'PP?',
 		'Pretentious, Moi'				: 'Pretentious, Moi?',
@@ -194,29 +194,16 @@ substitutions = {
 unique_artists_file = "unique_artists.txt"
 unique_albums_file = "unique_albums.txt"
 
-def compare_tag(fname, item, tagi):
-
-	t_item = tagi[item]
-	if item == 'artist2':
-		f_item = tagi['f_artist']
-		if t_item == 'Various Artists' or t_item == 'N/A':
-			### Skip compilations or missing TPE2 fields
-			return
-	else:
-		f_item = tagi[item]
-
-	if (item == 'artist' or item == 'artist2') and f_item in substitutions['artist']:
-		f_item = substitutions['artist'][f_item]
-
-	if (t_item != f_item) and report_mismatch[item]:
-		print('Mismatch in {}, file: {} tag: {} (file: {})'.format(item, f_item, t_item, fname))
-
-
-
-
-
+def my_print(str):
+	"""
+		Wraper to use alternate stdout handle capable of UTF-8 irregarding of environment.
+	"""
+	print(str, file=uni_stdout)
 
 def parse_file(full_path):
+
+	global uni_stdout
+
 	tagi = {}
 
 	path_rel = pathlib.PurePath(full_path).relative_to(start_dir)
@@ -251,8 +238,10 @@ def parse_file(full_path):
 
 		if debug:
 			print('-----------------------------')
-			for k,v in tagi.items():
-				print('{} : {}'.format(k, v))
+			print(full_path)
+			my_print(f.tags)
+#			for k,v in tagi.items():
+#				my_print('{} : {}'.format(k, v))
 
 	else:
 		num_violations += 1
@@ -334,11 +323,18 @@ def check_dir(work_dir):
 
 def main():
 	global start_dir
+	global uni_stdout
+
 
 	if len(sys.argv) != 2:
 		print('Usage: {} folder_name'.format(sys.argv[0]))
 		sys.exit(1)
-		
+
+	### Open another filehandle to stdout supporting UTF8 to prevent unicode issues with print()
+	### Note:	These problems may be only present when running the script locally and work flawless
+	###			over SSH.
+	uni_stdout = open(1, 'w', encoding='utf-8', closefd=False)
+
 	start_dir = pathlib.PurePath(sys.argv[1])
 	check_dir(str(start_dir))
 	print('-------------------------------------------------------------')
@@ -359,7 +355,7 @@ def main():
 	### Register dialect
 	csv.register_dialect('mp3_csv', delimiter='\t', quoting=csv.QUOTE_NONE)
 
-	with open('test.csv', mode='w+', encoding='utf8') as f:
+	with open('test.csv', mode='w+', encoding='utf-8', errors='surrogateescape') as f:
 		writer = csv.DictWriter(f, field_names, dialect='mp3_csv')
 		writer.writerows(all_tags)
 
