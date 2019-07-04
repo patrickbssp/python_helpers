@@ -239,7 +239,7 @@ def parse_file(full_path):
 		if debug:
 			print('-----------------------------')
 			print(full_path)
-			my_print(f.tags)
+			my_print(f.tags.pprint())
 #			for k,v in tagi.items():
 #				my_print('{} : {}'.format(k, v))
 
