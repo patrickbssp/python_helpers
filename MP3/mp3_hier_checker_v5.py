@@ -352,10 +352,12 @@ def generate_list(top_dir, csv_file=None, md5_file=None):
 
 	parse_dir(str(pathlib.PurePath(top_dir)), md5_fh, csv_wh)
 
-	print('-------------------------------------------------------------')
-	print("{} file(s) checked".format(num_files))
-	print("{} MP3 file(s) found".format(num_mp3))
-	print("{} violation(s) found".format(num_violations))
+	if md5_file:
+		md5_fh.write('-------------------------------------------------------------\n')
+		md5_fh.write("Top folder: {}\n".format(top_dir))
+		md5_fh.write("{} file(s) checked\n".format(num_files))
+		md5_fh.write("{} MP3 file(s) found\n".format(num_mp3))
+		md5_fh.write("{} violation(s) found\n".format(num_violations))
 
 	if md5_file:
 		md5_fh.close()
@@ -397,7 +399,7 @@ def main():
 	global uni_stdout
 
 	### Register dialect
-	csv.register_dialect('mp3_csv', delimiter='\t', quoting=csv.QUOTE_NONE)
+	csv.register_dialect('mp3_csv', delimiter='\t', quoting=csv.QUOTE_NONE, escapechar='\\')
 
 	### Open another filehandle to stdout supporting UTF8 to prevent unicode issues with print()
 	### Note:	These problems may be only present when running the script locally and work flawless
