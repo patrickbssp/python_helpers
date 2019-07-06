@@ -34,6 +34,8 @@
 import sys
 import re
 import os.path
+import shlex
+import subprocess
 import pathlib
 import mutagen
 import csv
@@ -60,16 +62,15 @@ unique_albums = set()
 all_tags = list()
 
 ### Enable/disable debugging (True/False)
-debug = True
+debug = False
 
 report_mismatch_flags = {
-	'artist'	: False,
+	'artist'	: True,
 	'artist2'	: True,
 	'album'		: False,
 	'track'		: True,		# Don't change this entry!
 	'title'		: False
 }
-generate_md5 = False
 
 tag_mapping = {
 	'TRCK'	: 't_track',
@@ -194,19 +195,30 @@ substitutions = {
 unique_artists_file = "unique_artists.txt"
 unique_albums_file = "unique_albums.txt"
 
+### strip trailing newline and convert to UTF-8
+def strip_shell(txt):
+	return txt[:-1].decode('utf-8')
+
+def file_md5(file):
+	cmd = '/usr/bin/md5sum "{}"'.format(file)
+	args = shlex.split(cmd)
+	p = subprocess.Popen(args, stdout=subprocess.PIPE)
+	txt = strip_shell(p.stdout.read())
+	md5 = txt.split()[0]
+	return md5
+
 def my_print(str):
 	"""
 		Wraper to use alternate stdout handle capable of UTF-8 irregarding of environment.
 	"""
 	print(str, file=uni_stdout)
 
-def parse_file(full_path):
+def parse_file(top_dir, full_path, md5_fh, csv_wh):
+	global num_violations
 
-	global uni_stdout
+	tag = {}
 
-	tagi = {}
-
-	path_rel = pathlib.PurePath(full_path).relative_to(start_dir)
+	path_rel = pathlib.PurePath(full_path).relative_to(top_dir)
 
 	if len(path_rel.parts) != 3:
 		num_violations += 1
@@ -216,40 +228,40 @@ def parse_file(full_path):
 	fname = path_rel.parts[2]
 
 	m = re.match("^(\d\d) - (.*)\.mp3", fname)
-	if m:
-		if generate_md5:
-			os.system("md5sum \"" + full_path + "\"")
+	if m and len(m.groups()) == 2:
 
-		### Extract info from file and path
-		tagi['f_artist'] = path_rel.parts[0]
-		tagi['f_album']	= path_rel.parts[1]
-		tagi['f_track'] = m.group(1)
-		tagi['f_title'] = m.group(2)
+		if md5_fh:
+			md5 = file_md5(full_path)
+			md5_fh.write('{}  {}\n'.format(md5, path_rel))
 
-		### Extract info from ID3 tag
-		f = mutagen.File(full_path)
-		if f:
+		if csv_wh:
 
-			for k,v in tag_mapping.items():
-				tagi[v] = f[k].text[0] if k in f else ''
+			### Extract info from file and path
+			tag['f_artist'] = path_rel.parts[0]
+			tag['f_album']	= path_rel.parts[1]
+			tag['f_track'] = m.group(1)
+			tag['f_title'] = m.group(2)
 
-		unique_artists.add(tagi['t_artist'])
-		unique_albums.add(tagi['t_album'])
+			### Extract info from ID3 tag
+			f = mutagen.File(full_path)
+			if f:
+				for k,v in tag_mapping.items():
+					tag[v] = f[k].text[0] if k in f else ''
 
-		if debug:
-			print('-----------------------------')
-			print(full_path)
-			my_print(f.tags.pprint())
-#			for k,v in tagi.items():
+			if debug:
+				print('-----------------------------')
+				print(full_path)
+				my_print(f.tags.pprint())
+#			for k,v in tag.items():
 #				my_print('{} : {}'.format(k, v))
+
+			csv_wh.writerow(tag)
 
 	else:
 		num_violations += 1
 		print("violation: rule_3b: filenames must have format 'xx - Trackname.mp3'")
 		print("file: {}".format(fname))
-	return tagi
-
-
+	return tag
 
 def report_mismatch(fname, item, f_item, t_item):
 	global num_violations
@@ -261,7 +273,7 @@ def report_mismatch(fname, item, f_item, t_item):
 def is_mismatch(f_item, t_item, item):
 	return True if f_item != t_item and report_mismatch_flags[item] else False
 
-def check_file(full_path):
+def check_tag(tag):
 	"""
 		Check file for errors or inconsistencies.
 
@@ -271,44 +283,46 @@ def check_file(full_path):
 	global num_mp3
 	global num_violations
 
-	tagi = parse_file(full_path)
-	if not tagi:
-		num_violations += 1
-		print('violation: invalid file: {}'.format(full_path))
-		return
+	full_path = '{}/{}/{} - {}.mp3'.format(tag['f_artist'], tag['f_album'], tag['f_track'], tag['f_title'])
 
 	### Check tags
 
+	unique_artists.add(tag['t_artist'])
+	unique_albums.add(tag['t_album'])
+
 	### Track number must match exactly. No excuses...
-	if is_mismatch(tagi['f_track'], tagi['t_track'], 'track'):
-		report_mismatch(full_path, "Track number", tagi['f_track'], tagi['t_track'])
+	if is_mismatch(tag['f_track'], tag['t_track'], 'track'):
+		report_mismatch(full_path, "Track number", tag['f_track'], tag['t_track'])
 
 	### Artist may not match exactly due to folder name restrictions
-	f_artist = tagi['f_artist']
-	if is_mismatch(f_artist, tagi['t_artist'], 'artist'):
+	f_artist = tag['f_artist']
+	if is_mismatch(f_artist, tag['t_artist'], 'artist'):
 
 		### Check, whether there is a substitution available
 		if f_artist in substitutions['artist']:
 			f_artist = substitutions['artist'][f_artist]
 
-			if is_mismatch(f_artist, tagi['t_artist'], 'artist'):
+			if is_mismatch(f_artist, tag['t_artist'], 'artist'):
 				### Still not matching -> error
-				report_mismatch(full_path, "Artist", tagi['f_artist'], tagi['t_artist'])
+				report_mismatch(full_path, "Artist", tag['f_artist'], tag['t_artist'])
 
 		else:
 			### No substitute found -> error
-			report_mismatch(full_path, "Artist", tagi['f_artist'], tagi['t_artist'])
+			report_mismatch(full_path, "Artist", tag['f_artist'], tag['t_artist'])
 
-	return tagi
+	if is_mismatch(tag['f_album'], tag['t_album'], 'album'):
+		report_mismatch(full_path, "Album", tag['f_album'], tag['t_album'])
 
+	return tag
 
-def check_dir(work_dir):
+def parse_dir(top_dir, md5_fh, csv_wh):
 	global num_files
 	global num_violations
 	global num_mp3
 
-	for dirpath, dirnames, filenames in os.walk(work_dir):
-
+	for dirpath, dirnames, filenames in os.walk(top_dir):
+		dirnames.sort()
+		filenames.sort()
 		if (len(dirnames) == 0) and (len(filenames) == 0):
 			num_violations += 1
 			print("violation: rule_xx: empty folder detected: {}".format(dirpath))
@@ -316,48 +330,90 @@ def check_dir(work_dir):
 		### then, iterate over files
 		for fname in filenames:
 			num_files += 1
-			tag = check_file(os.path.join(dirpath, fname))
+			tag = parse_file(top_dir, os.path.join(dirpath, fname), md5_fh, csv_wh)
 			if tag:
 				all_tags.append(tag)
 				num_mp3 += 1
 
-def main():
-	global start_dir
-	global uni_stdout
+def generate_list(top_dir, csv_file=None, md5_file=None):
 
+	md5_fh = None
+	csv_wh = None
 
-	if len(sys.argv) != 2:
-		print('Usage: {} folder_name'.format(sys.argv[0]))
-		sys.exit(1)
+	### Open MD5 file
+	if md5_file:
+		md5_fh = open(md5_file, mode='w+', encoding='utf-8')
 
-	### Open another filehandle to stdout supporting UTF8 to prevent unicode issues with print()
-	### Note:	These problems may be only present when running the script locally and work flawless
-	###			over SSH.
-	uni_stdout = open(1, 'w', encoding='utf-8', closefd=False)
+	### Open CSV file
+	if csv_file:
+		csv_fh = open(csv_file, mode='w+', encoding='utf-8', errors='surrogateescape')
+		csv_wh = csv.DictWriter(csv_fh, fieldnames=field_names, dialect='mp3_csv')
+		csv_wh.writeheader()
 
-	start_dir = pathlib.PurePath(sys.argv[1])
-	check_dir(str(start_dir))
+	parse_dir(str(pathlib.PurePath(top_dir)), md5_fh, csv_wh)
+
 	print('-------------------------------------------------------------')
 	print("{} file(s) checked".format(num_files))
 	print("{} MP3 file(s) found".format(num_mp3))
 	print("{} violation(s) found".format(num_violations))
+
+	if md5_file:
+		md5_fh.close()
+
+	if csv_file:
+		csv_fh.close()
+
+	sys.exit(0)
+
+def analyse_csv(csv_file):
+
+	### Open and parse CSV file
+	with open(csv_file, mode='r', encoding='utf-8', errors='surrogateescape') as f:
+		reader = csv.DictReader(f, fieldnames=field_names, dialect='mp3_csv')
+		for row in reader:
+			if reader.line_num > 1:
+				check_tag(row)
 
 	### Dump unique artists to file
 	with open(unique_artists_file, "w", encoding='utf8') as f:
 		for artist in sorted(unique_artists):
 			f.write('{}\n'.format(artist))
 	
-	### Dump unique albumss to file
+	### Dump unique albums to file
 	with open(unique_albums_file, "w", encoding='utf8') as f:
 		for album in sorted(unique_albums):
 			f.write('{}\n'.format(album))
 
+def print_usage_and_die():
+	print("""Usage:
+	-m <top_dir> <md5_file>             Check file hierarchy, naming rules etc. and dump MD5 hashes.
+	-e <top_dir> <csv_file>        	    Extract MP3 tags starting from folder <top_dir> and dump tags to CSV file.
+	-c <top_dir> <csv_file> <md5_file>	Combines options -m and -c.
+	-a <csv_file>                  Analyse CSV file.
+	""".format(sys.argv[0]))
+	sys.exit(1)
+
+def main():
+	global uni_stdout
+
 	### Register dialect
 	csv.register_dialect('mp3_csv', delimiter='\t', quoting=csv.QUOTE_NONE)
 
-	with open('test.csv', mode='w+', encoding='utf-8', errors='surrogateescape') as f:
-		writer = csv.DictWriter(f, field_names, dialect='mp3_csv')
-		writer.writerows(all_tags)
+	### Open another filehandle to stdout supporting UTF8 to prevent unicode issues with print()
+	### Note:	These problems may be only present when running the script locally and work flawless
+	###			over SSH.
+	uni_stdout = open(1, 'w', encoding='utf-8', closefd=False)
+
+	if len(sys.argv) == 3 and sys.argv[1] == '-a':
+		analyse_csv(sys.argv[2])
+	elif len(sys.argv) == 4 and sys.argv[1] == '-e':
+		generate_list(sys.argv[2], csv_file=sys.argv[3])
+	elif len(sys.argv) == 4 and sys.argv[1] == '-m':
+		generate_list(sys.argv[2], md5_file=sys.argv[3])
+	elif len(sys.argv) == 5 and sys.argv[1] == '-c':
+		generate_list(sys.argv[2], csv_file=sys.argv[3], md5_file=sys.argv[4])
+	else:
+		print_usage_and_die()
 
 	sys.exit(0)
 
