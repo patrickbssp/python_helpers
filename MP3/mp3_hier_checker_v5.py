@@ -84,7 +84,6 @@ substitutions = {
 	'artist' : {
 		"à;Grumh"						: "à;Grumh...",
 		"A7IE"							: ":A7IE:",
-		"Adult"							: "Adult.",
 		"All My Faith Lost"				: "All My Faith Lost...",
 		"An Idea"						: "An:Idea",
 		"Ascetic"						: "Ascetic:",
@@ -125,25 +124,20 @@ substitutions = {
 		"Re-Work"							: "Re/Work",
 		"Rozz Williams - Daucus Karota"		: "Rozz Williams/Daucus Karota",
 		"[SITD]"							: "[:SITD:]",
-		"S.V.D"								: "S.V.D.",
 		"Sabotage Qu'est-ce Que C'est"					: "Sabotage Qu'est-ce Que C'est?",
 		"Six Comm - Freya Aswynn"			: "Six Comm / Freya Aswynn",
 		"Sixth Comm - Mother Destruction"	: "Sixth Comm / Mother Destruction",
-		"Soon"						: "[Soon]",
 		"Shades Of Hell"			: "Shades:Of:Hell",
                 "Spasmodique"   : ":Spasmodique:",
 		"Still Patient"				: "Still Patient?",
 		"System-Eyes"				: r"System\\Eyes",
 		"Temps Perdu"				: "Temps Perdu?",
-		"The Dead Sexy Inc"				: "The Dead Sexy Inc.",
-		"The Malice Inc"				: "The Malice Inc.",
 		"The Sin-Decay"				: "The Sin:Decay",
 		"Test Dept. - Brith Gof"	: "Test Dept. / Brith Gof",
 		"V.28"						: "V:28",
 		"Welle Erdball"				: "Welle: Erdball",
 		"Witt - Heppner"			: "Witt / Heppner",
 		"Wumpscut"					: ":Wumpscut:",
-		"X-Dream Feat. Planet B.E.N"	: "X-Dream Feat. Planet B.E.N.",
 		"Zoo"						: "//Zoo",
 		"Zos Kia - Coil"			: "Zos Kia/Coil"
 	},
@@ -216,7 +210,6 @@ substitutions = {
 		"Edgar Allen Poe - Visionen (CD2)"							: "Edgar Allen Poe - Visionen (CD2: Music)",
 		"Emptiness Emptiness Emptiness"								: ":Emptiness:Emptiness:Emptiness:",
 		"Emptiness Emptiness Emptiness (Remastered)"				: ":Emptiness:Emptiness:Emptiness: (Remastered)",
-#		"Eon Eon"	: "Eon:Eon",
 		"Es reiten die Toten so schnell"	: "Es reiten die Toten so schnell (Or: The Vampyre Sucking At His Own Vein)",
 		"Escape From New York - O.S.T" : "Escape From New York - Original Motion Picture Soundtrack",
 		"Everything You Knew Was Wrong... (CD1 - Velvet Illusions)"	: "Everything You Knew Was Wrong... (CD1: Velvet Illusions)",
@@ -295,6 +288,7 @@ substitutions = {
                 "Scatology (Remastered)"        : "Stevø, Pay Us What You Owe Us! Volume One - Scatology - Remastered", 
 		"Sin Pecado (Original Album Collection)"	: "Sin / Pecado (Original Album Collection)",
 		"That First Season (Winter-Light) (CD1 - Heavy Snow)"	: "...That First Season (Winter-Light) (CD1: Heavy Snow)",
+                "That First Season (Winter-Light) (CD2 - Long Shadows)" : "...That First Season (Winter-Light) (CD2: Long Shadows)",
 		"The Art Of Killing Silence (CD1 - Métodos Del Caos)"	: "The Art Of Killing Silence (CD1: Métodos Del Caos)",
 		"The Art Of Killing Silence (CD2 - Noise Diary Plus Bonus)"	: "The Art Of Killing Silence (CD2: Noise Diary Plus Bonus)",
 		"The Dark Box (CD1)"	: "The Dark Box - The Ultimate Goth, Wave & Industrial Collection 1980-2011 (CD1)",
@@ -330,6 +324,7 @@ substitutions = {
 		"With A Million Tear-Stained Memories (CD2)" : "With A Million Tear-Stained Memories (CD2) (Instrumental Tracks)",
 		"Who Watches Over Me"	: "Who Watches Over Me?",
 		"Works & Passion 1955 - 2000 (CD1)"	: "Works & Passion 1955 - 2000 (CD1: The Feetwarmers - The Quartet - Paul Nero - Motherhood)",
+                "Works & Passion 1955 - 2000 (CD2)"     : "Works & Passion 1955 - 2000 (CD2: The Soloist - The Composer)",
 		"Works & Passion 1955 - 2000 (CD3)"		: "Works & Passion 1955 - 2000 (CD3: Passport 1971 - 1980)",
 		"Works & Passion 1955 - 2000 (CD4)"		: "Works & Passion 1955 - 2000 (CD4: Passport 1980 - 2000)",
 		"Wrack And Ruin (Limited Edition) (CD1)"	: "Wrack And Ruin (Limited Edition) (CD1: Wrack And Ruin)",
@@ -347,6 +342,18 @@ substitutions = {
 		"Zos Kia - Coil - Transparent"	: "Zos Kia/Coil - Transparent",
 		"Zwischenfall - From The 80's To The 90's Vol. 2 (CD1)"	: "Zwischenfall Vol. 2 (CD1)",
 		"Zwischenfall - From The 80's To The 90's Vol. 2 (CD2)"	: "Zwischenfall Vol. 2 (CD2)",
+	},
+	'album_artist' : {
+                "Solitary Experiments" : ["Phenomena (CD2: Hysteria)"],
+                "Klaus Doldinger" : [
+                        "Works & Passion 1955 - 2000 (CD1: The Feetwarmers - The Quartet - Paul Nero - Motherhood)",
+                        "Works & Passion 1955 - 2000 (CD2: The Soloist - The Composer)",
+                        "Works & Passion 1955 - 2000 (CD3: Passport 1971 - 1980)",
+                        "Works & Passion 1955 - 2000 (CD4: Passport 1980 - 2000)"
+                        ],
+                "Queen" : [
+                        "Greatest Hits III (2011 Digital Remaster)"
+                    ]
 	}
 }
 
@@ -481,6 +488,7 @@ def match_album_artist(tag, item):
 
 	t_artist = tag['t_artist']
 	t_album_artist = tag['t_album_artist']
+	t_album = tag['t_album']
 
 	if not report_mismatch_flags['album_artist']:
 		### Check disabled
@@ -493,6 +501,13 @@ def match_album_artist(tag, item):
 	if t_album_artist in ['Various Artists', '']:
 		### Compilation
 		return True
+
+	### Check, whether there is a substitution available
+	if t_album_artist in substitutions['album_artist']:
+		if t_album in substitutions['album_artist'][t_album_artist]:
+			### Substitute matches
+			return True
+
 
 	### Still not matching -> error
 	return False
