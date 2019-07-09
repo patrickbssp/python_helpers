@@ -90,49 +90,26 @@ substitutions = {
 		"Ascetic"						: "Ascetic:",
 		"Bahntier"						: ":Bahntier//",
 		"B. Says"						: "B. Says...",
-		"B.E.F"							: "B.E.F.",
 		"Boyd Rice & FriendsNON"		: "Boyd Rice & Friends/NON",
-		"C.A.P"							: "C.A.P.",
-		"C.O.C"							: "C.O.C.",
 		"Carlos Peron - Peter Ehrlich"	: "Carlos Peron/Peter Ehrlich",
-		"Charles Lindbergh N.E.V"		: "Charles Lindbergh N.E.V.",
-		"Chameleons U.K"				: "Chameleons U.K.",
 		"Concrete-Rage"					: "Concrete/Rage",
-		"Crisk"							: "Crisk.",
 		"De-Vision"						: "De/Vision",
-		"D.I.D"							: "D.I.D.",
-		"D.N.S"							: "D.N.S.",
 		"Dinosaur Jr"					: "Dinosaur Jr.",
 		"Ditto - Destroyer"				: "Ditto ≠ Destroyer",
 		"Dope Stars Inc"				: "Dope Stars Inc.",
-		"E.C.M"							: "E.C.M.",
-		"E.R.R.A"						: "E.R.R.A.",
 		"F-A-V"							: "F/A/V",
 		"Fïx8-Sëd8"						: "Fïx8:Sëd8",
-		"G.L.O.D"						: "G.L.O.D.",
 		"Gary Numan - Tubeway Army"			: "Gary Numan/Tubeway Army",
 		"Hell Sector"						: "Hell:Sector",
 		"Golgatha"							: ":Golgatha:",
 		"Golgatha And Dawn & Dusk Entwined"	: ":Golgatha: And Dawn & Dusk Entwined",
 		"Golgatha & Birthe Klementowski"	: ":Golgatha: & Birthe Klementowski",
-		"Hate Dept"						: "Hate Dept.",
                 "Herbst9-Z'Ev"  : "Herbst9/Z'Ev",
                 "Howden & Wakeford"         : "Howden/Wakeford",
 		"I-Scintilla"					: "I:Scintilla",
 		"In The Woods"					: "In The Woods...",
-		"Keen K. Feat. Dorian E"				: "Keen K. Feat. Dorian E.",
-		"L.E.A.K"						: "L.E.A.K.",
-		"L.I.N"							: "L.I.N.",
-		"L.S.G"							: "L.S.G.",
 		"Land-Fire"						: "Land:Fire",
-		"Lipps Inc"						: "Lipps Inc.",
-		"Liquid G"						: "Liquid G.",
-		"M.A.D"							: "M.A.D.",
-		"Manic P"						: "Manic P.",
                 "Mind-State"						: "Mind:State",
-		"Mono Inc"						: "Mono Inc.",
-                "N.D.M.A"                                               : "N.D.M.A.",
-		"O.K"				: "O.K.",
 		"O Quam Tristis"				: "O Quam Tristis...",
 		"Of The Wand & The Moon"		: ":Of The Wand & The Moon:",
                 "Osiris T" : "Osiris T.",
@@ -144,11 +121,8 @@ substitutions = {
                 "Project Komakino"              : "Project: Komakino",
 		"ProTech"						: "Pro>Tech",
 		"Public Image Ltd"				: "Public Image Ltd.",
-		"Punch Inc"						: "Punch Inc.",
-		"R.E.M"							: "R.E.M.",
 		"Re-Legion"							: "Re:/Legion",
 		"Re-Work"							: "Re/Work",
-		"REC"								: "REC.",
 		"Rozz Williams - Daucus Karota"		: "Rozz Williams/Daucus Karota",
 		"[SITD]"							: "[:SITD:]",
 		"S.V.D"								: "S.V.D.",
@@ -156,10 +130,8 @@ substitutions = {
 		"Six Comm - Freya Aswynn"			: "Six Comm / Freya Aswynn",
 		"Sixth Comm - Mother Destruction"	: "Sixth Comm / Mother Destruction",
 		"Soon"						: "[Soon]",
-		"S.K.E.T"					: "S.K.E.T.",
 		"Shades Of Hell"			: "Shades:Of:Hell",
                 "Spasmodique"   : ":Spasmodique:",
-		"Star Inc"					: "Star Inc.",
 		"Still Patient"				: "Still Patient?",
 		"System-Eyes"				: r"System\\Eyes",
 		"Temps Perdu"				: "Temps Perdu?",
@@ -167,19 +139,7 @@ substitutions = {
 		"The Malice Inc"				: "The Malice Inc.",
 		"The Sin-Decay"				: "The Sin:Decay",
 		"Test Dept. - Brith Gof"	: "Test Dept. / Brith Gof",
-		"T.A.C"						: "T.A.C.",
-		"T.C"						: "T.C.",
-		"T.C.H"						: "T.C.H.",
-		"T.G.V.T"					: "T.G.V.T.",
-		"T.H.D"						: "T.H.D.",
-		"T.H.E"						: "T.H.E.",
-		"T.O.Y"						: "T.O.Y.",
-		"U.D.O"						: "U.D.O.",
-		"Undergod"					: "Undergod.",
 		"V.28"						: "V:28",
-		"V.S.B"						: "V.S.B.",
-		"W.A.S.P"					: "W.A.S.P.",
-		"W.O.M.P"					: "W.O.M.P.",
 		"Welle Erdball"				: "Welle: Erdball",
 		"Witt - Heppner"			: "Witt / Heppner",
 		"Wumpscut"					: ":Wumpscut:",
@@ -241,6 +201,7 @@ substitutions = {
 		"Die Aesthetik Der Herrschaftsfreiheit (CD3 - Aufgabe)"		: "Die Aesthetik Der Herrschaftsfreiheit (CD3: Aufgabe Oder A Cross Of Flowers)",
 		"Die Flut (CD1)"											: "Die Flut - Die Benefiz Compilation Der Darkwave- Und Elektroszene (CD1)",
 		"Die Flut (CD2)"											: "Die Flut - Die Benefiz Compilation Der Darkwave- Und Elektroszene (CD2)",
+                "Der Ring Des Nibelungen (Excerpts)"                                    : "Der Ring Des Nibelungen (Excerpts/Extraits/Auszüge, Deborah Polaski, Chicago Symphony Orchestra, Daniel Barenboim)",
 		"Die Singles 1993-2010 (CD01) - Nyntändo-Schock"			: "Die Singles 1993-2010 (CD01): Nyntändo-Schock",
 		"Die Singles 1993-2010 (CD02) - W.O.L.F"					: "Die Singles 1993-2010 (CD02): W.O.L.F.",
 		"Die Singles 1993-2010 (CD03) - Telephon W-38"				: "Die Singles 1993-2010 (CD03): Telephon W-38",
@@ -260,6 +221,7 @@ substitutions = {
 		"Escape From New York - O.S.T" : "Escape From New York - Original Motion Picture Soundtrack",
 		"Everything You Knew Was Wrong... (CD1 - Velvet Illusions)"	: "Everything You Knew Was Wrong... (CD1: Velvet Illusions)",
 		"Everything You Knew Was Wrong... (CD2 - Velvet Suggestions)"	: "Everything You Knew Was Wrong... (CD2: Velvet Suggestions)",
+                "Fremd (CD2)"                           : "Fremd (CD2: Bonus-CD)",
 		"From The Flame Into The Fire (Deluxe Edition) (CD1)" : "From The Flame Into The Fire (Deluxe Edition) (CD1: From The Flame Into The Fire)",
 		"From The Flame Into The Fire (Deluxe Edition) (CD2)" : "From The Flame Into The Fire (Deluxe Edition) (CD2: From The Rain Into The Flood)",
 		"German Mystic Sound Sampler Vol. II"		: "German Mystic Sound Sampler II",
@@ -272,7 +234,6 @@ substitutions = {
 		"Götterdämmerung (Pierre Boulez) (CD3)"	: "Götterdämmerung (Bayreuther Festspiele, Pierre Boulez) (CD3)",
 		"Götterdämmerung (Pierre Boulez) (CD4)"	: "Götterdämmerung (Bayreuther Festspiele, Pierre Boulez) (CD4)",
 		"Gymnastic Label Compilation 1991-1995"	: "Gymnastic Label Compilation",
-		"Have You Seen This Ghost"	: "Have You Seen This Ghost?",
 		"Have You Seen This Ghost (Limited Edition)"	: "Have You Seen This Ghost? (Limited Edition)",
 		"Have You Seen This Ghost (PE)"					: "Have You Seen This Ghost? (Premiere Edition)",
 		"Highlander II - The Quickening - O.S.T"	: "Highlander II - The Quickening - Music From And Inspired By The Film",
@@ -285,8 +246,7 @@ substitutions = {
 		"Illumination"		: "Illumination?",
 		"Illumination (Hyperium)"	: "Illumination? (Hyperium)",
 		"In Case You Didn't Feel Like Showing Up (Original Album Series)"	: "In Case You Didn't Feel Like Showing Up (Live) (Original Album Series)",
-		"Is Anybody There"	: "Is Anybody There?",
-		"Is There Any Way"	: "Is There Any Way...",
+                "In Flimmernder Nacht"          : "In Flimmernder Nacht ...",
 		"John Barleycorn Reborn - Rebirth (CD1)"	: "John Barleycorn Reborn : Rebirth (CD1)",
 		"John Barleycorn Reborn - Rebirth (CD2)"	: "John Barleycorn Reborn : Rebirth (CD2)",
 		"Join The Dots - B-Sides & Rarities (CD1)"	: "Join The Dots - B-Sides & Rarities (CD1: 1978>1987)",
@@ -305,7 +265,6 @@ substitutions = {
 		"Like A Corpse Standing In Desperation (CD2)"	: "Like A Corpse Standing In Desperation (CD2) - Voyager - The Jugglers Of Jusa", 
 		"Like A Corpse Standing In Desperation (CD3)"	: "Like A Corpse Standing In Desperation (CD3) - Flowers In Formaldehyde",
 		"Love Poems For Dying Children... Act III"		: "Love Poems For Dying Children... Act III: Winter And The Broken Angel",
-		"L.R.K"											: "L.R.K.",
 		"Made In Germany (CD1 - 1995-2011)"				: "Made In Germany (CD1: 1995-2011)",
 		"Made In Germany (CD2 - Remixes)"				: "Made In Germany (CD2: Remixes)",
 		"Madrigali (CD2 - Bonus CD)"					: "Madrigali (CD2: Bonus CD With Live And Unreleased Tracks)",
@@ -321,8 +280,6 @@ substitutions = {
 		"Odyssey Europa (Limited Edition) (CD2)"	: "Odyssey Europa (4 CD Special Limited Edition) (CD2)",
 		"Odyssey Europa (Limited Edition) (CD3)"	: "Odyssey Europa (4 CD Special Limited Edition) (CD3)",
 		"Odyssey Europa (Limited Edition) (CD4)"	: "Odyssey Europa (4 CD Special Limited Edition) (CD4)",
-		"Ogham Inside The Night (CD1 - Ogham Inside The Night)"	: "Ogham Inside The Night (CD1: Ogham Inside The Night)",
-		"Ogham Inside The Night (CD2 - Sex And Wildflowers)"	: "Ogham Inside The Night (CD2: Sex And Wildflowers)",
 		"Once Upon A Time - The Singles"				: "Once Upon A Time/The Singles",
 		"Paradise"											: "Paradise... ?",
 		"Pictures From Eternity (Twilight Records)" : "Pictures From Eternity - Bilder Aus Der Ewigkeit (Twilight Records)",
@@ -335,6 +292,7 @@ substitutions = {
 		"Riding The Crest Of The Frozen Wave"	: "Riding The Crest Of The Frozen Wave - A Tribute To The Frozen Autumn",
 		"Robin Hood - Prince Of Thieves - O.S.T" : "Robin Hood - Prince Of Thieves - Original Motion Picture Soundtrack",
 		"Satan, Bugs Bunny, And Me"	: "Satan, Bugs Bunny, And Me...",
+                "Scatology (Remastered)"        : "Stevø, Pay Us What You Owe Us! Volume One - Scatology - Remastered", 
 		"Sin Pecado (Original Album Collection)"	: "Sin / Pecado (Original Album Collection)",
 		"That First Season (Winter-Light) (CD1 - Heavy Snow)"	: "...That First Season (Winter-Light) (CD1: Heavy Snow)",
 		"The Art Of Killing Silence (CD1 - Métodos Del Caos)"	: "The Art Of Killing Silence (CD1: Métodos Del Caos)",
@@ -367,6 +325,7 @@ substitutions = {
 		"What If"	: "What If...",
 		"What Sweet Music They Make - The Best Of (CD1)"	: "Thee Vampire Guild - What Sweet Music They Make - The Best Of (CD1)",
 		"What Sweet Music They Make - The Best Of (CD2)"	: "Thee Vampire Guild - What Sweet Music They Make - The Best Of (CD2)",
+                "What Sweet Music They Make Vol. 2"                     : "What Sweet Music They Make - Thee Vampire Guild Compilation Vol. 2",
 		"With A Million Tear-Stained Memories (CD1)" : "With A Million Tear-Stained Memories (CD1) (Vocal Tracks)",
 		"With A Million Tear-Stained Memories (CD2)" : "With A Million Tear-Stained Memories (CD2) (Instrumental Tracks)",
 		"Who Watches Over Me"	: "Who Watches Over Me?",
@@ -496,6 +455,13 @@ def match_artist(tag, item):
 		### Standard replacement
 		return True
 
+        ### Remove trailing "."
+	m = re.search(r'^(.*)\.$', t_artist)
+	if m and f_artist == m.group(1):
+		### Standard replacement
+		return True
+
+
 	### Check, whether there is a substitution available
 	if f_artist in substitutions['artist']:
 		if t_artist == substitutions['artist'][f_artist]:
@@ -559,6 +525,10 @@ def match_album(tag, item):
 		return True
 
 	if f_album == t_album.replace(':', ' -'):
+		### Standard replacement
+		return True
+
+	if f_album == t_album.replace(':', '.'):
 		### Standard replacement
 		return True
 
