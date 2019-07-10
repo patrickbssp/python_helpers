@@ -353,6 +353,9 @@ substitutions = {
                         ],
                 "Queen" : [
                         "Greatest Hits III (2011 Digital Remaster)"
+                    ],
+                "Hekate" : [
+                        "Taurus (Gesammelte Werke 1992-2011)"
                     ]
 	}
 }
@@ -574,6 +577,24 @@ def match_album(tag, item):
 	### Still not matching -> error
 	return False
 
+def check_cdm(str):
+	"""
+		Check for combining diacritical marks, i.e. accented characters composed of base
+		character plus mark.
+		For example, an 'í' can be represented as
+		a) Single char   (2 bytes in UTF-8): 0xc3 0xad      -> LATIN SMALL LETTER I WITH ACUTE
+		b) Composed char (3 bytes in UTF-8): 0x69 0xcc 0x81 -> LATIN SMALL LETTER I plus COMBINING ACUTE ACCENT
+	"""
+	chars = [b'\xcc', b'\xcd']
+
+	ba = str.encode('utf-8')
+	for i,v in enumerate(ba):
+		for c in chars:
+			d = (ba[i]).to_bytes(1, 'big')
+			if d == c:
+				e = ba[i-1:i+2].decode('utf-8')
+				return e
+
 def check_tag(tag):
 	"""
 		Check file for errors or inconsistencies.
@@ -585,6 +606,12 @@ def check_tag(tag):
 	global num_violations
 
 	full_path = '{}/{}/{} - {}.mp3'.format(tag['f_artist'], tag['f_album'], tag['f_track'], tag['f_title'])
+
+	### Scan for unwanted combining diacritical marks
+	for k,v in tag.items():
+		c = check_cdm(v)
+		if c:
+			print('CDM found: {} in {}'.format(c, full_path))
 
 	### Check tags
 
