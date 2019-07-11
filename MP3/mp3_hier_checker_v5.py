@@ -39,11 +39,12 @@ import subprocess
 import pathlib
 import mutagen
 import csv
-import numpy as np
 
 file_shortest = None
 file_longest = None
-file_len_hist = np.zeros(512)
+
+stats_longest={'t_artist' : None}
+stats_shortest={}
 
 num_files = 0
 num_mp3 = 0
@@ -363,7 +364,12 @@ substitutions = {
                         "Taurus (Gesammelte Werke 1992-2011)"
                     ],
 				"Kiss" : [
-						"God Gave Rock & Roll To You II"]
+						"God Gave Rock & Roll To You II"
+                    ],
+                "The Dust Of Basement" : [
+                        "Meridian (CD2)",
+                        "Awakening The Oceans (CD2)"
+                    ]
 	}
 }
 
@@ -428,8 +434,6 @@ def parse_file(top_dir, full_path, md5_fh, csv_wh):
 				my_print('-----------------------------')
 				my_print(full_path)
 				my_print(f.tags.pprint())
-#			for k,v in tag.items():
-#				my_print('{} : {}'.format(k, v))
 
 			csv_wh.writerow(tag)
 
@@ -469,6 +473,10 @@ def match_artist(tag, item):
 		return True
 
 	if f_artist == t_artist.replace('/', '-').replace(':', ''):
+		### Standard replacement
+		return True
+
+	if f_artist == t_artist.replace('/', ' - '):
 		### Standard replacement
 		return True
 
@@ -627,6 +635,12 @@ def check_tag(tag):
 
 	### Scan for unwanted combining diacritical marks
 	for k,v in tag.items():
+
+		l = len(v)
+		my_print(stats_longest[k])
+		if stats_longest[k] and l > len(stats_longest[k]) or not stats_longest[k]:
+			stats_longest[k] = v
+
 		c = check_cdm(v)
 		if c:
 			my_print('CDM {} found: {} in {}'.format(c, k, full_path))
@@ -707,6 +721,10 @@ def generate_list(top_dir, csv_file=None, md5_file=None):
 
 def analyse_csv(csv_file):
 
+	for f in field_names:
+		stats_longest[f] = None
+		stats_shortest[f] = None
+
 	### Open and parse CSV file
 	with open(csv_file, mode='r', encoding='utf-8', errors='surrogateescape') as f:
 		reader = csv.DictReader(f, fieldnames=field_names, dialect='mp3_csv')
@@ -723,6 +741,13 @@ def analyse_csv(csv_file):
 	with open(unique_albums_file, "w", encoding='utf8') as f:
 		for album in sorted(unique_albums):
 			f.write('{}\n'.format(album))
+
+	my_print('----------------------------------------------------')
+	my_print('longest: {} {}'.format(len(file_longest), file_longest))
+	my_print('shortest: {} {}'.format(len(file_shortest), file_shortest))
+	my_print('Artist:')
+	my_print('    longest: {} {}'.format(len(stats_longest['t_artist']), stats_longest['t_artist']))
+	my_print('    shortest: {} {}'.format(len(stats_shortest['t_artist']), stats_shortest['t_artist']))	
 
 def print_usage_and_die():
 	print("""Usage:
@@ -755,9 +780,6 @@ def main():
 	else:
 		print_usage_and_die()
 
-	my_print('longest: {} {}'.format(len(file_longest), file_longest))
-	my_print('shortest: {} {}'.format(len(file_shortest), file_shortest))
-		
 	sys.exit(0)
 
 main()
