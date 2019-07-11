@@ -43,8 +43,8 @@ import csv
 file_shortest = None
 file_longest = None
 
-stats_longest={'t_artist' : None}
-stats_shortest={}
+stats_max={}
+stats_min={}
 
 num_files = 0
 num_mp3 = 0
@@ -75,7 +75,7 @@ report_mismatch_flags = {
 	'album_artist'	: True,
 	'album'			: True,
 	'track'			: True,		# Don't change this entry!
-	'title'			: False
+	'title'			: True
 }
 
 tag_mapping = {
@@ -369,7 +369,10 @@ substitutions = {
                 "The Dust Of Basement" : [
                         "Meridian (CD2)",
                         "Awakening The Oceans (CD2)"
-                    ]
+                    ],
+				"Matthias Schuster" : [
+						"Atemlos"
+                    ],
 	}
 }
 
@@ -592,6 +595,43 @@ def match_album(tag, item):
 	### Still not matching -> error
 	return False
 
+def match_title(tag, item):
+	"""
+	(Try to) match title.
+
+	Album may not match exactly due to folder name restrictions
+	(trailing dots, colons, etc.).
+	"""
+
+	f_title = tag['f_title']
+	t_title = tag['t_title']
+
+	if not report_mismatch_flags[item]:
+		### Check disabled
+		return True
+
+	if f_title == t_title:
+		### Perfect match
+		return True
+
+	if f_title == t_title.replace('/', '-').replace(':', '').replace('?', ''):
+		### Standard replacement
+		return True
+
+	if f_title == t_title.replace('/', ' - ').replace(':', ' -').replace('"', ''):
+		### Standard replacement
+		return True
+
+	if f_title == t_title.replace(':', '-').replace('"', '\''):
+		### Standard replacement
+		return True
+
+		### Standard replacement
+		return True
+
+	### Still not matching -> error
+	return False
+
 def check_cdm(str):
 	"""
 		Check for combining diacritical marks, i.e. accented characters composed of base
@@ -637,9 +677,10 @@ def check_tag(tag):
 	for k,v in tag.items():
 
 		l = len(v)
-		my_print(stats_longest[k])
-		if stats_longest[k] and l > len(stats_longest[k]) or not stats_longest[k]:
-			stats_longest[k] = v
+		if stats_max[k] and l > len(stats_max[k]) or not stats_max[k]:
+			stats_max[k] = v
+		if stats_min[k] and l < len(stats_min[k]) or not stats_min[k]:
+			stats_min[k] = v
 
 		c = check_cdm(v)
 		if c:
@@ -665,6 +706,8 @@ def check_tag(tag):
 	if not match_album(tag, 'album'):
 		report_mismatch(full_path, "Album", tag['f_album'], tag['t_album'])
 
+	if not match_title(tag, 'title'):
+		report_mismatch(full_path, "Title", tag['f_title'], tag['t_title'])
 	return tag
 
 def parse_dir(top_dir, md5_fh, csv_wh):
@@ -722,8 +765,8 @@ def generate_list(top_dir, csv_file=None, md5_file=None):
 def analyse_csv(csv_file):
 
 	for f in field_names:
-		stats_longest[f] = None
-		stats_shortest[f] = None
+		stats_max[f] = None
+		stats_min[f] = None
 
 	### Open and parse CSV file
 	with open(csv_file, mode='r', encoding='utf-8', errors='surrogateescape') as f:
@@ -743,11 +786,16 @@ def analyse_csv(csv_file):
 			f.write('{}\n'.format(album))
 
 	my_print('----------------------------------------------------')
-	my_print('longest: {} {}'.format(len(file_longest), file_longest))
-	my_print('shortest: {} {}'.format(len(file_shortest), file_shortest))
-	my_print('Artist:')
-	my_print('    longest: {} {}'.format(len(stats_longest['t_artist']), stats_longest['t_artist']))
-	my_print('    shortest: {} {}'.format(len(stats_shortest['t_artist']), stats_shortest['t_artist']))	
+	my_print('Path (max): {} {}'.format(len(file_longest), file_longest))
+	my_print('Artist (max):')
+	my_print('  Tag:  {:3d}   {}'.format(len(stats_max['t_artist']), stats_max['t_artist']))
+	my_print('  File: {:3d}   {}'.format(len(stats_max['f_artist']), stats_max['f_artist']))
+	my_print('Album (max):')
+	my_print('  Tag:  {:3d}   {}'.format(len(stats_max['t_album']), stats_max['t_album']))
+	my_print('  File: {:3d}   {}'.format(len(stats_max['f_album']), stats_max['f_album']))
+	my_print('Title (max):')
+	my_print('  Tag:  {:3d}   {}'.format(len(stats_max['t_title']), stats_max['t_title']))
+	my_print('  File: {:3d}   {}'.format(len(stats_max['f_title']), stats_max['f_title']))
 
 def print_usage_and_die():
 	print("""Usage:
