@@ -39,6 +39,11 @@ import subprocess
 import pathlib
 import mutagen
 import csv
+import numpy as np
+
+file_shortest = None
+file_longest = None
+file_len_hist = np.zeros(512)
 
 num_files = 0
 num_mp3 = 0
@@ -356,7 +361,9 @@ substitutions = {
                     ],
                 "Hekate" : [
                         "Taurus (Gesammelte Werke 1992-2011)"
-                    ]
+                    ],
+				"Kiss" : [
+						"God Gave Rock & Roll To You II"]
 	}
 }
 
@@ -604,14 +611,25 @@ def check_tag(tag):
 
 	global num_mp3
 	global num_violations
+	global file_longest
+	global file_shortest
+
 
 	full_path = '{}/{}/{} - {}.mp3'.format(tag['f_artist'], tag['f_album'], tag['f_track'], tag['f_title'])
+
+	l = len(full_path)
+	
+	if file_shortest and l < len(file_shortest) or not file_shortest:
+		file_shortest = full_path
+
+	if file_longest and l > len(file_longest) or not file_longest:
+		file_longest = full_path
 
 	### Scan for unwanted combining diacritical marks
 	for k,v in tag.items():
 		c = check_cdm(v)
 		if c:
-			print('CDM found: {} in {}'.format(c, full_path))
+			my_print('CDM {} found: {} in {}'.format(c, k, full_path))
 
 	### Check tags
 
@@ -737,6 +755,9 @@ def main():
 	else:
 		print_usage_and_die()
 
+	my_print('longest: {} {}'.format(len(file_longest), file_longest))
+	my_print('shortest: {} {}'.format(len(file_shortest), file_shortest))
+		
 	sys.exit(0)
 
 main()
