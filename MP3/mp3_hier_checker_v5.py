@@ -29,6 +29,15 @@
 # - Empty Album folder 
 # - Files in Artist folder
 # - Non-MP3-Files in any folder
+#
+# Due to file/folder naming requirements on various OSes, following rules should be observed:
+# - Do not use trailing dots for folders (problematic on Windows)
+# - Do not use leading dots for folders (problematic on Unix (hidden folders))
+#
+# Homoglyph replacement (to escape characters with special meaning to filesystems
+# / (slash) -> U+29F8	⧸	e2 a7 b8  BIG SOLIDUS     (page Misc. Mathematical Symbols-B)
+# / (slash) -> U+2215	∕	e2 88 95  DIVISION SLASH) (page Mathematical Operators)
+# : (colon) -> U+2236	∶	e2 88 b6  RATIO           (page Mathematical Operators)
  
 
 import sys
@@ -45,6 +54,10 @@ file_longest = None
 
 stats_max={}
 stats_min={}
+
+enable_report_substitutions = True
+
+substitutions_done = set()
 
 num_files = 0
 num_mp3 = 0
@@ -75,7 +88,7 @@ report_mismatch_flags = {
 	'album_artist'	: True,
 	'album'			: True,
 	'track'			: True,		# Don't change this entry!
-	'title'			: True
+	'title'			: False
 }
 
 tag_mapping = {
@@ -88,85 +101,56 @@ tag_mapping = {
 
 substitutions = {
 	'artist' : {
-		"à;Grumh"						: "à;Grumh...",
-		"A7IE"							: ":A7IE:",
-		"All My Faith Lost"				: "All My Faith Lost...",
-		"An Idea"						: "An:Idea",
-		"Ascetic"						: "Ascetic:",
-		"Bahntier"						: ":Bahntier//",
-		"B. Says"						: "B. Says...",
-		"Boyd Rice & FriendsNON"		: "Boyd Rice & Friends/NON",
-		"Carlos Peron - Peter Ehrlich"	: "Carlos Peron/Peter Ehrlich",
-		"Concrete-Rage"					: "Concrete/Rage",
-		"De-Vision"						: "De/Vision",
-		"Dinosaur Jr"					: "Dinosaur Jr.",
-		"Ditto - Destroyer"				: "Ditto ≠ Destroyer",
-		"Dope Stars Inc"				: "Dope Stars Inc.",
-		"F-A-V"							: "F/A/V",
-		"Fïx8-Sëd8"						: "Fïx8:Sëd8",
-		"Gary Numan - Tubeway Army"			: "Gary Numan/Tubeway Army",
+		"à;Grumh"							: "à;Grumh...",
+		"A7IE"								: ":A7IE:",
+		"An Idea"							: "An:Idea",
+		"Ascetic"							: "Ascetic:",
+		"Bahntier"							: ":Bahntier//",
+		"Boyd Rice & FriendsNON"			: "Boyd Rice & Friends/NON",
+		"Ditto - Destroyer"					: "Ditto ≠ Destroyer",
+		"F-A-V"								: "F/A/V",
+		"Fïx8-Sëd8"							: "Fïx8:Sëd8",
 		"Hell Sector"						: "Hell:Sector",
 		"Golgatha"							: ":Golgatha:",
 		"Golgatha And Dawn & Dusk Entwined"	: ":Golgatha: And Dawn & Dusk Entwined",
 		"Golgatha & Birthe Klementowski"	: ":Golgatha: & Birthe Klementowski",
-                "Herbst9-Z'Ev"  : "Herbst9/Z'Ev",
-                "Howden & Wakeford"         : "Howden/Wakeford",
-		"I-Scintilla"					: "I:Scintilla",
-		"In The Woods"					: "In The Woods...",
-		"Land-Fire"						: "Land:Fire",
-                "Mind-State"						: "Mind:State",
-		"O Quam Tristis"				: "O Quam Tristis...",
-		"Of The Wand & The Moon"		: ":Of The Wand & The Moon:",
-                "Osiris T" : "Osiris T.",
-		"P1-E"										: "P1/E",
-		"Patenbrigade Wolff"						: "Patenbrigade: Wolff",
-		"Patenbrigade Wolff Feat. André Hartung"	: "Patenbrigade: Wolff Feat. André Hartung",
-		"PP"							: "PP?",
-		"Pretentious, Moi"				: "Pretentious, Moi?",
-                "Project Komakino"              : "Project: Komakino",
-		"ProTech"						: "Pro>Tech",
-		"Public Image Ltd"				: "Public Image Ltd.",
+		"Herbst9-Z'Ev"  					: "Herbst9/Z'Ev",
+		"Howden & Wakeford"         		: "Howden/Wakeford",
+		"I-Scintilla"						: "I:Scintilla",
+		"Land-Fire"							: "Land:Fire",
+		"Mind-State"						: "Mind:State",
+		"Of The Wand & The Moon"			: ":Of The Wand & The Moon:",
+		"P1-E"								: "P1/E",
+		"Project Komakino"      	        : "Project: Komakino",
+		"ProTech"							: "Pro>Tech",
 		"Re-Legion"							: "Re:/Legion",
 		"Re-Work"							: "Re/Work",
-		"Rozz Williams - Daucus Karota"		: "Rozz Williams/Daucus Karota",
 		"[SITD]"							: "[:SITD:]",
-		"Sabotage Qu'est-ce Que C'est"					: "Sabotage Qu'est-ce Que C'est?",
-		"Six Comm - Freya Aswynn"			: "Six Comm / Freya Aswynn",
+		"Sabotage Qu'est-ce Que C'est"		: "Sabotage Qu'est-ce Que C'est?",
 		"Sixth Comm - Mother Destruction"	: "Sixth Comm / Mother Destruction",
-		"Shades Of Hell"			: "Shades:Of:Hell",
-                "Spasmodique"   : ":Spasmodique:",
-		"Still Patient"				: "Still Patient?",
-		"System-Eyes"				: r"System\\Eyes",
-		"Temps Perdu"				: "Temps Perdu?",
-		"The Sin-Decay"				: "The Sin:Decay",
-		"Test Dept. - Brith Gof"	: "Test Dept. / Brith Gof",
-		"V.28"						: "V:28",
-		"Welle Erdball"				: "Welle: Erdball",
-		"Witt - Heppner"			: "Witt / Heppner",
-		"Wumpscut"					: ":Wumpscut:",
-		"Zoo"						: "//Zoo",
-		"Zos Kia - Coil"			: "Zos Kia/Coil"
+		"Shades Of Hell"					: "Shades:Of:Hell",        
+		"Spasmodique"  						: ":Spasmodique:",
+		"System-Eyes"						: r"System\\Eyes",
+		"The Sin-Decay"						: "The Sin:Decay",
+		"Test Dept. - Brith Gof"			: "Test Dept. / Brith Gof",
+		"V.28"								: "V:28",
+		"Welle Erdball"						: "Welle: Erdball",
+		"Wumpscut"							: ":Wumpscut:",
+		"Zoo"								: "//Zoo",
+		"Zos Kia - Coil"					: "Zos Kia/Coil"
 	},
 	'album' : {
-		"2001 - A S.P.O.C.K Odyssey"	: "2001: A S.P.O.C.K Odyssey",
-		"4-13 Dream"	: "4:13 Dream",
 		"Terminator 2 - Judgment Day - O.S.T" : "Terminator 2: Judgment Day - Original Motion Picture Soundtrack",
 		"Abattoir Blues - The Lyre Of Orpheus (CD1 - Abattoir Blues)"	: "Abattoir Blues / The Lyre Of Orpheus (CD1: Abattoir Blues)",
 		"Abattoir Blues - The Lyre Of Orpheus (CD2 - The Lyre Of Orpheus)": "Abattoir Blues / The Lyre Of Orpheus (CD2: The Lyre Of Orpheus)",
 		"Acoustic - La Ferrière-Harang - Bérigny, Normandie, France, 2011-2013"	: "Acoustic - La Ferrière-Harang/Bérigny, Normandie, France, 2011-2013",
 		"A Guide To The Legendary Pink Dots - Vol. 1"	: "A Guide To The Legendary Pink Dots - Vol. 1 The Best Ballads",
-		"A Question Of Time (CD1 - A Question Of Time)"	: "A Question Of Time (CD1: A Question Of Time)",
-		"A Question Of Time (CD2 - Philharmonic Diseases)"	: "A Question Of Time (CD2: Philharmonic Diseases)",
 		"All E.T.s Aren't Nice"	: "All E.T:s Aren't Nice",
 		"An Entire Wardrobe Of Doubt And Uncertainty (CD1 - Album)"			: "An Entire Wardrobe Of Doubt And Uncertainty (CD1: Album)",
 		"An Entire Wardrobe Of Doubt And Uncertainty (CD2 - Commentary)"	: "An Entire Wardrobe Of Doubt And Uncertainty (CD2: Patented Deadfly Ensemble Double Album Commentary)",
 		"Aus Der Welt (The Collective Works 2000 - 2003)"	: "Aus Der Welt / Seduction Of Madness / Death, Dumb And Blind (The Collective Works 2000 - 2003)",
-		"Barren Land (Limited Edition) (CD1 - Album)"	: "Barren Land (Limited Edition) (CD1: Album)",
-		"Barren Land (Limited Edition) (CD2 - In The Midst Of Life, We Are In Death)"	: "Barren Land (Limited Edition) (CD2: In The Midst Of Life, We Are In Death)",
-		"Bat Out Of Hell II - Back Into Hell" : "Bat Out Of Hell II: Back Into Hell",
 		"Bellum, Sacrum Bellum"	: "Bellum, Sacrum Bellum!?",
 		"Bergwerk 2010 - DJ Francois Vs. Kartagon - The Remix Collection"	: "Bergwerk 2010 - DJ Francois Vs Kartagon - The Remix Collection",
-		"Best Of (CD3) (Bonus CD - Live At Wacken 2015)"	: "Best Of (CD3) (Bonus CD: Live At Wacken 2015)",
 		"Best Of Wagner - Walkürenritt - Ride Of The Valkyries"	: "Best Of Wagner - Walkürenritt/Ride Of The Valkyries",
 		"Between The Eyes Vol. #1" : "Between The Eyes Vol. #1 (Singles/Rare B-Sides 1996-2000)",
 		"Between The Eyes Vol. #2" : "Between The Eyes Vol. #2 (1994)",
@@ -201,7 +185,7 @@ substitutions = {
 		"Die Aesthetik Der Herrschaftsfreiheit (CD3 - Aufgabe)"		: "Die Aesthetik Der Herrschaftsfreiheit (CD3: Aufgabe Oder A Cross Of Flowers)",
 		"Die Flut (CD1)"											: "Die Flut - Die Benefiz Compilation Der Darkwave- Und Elektroszene (CD1)",
 		"Die Flut (CD2)"											: "Die Flut - Die Benefiz Compilation Der Darkwave- Und Elektroszene (CD2)",
-                "Der Ring Des Nibelungen (Excerpts)"                                    : "Der Ring Des Nibelungen (Excerpts/Extraits/Auszüge, Deborah Polaski, Chicago Symphony Orchestra, Daniel Barenboim)",
+		"Der Ring Des Nibelungen (Excerpts)"						: "Der Ring Des Nibelungen (Excerpts/Extraits/Auszüge, Deborah Polaski, Chicago Symphony Orchestra, Daniel Barenboim)",
 		"Die Singles 1993-2010 (CD01) - Nyntändo-Schock"			: "Die Singles 1993-2010 (CD01): Nyntändo-Schock",
 		"Die Singles 1993-2010 (CD02) - W.O.L.F"					: "Die Singles 1993-2010 (CD02): W.O.L.F.",
 		"Die Singles 1993-2010 (CD03) - Telephon W-38"				: "Die Singles 1993-2010 (CD03): Telephon W-38",
@@ -220,12 +204,10 @@ substitutions = {
 		"Escape From New York - O.S.T" : "Escape From New York - Original Motion Picture Soundtrack",
 		"Everything You Knew Was Wrong... (CD1 - Velvet Illusions)"	: "Everything You Knew Was Wrong... (CD1: Velvet Illusions)",
 		"Everything You Knew Was Wrong... (CD2 - Velvet Suggestions)"	: "Everything You Knew Was Wrong... (CD2: Velvet Suggestions)",
-                "Fremd (CD2)"                           : "Fremd (CD2: Bonus-CD)",
+		"Fremd (CD2)"                           : "Fremd (CD2: Bonus-CD)",
 		"From The Flame Into The Fire (Deluxe Edition) (CD1)" : "From The Flame Into The Fire (Deluxe Edition) (CD1: From The Flame Into The Fire)",
 		"From The Flame Into The Fire (Deluxe Edition) (CD2)" : "From The Flame Into The Fire (Deluxe Edition) (CD2: From The Rain Into The Flood)",
 		"German Mystic Sound Sampler Vol. II"		: "German Mystic Sound Sampler II",
-		"Ghosts I-IV (CD1 - Ghosts I-II)"	: "Ghosts I-IV (CD1: Ghosts I-II)",
-		"Ghosts I-IV (CD2 - Ghosts III-IV)"	: "Ghosts I-IV (CD2: Ghosts III-IV)",
 		"Gothic Rock 2 (CD1 - Out Of The 80's...)"	: "Gothic Rock 2 (CD1: Out Of The 80's...)",
 		"Gothic Rock 2 (CD2 - ...Into The 90's)"	: "Gothic Rock 2 (CD2: ...Into The 90's)",
 		"Götterdämmerung (Pierre Boulez) (CD1)"	: "Götterdämmerung (Bayreuther Festspiele, Pierre Boulez) (CD1)",
@@ -233,39 +215,30 @@ substitutions = {
 		"Götterdämmerung (Pierre Boulez) (CD3)"	: "Götterdämmerung (Bayreuther Festspiele, Pierre Boulez) (CD3)",
 		"Götterdämmerung (Pierre Boulez) (CD4)"	: "Götterdämmerung (Bayreuther Festspiele, Pierre Boulez) (CD4)",
 		"Gymnastic Label Compilation 1991-1995"	: "Gymnastic Label Compilation",
-		"Have You Seen This Ghost (Limited Edition)"	: "Have You Seen This Ghost? (Limited Edition)",
 		"Have You Seen This Ghost (PE)"					: "Have You Seen This Ghost? (Premiere Edition)",
 		"Highlander II - The Quickening - O.S.T"	: "Highlander II - The Quickening - Music From And Inspired By The Film",
-		"Hotel Suicide (CD1 - Hotel Suicide)"	: "Hotel Suicide (CD1: Hotel Suicide)",
-		"Hotel Suicide (CD2 - Room 13)"			: "Hotel Suicide (CD2: Room 13)",
-		"How To Measure A Planet (CD1)" : "How To Measure A Planet? (CD1)",
-		"How To Measure A Planet (CD2)" : "How To Measure A Planet? (CD2)",
 		"Ich Töte Mich Jedesmal Aufs Neue"	: "Ich Töte Mich Jedesmal Aufs Neue, Doch Ich Bin Unsterblich, Und Ich Erstehe Wieder Auf ... - In Einer Vision Des Untergangs",
 		"If I Die, I Die"	: "...If I Die, I Die",
-		"Illumination"		: "Illumination?",
-		"Illumination (Hyperium)"	: "Illumination? (Hyperium)",
 		"In Case You Didn't Feel Like Showing Up (Original Album Series)"	: "In Case You Didn't Feel Like Showing Up (Live) (Original Album Series)",
-                "In Flimmernder Nacht"          : "In Flimmernder Nacht ...",
+		"In Flimmernder Nacht"          : "In Flimmernder Nacht ...",
 		"John Barleycorn Reborn - Rebirth (CD1)"	: "John Barleycorn Reborn : Rebirth (CD1)",
 		"John Barleycorn Reborn - Rebirth (CD2)"	: "John Barleycorn Reborn : Rebirth (CD2)",
 		"Join The Dots - B-Sides & Rarities (CD1)"	: "Join The Dots - B-Sides & Rarities (CD1: 1978>1987)",
 		"Join The Dots - B-Sides & Rarities (CD2)"	: "Join The Dots - B-Sides & Rarities (CD2: 1987>1992)",
 		"Join The Dots - B-Sides & Rarities (CD3)"	: "Join The Dots - B-Sides & Rarities (CD3: 1992>1996)",
 		"Join The Dots - B-Sides & Rarities (CD4)"	: "Join The Dots - B-Sides & Rarities (CD4: 1996>2001)",
-		"Künstler zum 14. Wave-Gotik-Treffen"	: "Künstler zum 14. WGT",
-		"La Chambre D'Echo"	: "La Chambre D'Echo - Where The Dead Birds Sing",
-		"Laugh - I Nearly Bought One!" : "Laugh? I Nearly Bought One!",
-		"Left Of The Dial (CD1)"	: "Left Of The Dial - Dispatches From The '80s Underground (CD1)",
-		"Left Of The Dial (CD2)"	: "Left Of The Dial - Dispatches From The '80s Underground (CD2)",
-		"Left Of The Dial (CD3)"	: "Left Of The Dial - Dispatches From The '80s Underground (CD3)",
-		"Left Of The Dial (CD4)"	: "Left Of The Dial - Dispatches From The '80s Underground (CD4)",
-		"Lexx - O.S.T"	: "Lexx - Music From The Original Television Sci-Fi Movie Series",
+		"Künstler zum 14. Wave-Gotik-Treffen"		: "Künstler zum 14. WGT",
+		"La Chambre D'Echo"							: "La Chambre D'Echo - Where The Dead Birds Sing",
+		"Laugh - I Nearly Bought One!"				: "Laugh? I Nearly Bought One!",
+		"Left Of The Dial (CD1)"		: "Left Of The Dial - Dispatches From The '80s Underground (CD1)",
+		"Left Of The Dial (CD2)"		: "Left Of The Dial - Dispatches From The '80s Underground (CD2)",
+		"Left Of The Dial (CD3)"		: "Left Of The Dial - Dispatches From The '80s Underground (CD3)",
+		"Left Of The Dial (CD4)"		: "Left Of The Dial - Dispatches From The '80s Underground (CD4)",
+		"Lexx - O.S.T"					: "Lexx - Music From The Original Television Sci-Fi Movie Series",
 		"Like A Corpse Standing In Desperation (CD1)"	: "Like A Corpse Standing In Desperation (CD1) - Original Demo Recordings",
 		"Like A Corpse Standing In Desperation (CD2)"	: "Like A Corpse Standing In Desperation (CD2) - Voyager - The Jugglers Of Jusa", 
 		"Like A Corpse Standing In Desperation (CD3)"	: "Like A Corpse Standing In Desperation (CD3) - Flowers In Formaldehyde",
 		"Love Poems For Dying Children... Act III"		: "Love Poems For Dying Children... Act III: Winter And The Broken Angel",
-		"Made In Germany (CD1 - 1995-2011)"				: "Made In Germany (CD1: 1995-2011)",
-		"Made In Germany (CD2 - Remixes)"				: "Made In Germany (CD2: Remixes)",
 		"Madrigali (CD2 - Bonus CD)"					: "Madrigali (CD2: Bonus CD With Live And Unreleased Tracks)",
 		"Meeresrauschen Mit Möwen- Und Vogelgezwitscher" : "Meeresrauschen Mit Möwen- Und Vogelgezwitscher Und Delphin- Und Walgesängen",
 		"Mellon Collie And The Infinite Sadness (CD1)"	: "Mellon Collie And The Infinite Sadness - Dawn To Dusk",
@@ -283,25 +256,22 @@ substitutions = {
 		"Paradise"											: "Paradise... ?",
 		"Pictures From Eternity (Twilight Records)" : "Pictures From Eternity - Bilder Aus Der Ewigkeit (Twilight Records)",
 		"Playlist - The Very Best Of Survivor"			: "Playlist: The Very Best Of Survivor",
-		"Priest-Aura"	: "Priest=Aura",
 		"Prince Of Darkness - O.S.T. (CD1)" : "Prince Of Darkness - Complete Original Motion Picture Soundtrack (Limited Edition) (CD1)",
 		"Prince Of Darkness - O.S.T. (CD2)" : "Prince Of Darkness - Complete Original Motion Picture Soundtrack (Limited Edition) (CD2)",
 		"Prophetia (Remastered, Limited Edition) (CD1 - Album)" : "Prophetia (Remastered, Limited Edition) (CD1: Album)",
 		"Prophetia (Remastered, Limited Edition) (CD2 - Bootleg)" : "Prophetia (Remastered, Limited Edition) (CD2: Bootleg - Live 1989)",
 		"Riding The Crest Of The Frozen Wave"	: "Riding The Crest Of The Frozen Wave - A Tribute To The Frozen Autumn",
 		"Robin Hood - Prince Of Thieves - O.S.T" : "Robin Hood - Prince Of Thieves - Original Motion Picture Soundtrack",
-		"Satan, Bugs Bunny, And Me"	: "Satan, Bugs Bunny, And Me...",
-                "Scatology (Remastered)"        : "Stevø, Pay Us What You Owe Us! Volume One - Scatology - Remastered", 
+		"Scatology (Remastered)"        : "Stevø, Pay Us What You Owe Us! Volume One - Scatology - Remastered", 
 		"Sin Pecado (Original Album Collection)"	: "Sin / Pecado (Original Album Collection)",
 		"That First Season (Winter-Light) (CD1 - Heavy Snow)"	: "...That First Season (Winter-Light) (CD1: Heavy Snow)",
-                "That First Season (Winter-Light) (CD2 - Long Shadows)" : "...That First Season (Winter-Light) (CD2: Long Shadows)",
+		"That First Season (Winter-Light) (CD2 - Long Shadows)" : "...That First Season (Winter-Light) (CD2: Long Shadows)",
 		"The Art Of Killing Silence (CD1 - Métodos Del Caos)"	: "The Art Of Killing Silence (CD1: Métodos Del Caos)",
 		"The Art Of Killing Silence (CD2 - Noise Diary Plus Bonus)"	: "The Art Of Killing Silence (CD2: Noise Diary Plus Bonus)",
 		"The Dark Box (CD1)"	: "The Dark Box - The Ultimate Goth, Wave & Industrial Collection 1980-2011 (CD1)",
 		"The Dark Box (CD2)"	: "The Dark Box - The Ultimate Goth, Wave & Industrial Collection 1980-2011 (CD2)",
 		"The Dark Box (CD3)"	: "The Dark Box - The Ultimate Goth, Wave & Industrial Collection 1980-2011 (CD3)",
 		"The Dark Box (CD4)"	: "The Dark Box - The Ultimate Goth, Wave & Industrial Collection 1980-2011 (CD4)",
-		"The Eye Of Time (CD1 - After Us)" : "The Eye Of Time (CD1: After Us)",
 		"The Eye Of Time (CD2 - Jail - Lily On The Valley)" : "The Eye Of Time (CD2: Jail / Lily On The Valley)",
 		"The Future Starts Here - The Essential Doors Hits"	: "The Future Starts Here: The Essential Doors Hits",
 		"The Gothic Grotesque & Elektro Bizarre (Promo Edition)"	: "The Gothic Grotesque & Elektro Bizarre - Trisol Compilation 1 (Promo Edition)",
@@ -313,24 +283,19 @@ substitutions = {
 		"The Last Embrace (The First Era 1996-2002)" : "...The Last Embrace (The First Era 1996-2002)",
 		"The Most Spectacular Synthesizer Hits" : "The Most Spectacular Synthesizer Hits Of Vangelis, Jean-Michel Jarre & Jan Hammer Played By Star Inc.",
 		"The Naked Gun 21-2 - The Smell Of Fear - O.S.T"	: "The Naked Gun 21/2: The Smell Of Fear - Music From The Motion Picture",
-		"The Silhouette Scene E.P"		: "The Silhouette Scene E.P.",
 		"The Triumph Of Light"	: "The Triumph Of Light... And Thy Thirteen Shadows Of Love",
 		"Todeswunsch"	: "Todeswunsch - Sous Le Soleil De Saturne",
 		"Twilight Of The Gods Vol. 1 (CD1)"		: "Twilight Of The Gods Vol. 1 - The Gothic-Metal-Collection (CD1)",
 		"Twilight Of The Gods Vol. 1 (CD2)"		: "Twilight Of The Gods Vol. 1 - The Gothic-Metal-Collection (CD2)",
 		"Very 'Eavy ...Very 'Umble (Expanded De-Luxe Edition)"	: "...Very 'Eavy ...Very 'Umble (Expanded De-Luxe Edition)",
-		"Volk Und Armee"						: "Volk Und Armee...",
 		"Wenches, Wytches And Vampyres - The Very Best Of Two Witches"	: "Wenches, Wytches And Vampyres - The Very Best Of Two Witches 1987-1999",
-		"What Happened Behind The Door"	: "What Happened Behind The Door?",
-		"What If"	: "What If...",
 		"What Sweet Music They Make - The Best Of (CD1)"	: "Thee Vampire Guild - What Sweet Music They Make - The Best Of (CD1)",
 		"What Sweet Music They Make - The Best Of (CD2)"	: "Thee Vampire Guild - What Sweet Music They Make - The Best Of (CD2)",
-                "What Sweet Music They Make Vol. 2"                     : "What Sweet Music They Make - Thee Vampire Guild Compilation Vol. 2",
-		"With A Million Tear-Stained Memories (CD1)" : "With A Million Tear-Stained Memories (CD1) (Vocal Tracks)",
-		"With A Million Tear-Stained Memories (CD2)" : "With A Million Tear-Stained Memories (CD2) (Instrumental Tracks)",
-		"Who Watches Over Me"	: "Who Watches Over Me?",
-		"Works & Passion 1955 - 2000 (CD1)"	: "Works & Passion 1955 - 2000 (CD1: The Feetwarmers - The Quartet - Paul Nero - Motherhood)",
-                "Works & Passion 1955 - 2000 (CD2)"     : "Works & Passion 1955 - 2000 (CD2: The Soloist - The Composer)",
+		"What Sweet Music They Make Vol. 2"					: "What Sweet Music They Make - Thee Vampire Guild Compilation Vol. 2",
+		"With A Million Tear-Stained Memories (CD1)"		: "With A Million Tear-Stained Memories (CD1) (Vocal Tracks)",
+		"With A Million Tear-Stained Memories (CD2)"		: "With A Million Tear-Stained Memories (CD2) (Instrumental Tracks)",
+		"Works & Passion 1955 - 2000 (CD1)"					: "Works & Passion 1955 - 2000 (CD1: The Feetwarmers - The Quartet - Paul Nero - Motherhood)",
+		"Works & Passion 1955 - 2000 (CD2)"					: "Works & Passion 1955 - 2000 (CD2: The Soloist - The Composer)",
 		"Works & Passion 1955 - 2000 (CD3)"		: "Works & Passion 1955 - 2000 (CD3: Passport 1971 - 1980)",
 		"Works & Passion 1955 - 2000 (CD4)"		: "Works & Passion 1955 - 2000 (CD4: Passport 1980 - 2000)",
 		"Wrack And Ruin (Limited Edition) (CD1)"	: "Wrack And Ruin (Limited Edition) (CD1: Wrack And Ruin)",
@@ -344,6 +309,38 @@ substitutions = {
 		"ZilloScope New Signs & Sounds 11-03"	: "ZilloScope 11/03",
 		"ZilloScope New Signs & Sounds 8_9-03"	: "ZilloScope 8-9/03",
 		"ZilloScope New Signs & Sounds 07-04"	: "ZilloScope 7/04",
+		"Zillo CD 02-05"	: "Zillo CD 02/05",
+		"Zillo CD 02-06"	: "Zillo CD 02/06",
+		"Zillo CD 05-06"	: "Zillo CD 05/06",
+		"Zillo CD 03-05"	: "Zillo CD 03/05",
+		"Zillo CD 06-05"	: "Zillo CD 06/05",
+		"Zillo CD 03-06"	: "Zillo CD 03/06",
+		"Zillo CD 11-06"	: "Zillo CD 11/06",
+		"Zillo CD 03-07"	: "Zillo CD 03/07",
+		"Zillo CD 09-07"	: "Zillo CD 09/07",
+		"Zillo CD 11-07"	: "Zillo CD 11/07",
+		"Zillo CD 03-08"	: "Zillo CD 03/08",
+		"Zillo CD 04-08"	: "Zillo CD 04/08",
+		"Zillo CD 05-08"	: "Zillo CD 05/08",
+		"Zillo CD 06-08"	: "Zillo CD 06/08",
+		"Zillo CD 04-05"	: "Zillo CD 04/05",
+		"Zillo CD 09-04"	: "Zillo CD 09/04",
+		"Zillo CD 10-04"	: "Zillo CD 10/04",
+		"Zillo CD 11-04"	: "Zillo CD 11/04",
+		"Zillo CD 07-08-05"	: "Zillo CD 07-08/05",
+		"Zillo CD 07-08-06"	: "Zillo CD 07-08/06",
+		"Zillo CD 11-05"	: "Zillo CD 11/05",
+		"Zillo CD 12-04-01-05"	: "Zillo CD 12/04-01/05",
+		"Zillo CD 12-05-01-06"	: "Zillo CD 12/05-01/06",
+#		"Zillo CD 12-05-01-06"	: "Zillo CD 12/05-01/06 (Spoken Word - Dunkle Lesungen)",
+		"ZilloScope 11-98"	: "ZilloScope 11/98",
+		"ZilloScope 2-04"	: "ZilloScope 2/04",
+		"ZilloScope 3-00"	: "ZilloScope 3/00",
+		"ZilloScope 4-04"	: "ZilloScope 4/04",
+		"ZilloScope 5-04"	: "ZilloScope 5/04",
+		"ZilloScope 6-04"	: "ZilloScope 6/04",
+		"ZilloScope 4-99"	: "ZilloScope 4/99",
+		"ZilloScope 7-8-99"	: "ZilloScope 7-8/99",
 		"ZilloScope New Signs & Sounds 10-03"	: "ZilloScope 10/03",
 		"Zos Kia - Coil - Transparent"	: "Zos Kia/Coil - Transparent",
 		"Zwischenfall - From The 80's To The 90's Vol. 2 (CD1)"	: "Zwischenfall Vol. 2 (CD1)",
@@ -372,6 +369,9 @@ substitutions = {
                     ],
 				"Matthias Schuster" : [
 						"Atemlos"
+                    ],
+				"Sara Noxx & Mark Benecke" : [
+						"Where The Wild Roses Grow (Re-Mixxed)"
                     ],
 	}
 }
@@ -452,6 +452,10 @@ def report_mismatch(fname, item, f_item, t_item):
 	num_violations += 1
 	my_print('Mismatch in {}, file: {} tag: {} (file: {})'.format(item, f_item, t_item, fname))
 
+def report_substitution(reason, orig, sub):
+	if enable_report_substitutions:
+		sub = 'Replaced {}: {} with {}'.format(reason, orig, sub)
+		substitutions_done.add(sub)
 
 def is_mismatch(f_item, t_item, item):
 	return True if f_item != t_item and report_mismatch_flags[item] else False
@@ -475,20 +479,26 @@ def match_artist(tag, item):
 		### Perfect match
 		return True
 
-	if f_artist == t_artist.replace('/', '-').replace(':', ''):
-		### Standard replacement
+	### Attention: Homoglyphs!
+	if f_artist == t_artist.replace('/', '⁄').replace(':', '∶'):
+		report_substitution('AR1', t_artist, f_artist)
 		return True
 
-	if f_artist == t_artist.replace('/', ' - '):
-		### Standard replacement
+	if f_artist == t_artist.replace('?', ''):
+		report_substitution('AR2', t_artist, f_artist)
 		return True
 
-        ### Remove trailing "."
+	### Remove trailing "."
 	m = re.search(r'^(.*)\.$', t_artist)
 	if m and f_artist == m.group(1):
-		### Standard replacement
+		report_substitution('AR3', t_artist, f_artist)
 		return True
 
+	### Remove trailing "..."
+	m = re.search(r'^(.*)\.\.\.$', t_artist)
+	if m and f_artist == m.group(1):
+		report_substitution('AR4', t_artist, f_artist)
+		return True
 
 	### Check, whether there is a substitution available
 	if f_artist in substitutions['artist']:
@@ -533,6 +543,8 @@ def match_album_artist(tag, item):
 	### Still not matching -> error
 	return False
 
+
+
 def match_album(tag, item):
 	"""
 	(Try to) match album.
@@ -552,16 +564,31 @@ def match_album(tag, item):
 		### Perfect match
 		return True
 
-	if f_album == t_album.replace('/', '-').replace(':', '').replace('?', ''):
+	# TODO check for potential replacements of slash ("/")
+#	repl = t_album.replace('/', '-').replace(':', '').replace('?', '')
+	repl = t_album.replace(':', '').replace('?', '')
+	if f_album == repl:
+		report_substitution('AL1', t_album, f_album) ### Standard replacement
+		return True
+
+	repl = t_album.replace('>', '-').replace('=', '-')
+	if f_album == repl:
+		report_substitution('AL2', t_album, f_album) ### Standard replacement
+		return True
+
+	### Attention: Homoglyphs!
+	if f_album == t_album.replace('/', '⁄').replace(':', '∶'):
 		### Standard replacement
 		return True
 
-	if f_album == t_album.replace(':', '-').replace('>', '-'):
-		### Standard replacement
-		return True
+#	repl = t_album.replace(':', '-').replace('>', '-').replace('=', '-')
+#	if f_album == repl:
+#		report_substitution('AL2', t_album, f_album) ### Standard replacement
+#		return True
 
-	if f_album == t_album.replace(':', ' -'):
-		### Standard replacement
+	repl = t_album.replace(':', ' -')
+	if f_album == repl:
+		report_substitution('AL3', t_album, f_album) ### Standard replacement
 		return True
 
 	if f_album == t_album.replace(':', '.'):
@@ -784,6 +811,10 @@ def analyse_csv(csv_file):
 	with open(unique_albums_file, "w", encoding='utf8') as f:
 		for album in sorted(unique_albums):
 			f.write('{}\n'.format(album))
+
+	if enable_report_substitutions:
+		for line in substitutions_done:
+			my_print(line)
 
 	my_print('----------------------------------------------------')
 	my_print('Path (max): {} {}'.format(len(file_longest), file_longest))
