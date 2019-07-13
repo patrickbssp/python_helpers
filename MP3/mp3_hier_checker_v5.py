@@ -103,29 +103,21 @@ substitutions = {
 	'artist' : {
 		"à;Grumh"							: "à;Grumh...",
 		"A7IE"								: ":A7IE:",
-		"An Idea"							: "An:Idea",
 		"Ascetic"							: "Ascetic:",
 		"Bahntier"							: ":Bahntier//",
 		"Boyd Rice & FriendsNON"			: "Boyd Rice & Friends/NON",
 		"Ditto - Destroyer"					: "Ditto ≠ Destroyer",
-		"F-A-V"								: "F/A/V",
 		"Fïx8-Sëd8"							: "Fïx8:Sëd8",
 		"Hell Sector"						: "Hell:Sector",
-		"Golgatha"							: ":Golgatha:",
-		"Golgatha And Dawn & Dusk Entwined"	: ":Golgatha: And Dawn & Dusk Entwined",
-		"Golgatha & Birthe Klementowski"	: ":Golgatha: & Birthe Klementowski",
 		"Herbst9-Z'Ev"  					: "Herbst9/Z'Ev",
 		"Howden & Wakeford"         		: "Howden/Wakeford",
 		"I-Scintilla"						: "I:Scintilla",
 		"Land-Fire"							: "Land:Fire",
 		"Mind-State"						: "Mind:State",
-		"Of The Wand & The Moon"			: ":Of The Wand & The Moon:",
 		"P1-E"								: "P1/E",
-		"Project Komakino"      	        : "Project: Komakino",
 		"ProTech"							: "Pro>Tech",
 		"Re-Legion"							: "Re:/Legion",
 		"Re-Work"							: "Re/Work",
-		"[SITD]"							: "[:SITD:]",
 		"Sabotage Qu'est-ce Que C'est"		: "Sabotage Qu'est-ce Que C'est?",
 		"Sixth Comm - Mother Destruction"	: "Sixth Comm / Mother Destruction",
 		"Shades Of Hell"					: "Shades:Of:Hell",        
@@ -133,11 +125,6 @@ substitutions = {
 		"System-Eyes"						: r"System\\Eyes",
 		"The Sin-Decay"						: "The Sin:Decay",
 		"Test Dept. - Brith Gof"			: "Test Dept. / Brith Gof",
-		"V.28"								: "V:28",
-		"Welle Erdball"						: "Welle: Erdball",
-		"Wumpscut"							: ":Wumpscut:",
-		"Zoo"								: "//Zoo",
-		"Zos Kia - Coil"					: "Zos Kia/Coil"
 	},
 	'album' : {
 		"Terminator 2 - Judgment Day - O.S.T" : "Terminator 2: Judgment Day - Original Motion Picture Soundtrack",
@@ -145,7 +132,6 @@ substitutions = {
 		"Abattoir Blues - The Lyre Of Orpheus (CD2 - The Lyre Of Orpheus)": "Abattoir Blues / The Lyre Of Orpheus (CD2: The Lyre Of Orpheus)",
 		"Acoustic - La Ferrière-Harang - Bérigny, Normandie, France, 2011-2013"	: "Acoustic - La Ferrière-Harang/Bérigny, Normandie, France, 2011-2013",
 		"A Guide To The Legendary Pink Dots - Vol. 1"	: "A Guide To The Legendary Pink Dots - Vol. 1 The Best Ballads",
-		"All E.T.s Aren't Nice"	: "All E.T:s Aren't Nice",
 		"An Entire Wardrobe Of Doubt And Uncertainty (CD1 - Album)"			: "An Entire Wardrobe Of Doubt And Uncertainty (CD1: Album)",
 		"An Entire Wardrobe Of Doubt And Uncertainty (CD2 - Commentary)"	: "An Entire Wardrobe Of Doubt And Uncertainty (CD2: Patented Deadfly Ensemble Double Album Commentary)",
 		"Aus Der Welt (The Collective Works 2000 - 2003)"	: "Aus Der Welt / Seduction Of Madness / Death, Dumb And Blind (The Collective Works 2000 - 2003)",
@@ -198,8 +184,6 @@ substitutions = {
 		"Die Singles 1993-2010 (CD10) - Ich Bin Aus Plastik"		: "Die Singles 1993-2010 (CD10): Ich Bin Aus Plastik",
 		"Edgar Allen Poe - Visionen (CD1)"							: "Edgar Allen Poe - Visionen (CD1: Words)",
 		"Edgar Allen Poe - Visionen (CD2)"							: "Edgar Allen Poe - Visionen (CD2: Music)",
-		"Emptiness Emptiness Emptiness"								: ":Emptiness:Emptiness:Emptiness:",
-		"Emptiness Emptiness Emptiness (Remastered)"				: ":Emptiness:Emptiness:Emptiness: (Remastered)",
 		"Es reiten die Toten so schnell"	: "Es reiten die Toten so schnell (Or: The Vampyre Sucking At His Own Vein)",
 		"Escape From New York - O.S.T" : "Escape From New York - Original Motion Picture Soundtrack",
 		"Everything You Knew Was Wrong... (CD1 - Velvet Illusions)"	: "Everything You Knew Was Wrong... (CD1: Velvet Illusions)",
@@ -342,7 +326,6 @@ substitutions = {
 		"ZilloScope 4-99"	: "ZilloScope 4/99",
 		"ZilloScope 7-8-99"	: "ZilloScope 7-8/99",
 		"ZilloScope New Signs & Sounds 10-03"	: "ZilloScope 10/03",
-		"Zos Kia - Coil - Transparent"	: "Zos Kia/Coil - Transparent",
 		"Zwischenfall - From The 80's To The 90's Vol. 2 (CD1)"	: "Zwischenfall Vol. 2 (CD1)",
 		"Zwischenfall - From The 80's To The 90's Vol. 2 (CD2)"	: "Zwischenfall Vol. 2 (CD2)",
 	},
@@ -592,6 +575,7 @@ def match_album(tag, item):
 		return True
 
 	if f_album == t_album.replace(':', '.'):
+		report_substitution('AL4', t_album, f_album) ### Standard replacement
 		### Standard replacement
 		return True
 
