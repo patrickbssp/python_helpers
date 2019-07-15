@@ -330,6 +330,9 @@ substitutions = {
 		"Zwischenfall - From The 80's To The 90's Vol. 2 (CD2)"	: "Zwischenfall Vol. 2 (CD2)",
 	},
 	'album_artist' : {
+				### List Album Artist/Album combos here, for which Album Artist check should be skipped
+				### This is useful for Albums with multiple Artists, which are no Compilations, where
+				### Album Artist would be Various Artists.
                 "Solitary Experiments" : ["Phenomena (CD2: Hysteria)"],
                 "Klaus Doldinger" : [
                         "Works & Passion 1955 - 2000 (CD1: The Feetwarmers - The Quartet - Paul Nero - Motherhood)",
@@ -458,29 +461,7 @@ def match_artist(tag, item):
 		### Check disabled
 		return True
 
-	if f_artist == t_artist:
-		### Perfect match
-		return True
-
-	### Attention: Homoglyphs!
-	if f_artist == t_artist.replace('/', '⁄').replace(':', '∶'):
-		report_substitution('AR1', t_artist, f_artist)
-		return True
-
-	if f_artist == t_artist.replace('?', ''):
-		report_substitution('AR2', t_artist, f_artist)
-		return True
-
-	### Remove trailing "."
-	m = re.search(r'^(.*)\.$', t_artist)
-	if m and f_artist == m.group(1):
-		report_substitution('AR3', t_artist, f_artist)
-		return True
-
-	### Remove trailing "..."
-	m = re.search(r'^(.*)\.\.\.$', t_artist)
-	if m and f_artist == m.group(1):
-		report_substitution('AR4', t_artist, f_artist)
+	if std_repl('AR', f_artist, t_artist):
 		return True
 
 	### Check, whether there is a substitution available
@@ -526,7 +507,63 @@ def match_album_artist(tag, item):
 	### Still not matching -> error
 	return False
 
+def std_repl(cat, f_item, t_item):
+	"""
+		Apply standard replacements:
 
+		cat:	Category:
+			AR	Artist
+			AA	Album Artist
+			AL	Album
+	"""
+
+	substitutions = {
+		"AR" : {
+			### Note: first entries for ':' and '/' are homoglyps!
+			':'	: ['∶'],
+			'/'	: ['⁄'],
+			'?'	: [''],
+		},
+		"AL" : {
+			### Note: first entries for ':' and '/' are homoglyps!
+			':'	: ['∶'],
+			'/'	: ['⁄'],
+			'?'	: [''],
+			'>'	: ['-'],
+			'='	: ['-'],
+		},
+	}
+
+	if f_item == t_item:
+		### Perfect match
+		return True
+
+	if cat in substitutions:
+		subs = substitutions[cat]
+		for i,v in enumerate(subs):
+			for sub in subs[v]:
+				if f_item == t_item.replace(v, sub):
+					report_substitution('{}{}'.format(cat, i), t_item, f_item)
+					return True
+
+	if cat in ['AL', 'AR']:
+
+		### Remove trailing "..."
+		m = re.search(r'^(.*)\.\.\.$', t_item)
+		if m and f_item == m.group(1):
+			return True
+
+		### Remove leading "..." or "... "
+		m = re.search(r'^\.\.\.\s{0,1}(.*)$', t_item)
+		if m and f_item == m.group(1):
+			return True
+
+		### Remove trailing "."
+		m = re.search(r'^(.*)\.$', t_item)
+		if m and f_item == m.group(1):
+			return True
+
+	return False
 
 def match_album(tag, item):
 	"""
@@ -543,58 +580,7 @@ def match_album(tag, item):
 		### Check disabled
 		return True
 
-	if f_album == t_album:
-		### Perfect match
-		return True
-
-	# TODO check for potential replacements of slash ("/")
-#	repl = t_album.replace('/', '-').replace(':', '').replace('?', '')
-	repl = t_album.replace(':', '').replace('?', '')
-	if f_album == repl:
-		report_substitution('AL1', t_album, f_album) ### Standard replacement
-		return True
-
-	repl = t_album.replace('>', '-').replace('=', '-')
-	if f_album == repl:
-		report_substitution('AL2', t_album, f_album) ### Standard replacement
-		return True
-
-	### Attention: Homoglyphs!
-	if f_album == t_album.replace('/', '⁄').replace(':', '∶'):
-		### Standard replacement
-		return True
-
-#	repl = t_album.replace(':', '-').replace('>', '-').replace('=', '-')
-#	if f_album == repl:
-#		report_substitution('AL2', t_album, f_album) ### Standard replacement
-#		return True
-
-	repl = t_album.replace(':', ' -')
-	if f_album == repl:
-		report_substitution('AL3', t_album, f_album) ### Standard replacement
-		return True
-
-	if f_album == t_album.replace(':', '.'):
-		report_substitution('AL4', t_album, f_album) ### Standard replacement
-		### Standard replacement
-		return True
-
-	### Remove trailing "..."
-	m = re.search(r'^(.*)\.\.\.$', t_album)
-	if m and f_album == m.group(1):
-		### Standard replacement
-		return True
-
-	### Remove leading "..." or "... "
-	m = re.search(r'^\.\.\.\s{0,1}(.*)$', t_album)
-	if m and f_album == m.group(1):
-		### Standard replacement
-		return True
-
-	### Remove trailing "."
-	m = re.search(r'^(.*)\.$', t_album)
-	if m and f_album == m.group(1):
-		### Standard replacement
+	if std_repl('AL', f_album, t_album):
 		return True
 
 	### Check, whether there is a substitution available
