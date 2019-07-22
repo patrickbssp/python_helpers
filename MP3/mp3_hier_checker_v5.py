@@ -101,20 +101,20 @@ tag_mapping = {
 
 substitutions = {
 	'artist' : {
+		### List combinations of artist names here, to be substituted in matching checks.
+		###   key:   Simplified artist name (as used in folder names)
+		###   value: Full artist names (as used in ID3 tags)
+		### This helps to white-list artists which have non-representable characters and/or long names
+		### not suitable for the filesystems.
+		### Example:    "Bahntier"	: ":Bahntier//",
+
 		"à;Grumh"							: "à;Grumh...",
 		"A7IE"								: ":A7IE:",
 		"Ascetic"							: "Ascetic:",
 		"Bahntier"							: ":Bahntier//",
-		"Boyd Rice & FriendsNON"			: "Boyd Rice & Friends/NON",
 		"Ditto - Destroyer"					: "Ditto ≠ Destroyer",
 		"Fïx8-Sëd8"							: "Fïx8:Sëd8",
-		"Hell Sector"						: "Hell:Sector",
-		"Herbst9-Z'Ev"  					: "Herbst9/Z'Ev",
 		"Howden & Wakeford"         		: "Howden/Wakeford",
-		"I-Scintilla"						: "I:Scintilla",
-		"Land-Fire"							: "Land:Fire",
-		"Mind-State"						: "Mind:State",
-		"P1-E"								: "P1/E",
 		"ProTech"							: "Pro>Tech",
 		"Re-Legion"							: "Re:/Legion",
 		"Re-Work"							: "Re/Work",
@@ -127,34 +127,29 @@ substitutions = {
 		"Test Dept. - Brith Gof"			: "Test Dept. / Brith Gof",
 	},
 	'album' : {
+
+		### List combinations of album names here, to be substituted in matching checks.
+		### Rules and rationale are the same as for artists.
+		### Example:    "Terminator 2 - Judgment Day - O.S.T" : "Terminator 2: Judgment Day - Original Motion Picture Soundtrack",
+
 		"Terminator 2 - Judgment Day - O.S.T" : "Terminator 2: Judgment Day - Original Motion Picture Soundtrack",
-		"Abattoir Blues - The Lyre Of Orpheus (CD1 - Abattoir Blues)"	: "Abattoir Blues / The Lyre Of Orpheus (CD1: Abattoir Blues)",
-		"Abattoir Blues - The Lyre Of Orpheus (CD2 - The Lyre Of Orpheus)": "Abattoir Blues / The Lyre Of Orpheus (CD2: The Lyre Of Orpheus)",
 		"Acoustic - La Ferrière-Harang - Bérigny, Normandie, France, 2011-2013"	: "Acoustic - La Ferrière-Harang/Bérigny, Normandie, France, 2011-2013",
-		"A Guide To The Legendary Pink Dots - Vol. 1"	: "A Guide To The Legendary Pink Dots - Vol. 1 The Best Ballads",
-		"An Entire Wardrobe Of Doubt And Uncertainty (CD1 - Album)"			: "An Entire Wardrobe Of Doubt And Uncertainty (CD1: Album)",
-		"An Entire Wardrobe Of Doubt And Uncertainty (CD2 - Commentary)"	: "An Entire Wardrobe Of Doubt And Uncertainty (CD2: Patented Deadfly Ensemble Double Album Commentary)",
-		"Aus Der Welt (The Collective Works 2000 - 2003)"	: "Aus Der Welt / Seduction Of Madness / Death, Dumb And Blind (The Collective Works 2000 - 2003)",
-		"Bellum, Sacrum Bellum"	: "Bellum, Sacrum Bellum!?",
-		"Bergwerk 2010 - DJ Francois Vs. Kartagon - The Remix Collection"	: "Bergwerk 2010 - DJ Francois Vs Kartagon - The Remix Collection",
-		"Best Of Wagner - Walkürenritt - Ride Of The Valkyries"	: "Best Of Wagner - Walkürenritt/Ride Of The Valkyries",
-		"Between The Eyes Vol. #1" : "Between The Eyes Vol. #1 (Singles/Rare B-Sides 1996-2000)",
-		"Between The Eyes Vol. #2" : "Between The Eyes Vol. #2 (1994)",
-		"Between The Eyes Vol. #3" : "Between The Eyes Vol. #3 (1994-1995)",
-		"Between The Eyes Vol. #4" : "Between The Eyes Vol. #4 (1994-1995)",
-		"Blade Runner Trilogy (CD2) - BR Prev. Unrel. & Bonus Material"		: "Blade Runner Trilogy (CD2) - Blade Runner Previously Unreleased & Bonus Material",
-		"Blinded By The Light - The Very Best Of"	: "Blinded By The Light - The Very Best Of Manfred Mann's Earth Band",
-		"Campo Di Marte (CD2 - Bonus CD)"			: "Campo Di Marte (CD2: Bonus CD With Rare And Live Tracks)",
-		"Celebrant 2004-05 - Der Mittelalterliche Klangkörper Zum WGT"	: "Celebrant 2004/05 - Der Mittelalterliche Klangkörper Zum Wave-Gotik-Treffen",
-		"Chakra Red!"	: "¡Chakra : Red!",
-		"Children Of The Corn (PE)"	: "Children Of The Corn (Premiere Edition)",
+		"A Guide To The Legendary Pink Dots - Vol. 1"								: "A Guide To The Legendary Pink Dots - Vol. 1 The Best Ballads",
+		"An Entire Wardrobe Of Doubt And Uncertainty (CD1 - Album)"					: "An Entire Wardrobe Of Doubt And Uncertainty (CD1: Album)",
+		"An Entire Wardrobe Of Doubt And Uncertainty (CD2 - Commentary)"			: "An Entire Wardrobe Of Doubt And Uncertainty (CD2: Patented Deadfly Ensemble Double Album Commentary)",
+		"Aus Der Welt (The Collective Works 2000 - 2003)"							: "Aus Der Welt / Seduction Of Madness / Death, Dumb And Blind (The Collective Works 2000 - 2003)",
+		"Bellum, Sacrum Bellum"														: "Bellum, Sacrum Bellum!?",
+		"Blade Runner Trilogy (CD2) - BR Prev. Unrel. & Bonus Material"				: "Blade Runner Trilogy (CD2) - Blade Runner Previously Unreleased & Bonus Material",
+		"Blinded By The Light - The Very Best Of"									: "Blinded By The Light - The Very Best Of Manfred Mann's Earth Band",
+		"Campo Di Marte (CD2 - Bonus CD)"											: "Campo Di Marte (CD2: Bonus CD With Rare And Live Tracks)",
+		"Celebrant 2004-05 - Der Mittelalterliche Klangkörper Zum WGT"				: "Celebrant 2004/05 - Der Mittelalterliche Klangkörper Zum Wave-Gotik-Treffen",
 		"Cold Hands Seduction Vol. 36 (2004-04) (CD2)"	: "Cold Hands Seduction Vol. 36 (2004-04) (CD2) (Mittelaltermusik-Special Vol. II)", 
 		"Cold Hands Seduction Vol. 46 (2005-03) (CD2)"	: "Cold Hands Seduction Vol. 46 (2005-03) (CD2) (Mittelalter-Special Vol. 3)",
 		"Cold Hands Seduction Vol. 31 (2003-10) - CD1"	: "Cold Hands Seduction Vol. 31-1",
 		"Cold Hands Seduction Vol. 31 (2003-10) - CD2"	: "Cold Hands Seduction Vol. 31-2",
-		"Conan The Barbarian - Original Soundtrack (Re-Release)" : "Conan The Barbarian - Original Motion Picture Soundtrack (Re-Release)",
-		"Construct Destruct"	: "Construct >< Destruct",
-		"Crocodile Dundee - Original Motion Picture Score"	: "\"Crocodile\" Dundee - Original Motion Picture Score",
+		"Conan The Barbarian - Original Soundtrack (Re-Release)"					: "Conan The Barbarian - Original Motion Picture Soundtrack (Re-Release)",
+		"Construct Destruct"														: "Construct >< Destruct",
+		"Crocodile Dundee - Original Motion Picture Score"							: "\"Crocodile\" Dundee - Original Motion Picture Score",
 		"Der Ring Des Nibelungen (Excerpts)"	:" Der Ring Des Nibelungen (Excerpts/Extraits/Auszüge, Deborah Polaski, Chicago Symphony Orchestra, Daniel Barenboim)",
 		"Der Komplette Schwarze Schmetterling Zyklus (I Bis V) (CD01)" : "Der Komplette Schwarze Schmetterling Zyklus (I Bis V) (CD01: Hast Du Mich Vermisst? (Der Schwarze Schmetterling I))",
 		"Der Komplette Schwarze Schmetterling Zyklus (I Bis V) (CD02)" : "Der Komplette Schwarze Schmetterling Zyklus (I Bis V) (CD02: :Duett (Der Schwarze Schmetterling II))",
@@ -182,13 +177,10 @@ substitutions = {
 		"Die Singles 1993-2010 (CD08) - Nur Tote Frauen Sind Schön" : "Die Singles 1993-2010 (CD08): Nur Tote Frauen Sind Schön",
 		"Die Singles 1993-2010 (CD09) - Horizonterweiterungen"		: "Die Singles 1993-2010 (CD09): Horizonterweiterungen",
 		"Die Singles 1993-2010 (CD10) - Ich Bin Aus Plastik"		: "Die Singles 1993-2010 (CD10): Ich Bin Aus Plastik",
-		"Edgar Allen Poe - Visionen (CD1)"							: "Edgar Allen Poe - Visionen (CD1: Words)",
-		"Edgar Allen Poe - Visionen (CD2)"							: "Edgar Allen Poe - Visionen (CD2: Music)",
 		"Es reiten die Toten so schnell"	: "Es reiten die Toten so schnell (Or: The Vampyre Sucking At His Own Vein)",
 		"Escape From New York - O.S.T" : "Escape From New York - Original Motion Picture Soundtrack",
 		"Everything You Knew Was Wrong... (CD1 - Velvet Illusions)"	: "Everything You Knew Was Wrong... (CD1: Velvet Illusions)",
 		"Everything You Knew Was Wrong... (CD2 - Velvet Suggestions)"	: "Everything You Knew Was Wrong... (CD2: Velvet Suggestions)",
-		"Fremd (CD2)"                           : "Fremd (CD2: Bonus-CD)",
 		"From The Flame Into The Fire (Deluxe Edition) (CD1)" : "From The Flame Into The Fire (Deluxe Edition) (CD1: From The Flame Into The Fire)",
 		"From The Flame Into The Fire (Deluxe Edition) (CD2)" : "From The Flame Into The Fire (Deluxe Edition) (CD2: From The Rain Into The Flood)",
 		"German Mystic Sound Sampler Vol. II"		: "German Mystic Sound Sampler II",
@@ -202,16 +194,12 @@ substitutions = {
 		"Have You Seen This Ghost (PE)"					: "Have You Seen This Ghost? (Premiere Edition)",
 		"Highlander II - The Quickening - O.S.T"	: "Highlander II - The Quickening - Music From And Inspired By The Film",
 		"Ich Töte Mich Jedesmal Aufs Neue"	: "Ich Töte Mich Jedesmal Aufs Neue, Doch Ich Bin Unsterblich, Und Ich Erstehe Wieder Auf ... - In Einer Vision Des Untergangs",
-		"If I Die, I Die"	: "...If I Die, I Die",
 		"In Case You Didn't Feel Like Showing Up (Original Album Series)"	: "In Case You Didn't Feel Like Showing Up (Live) (Original Album Series)",
 		"In Flimmernder Nacht"          : "In Flimmernder Nacht ...",
-		"John Barleycorn Reborn - Rebirth (CD1)"	: "John Barleycorn Reborn : Rebirth (CD1)",
-		"John Barleycorn Reborn - Rebirth (CD2)"	: "John Barleycorn Reborn : Rebirth (CD2)",
 		"Join The Dots - B-Sides & Rarities (CD1)"	: "Join The Dots - B-Sides & Rarities (CD1: 1978>1987)",
 		"Join The Dots - B-Sides & Rarities (CD2)"	: "Join The Dots - B-Sides & Rarities (CD2: 1987>1992)",
 		"Join The Dots - B-Sides & Rarities (CD3)"	: "Join The Dots - B-Sides & Rarities (CD3: 1992>1996)",
 		"Join The Dots - B-Sides & Rarities (CD4)"	: "Join The Dots - B-Sides & Rarities (CD4: 1996>2001)",
-		"Künstler zum 14. Wave-Gotik-Treffen"		: "Künstler zum 14. WGT",
 		"La Chambre D'Echo"							: "La Chambre D'Echo - Where The Dead Birds Sing",
 		"Laugh - I Nearly Bought One!"				: "Laugh? I Nearly Bought One!",
 		"Left Of The Dial (CD1)"		: "Left Of The Dial - Dispatches From The '80s Underground (CD1)",
@@ -223,41 +211,32 @@ substitutions = {
 		"Like A Corpse Standing In Desperation (CD2)"	: "Like A Corpse Standing In Desperation (CD2) - Voyager - The Jugglers Of Jusa", 
 		"Like A Corpse Standing In Desperation (CD3)"	: "Like A Corpse Standing In Desperation (CD3) - Flowers In Formaldehyde",
 		"Love Poems For Dying Children... Act III"		: "Love Poems For Dying Children... Act III: Winter And The Broken Angel",
-		"Madrigali (CD2 - Bonus CD)"					: "Madrigali (CD2: Bonus CD With Live And Unreleased Tracks)",
 		"Meeresrauschen Mit Möwen- Und Vogelgezwitscher" : "Meeresrauschen Mit Möwen- Und Vogelgezwitscher Und Delphin- Und Walgesängen",
 		"Mellon Collie And The Infinite Sadness (CD1)"	: "Mellon Collie And The Infinite Sadness - Dawn To Dusk",
 		"Mellon Collie And The Infinite Sadness (CD2)"	: "Mellon Collie And The Infinite Sadness - Twilight To Starlight",
 		"Music From Twin Peaks - Fire Walk With Me"		: "Music From The Motion Picture Soundtrack Twin Peaks - Fire Walk With Me",
 		"Musica Reservata (CD2 - Bonus CD)"				: "Musica Reservata (CD2: Bonus CD With Rare, Live And Unreleased Tracks)",
-		"Myth I - A Last Dance For The Things We Love"	: "Myth I: A Last Dance For The Things We Love",
 		"Nightglory (Deluxe Edition) (CD1)" 			: "Nightglory (Deluxe Edition) (CD1: Nightglory)",
 		"Nightglory (Deluxe Edition) (CD2)" 			: "Nightglory (Deluxe Edition) (CD2: Whispered Triumph Of Death (Nightglory Spin-Off))",
 		"Odyssey Europa (Limited Edition) (CD1)"	: "Odyssey Europa (4 CD Special Limited Edition) (CD1)",
 		"Odyssey Europa (Limited Edition) (CD2)"	: "Odyssey Europa (4 CD Special Limited Edition) (CD2)",
 		"Odyssey Europa (Limited Edition) (CD3)"	: "Odyssey Europa (4 CD Special Limited Edition) (CD3)",
 		"Odyssey Europa (Limited Edition) (CD4)"	: "Odyssey Europa (4 CD Special Limited Edition) (CD4)",
-		"Once Upon A Time - The Singles"				: "Once Upon A Time/The Singles",
 		"Paradise"											: "Paradise... ?",
 		"Pictures From Eternity (Twilight Records)" : "Pictures From Eternity - Bilder Aus Der Ewigkeit (Twilight Records)",
 		"Playlist - The Very Best Of Survivor"			: "Playlist: The Very Best Of Survivor",
 		"Prince Of Darkness - O.S.T. (CD1)" : "Prince Of Darkness - Complete Original Motion Picture Soundtrack (Limited Edition) (CD1)",
 		"Prince Of Darkness - O.S.T. (CD2)" : "Prince Of Darkness - Complete Original Motion Picture Soundtrack (Limited Edition) (CD2)",
-		"Prophetia (Remastered, Limited Edition) (CD1 - Album)" : "Prophetia (Remastered, Limited Edition) (CD1: Album)",
-		"Prophetia (Remastered, Limited Edition) (CD2 - Bootleg)" : "Prophetia (Remastered, Limited Edition) (CD2: Bootleg - Live 1989)",
 		"Riding The Crest Of The Frozen Wave"	: "Riding The Crest Of The Frozen Wave - A Tribute To The Frozen Autumn",
 		"Robin Hood - Prince Of Thieves - O.S.T" : "Robin Hood - Prince Of Thieves - Original Motion Picture Soundtrack",
 		"Scatology (Remastered)"        : "Stevø, Pay Us What You Owe Us! Volume One - Scatology - Remastered", 
 		"Sin Pecado (Original Album Collection)"	: "Sin / Pecado (Original Album Collection)",
 		"That First Season (Winter-Light) (CD1 - Heavy Snow)"	: "...That First Season (Winter-Light) (CD1: Heavy Snow)",
 		"That First Season (Winter-Light) (CD2 - Long Shadows)" : "...That First Season (Winter-Light) (CD2: Long Shadows)",
-		"The Art Of Killing Silence (CD1 - Métodos Del Caos)"	: "The Art Of Killing Silence (CD1: Métodos Del Caos)",
-		"The Art Of Killing Silence (CD2 - Noise Diary Plus Bonus)"	: "The Art Of Killing Silence (CD2: Noise Diary Plus Bonus)",
 		"The Dark Box (CD1)"	: "The Dark Box - The Ultimate Goth, Wave & Industrial Collection 1980-2011 (CD1)",
 		"The Dark Box (CD2)"	: "The Dark Box - The Ultimate Goth, Wave & Industrial Collection 1980-2011 (CD2)",
 		"The Dark Box (CD3)"	: "The Dark Box - The Ultimate Goth, Wave & Industrial Collection 1980-2011 (CD3)",
 		"The Dark Box (CD4)"	: "The Dark Box - The Ultimate Goth, Wave & Industrial Collection 1980-2011 (CD4)",
-		"The Eye Of Time (CD2 - Jail - Lily On The Valley)" : "The Eye Of Time (CD2: Jail / Lily On The Valley)",
-		"The Future Starts Here - The Essential Doors Hits"	: "The Future Starts Here: The Essential Doors Hits",
 		"The Gothic Grotesque & Elektro Bizarre (Promo Edition)"	: "The Gothic Grotesque & Elektro Bizarre - Trisol Compilation 1 (Promo Edition)",
 		"The Hobbit - The Battle Of The Five Armies - OST (Special Edition) (CD1)"	: "The Hobbit - The Battle Of The Five Armies - Original Motion Picture Soundtrack (Special Edition) (CD1)",
 		"The Hobbit - The Battle Of The Five Armies - OST (Special Edition) (CD2)"	: "The Hobbit - The Battle Of The Five Armies - Original Motion Picture Soundtrack (Special Edition) (CD2)",
@@ -284,48 +263,6 @@ substitutions = {
 		"Works & Passion 1955 - 2000 (CD4)"		: "Works & Passion 1955 - 2000 (CD4: Passport 1980 - 2000)",
 		"Wrack And Ruin (Limited Edition) (CD1)"	: "Wrack And Ruin (Limited Edition) (CD1: Wrack And Ruin)",
 		"Wrack And Ruin (Limited Edition) (CD2)"	: "Wrack And Ruin (Limited Edition) (CD2: Maldiciones Para Un Mundo En Decadencia)",
-		"Zillo CD 12-05-01-06"	: "Zillo CD 12/05-01/06 (Spoken Word - Dunkle Lesungen)",
-		"ZilloScope New Signs & Sounds 03-04"				: "ZilloScope 03/04",
-		"ZilloScope New Signs & Sounds 8_9-02"	: "ZilloScope 8-9/02",
-		"ZilloScope New Signs & Sounds 7-03"	: "ZilloScope 7/03",
-		"Zillo Scope 7_8-98"	: "Zillo Scope 7/8-98",
-		"ZilloScope New Signs & Sounds 12_03-01_04"		: "ZilloScope 12/03 1/04",
-		"ZilloScope New Signs & Sounds 11-03"	: "ZilloScope 11/03",
-		"ZilloScope New Signs & Sounds 8_9-03"	: "ZilloScope 8-9/03",
-		"ZilloScope New Signs & Sounds 07-04"	: "ZilloScope 7/04",
-		"Zillo CD 02-05"	: "Zillo CD 02/05",
-		"Zillo CD 02-06"	: "Zillo CD 02/06",
-		"Zillo CD 05-06"	: "Zillo CD 05/06",
-		"Zillo CD 03-05"	: "Zillo CD 03/05",
-		"Zillo CD 06-05"	: "Zillo CD 06/05",
-		"Zillo CD 03-06"	: "Zillo CD 03/06",
-		"Zillo CD 11-06"	: "Zillo CD 11/06",
-		"Zillo CD 03-07"	: "Zillo CD 03/07",
-		"Zillo CD 09-07"	: "Zillo CD 09/07",
-		"Zillo CD 11-07"	: "Zillo CD 11/07",
-		"Zillo CD 03-08"	: "Zillo CD 03/08",
-		"Zillo CD 04-08"	: "Zillo CD 04/08",
-		"Zillo CD 05-08"	: "Zillo CD 05/08",
-		"Zillo CD 06-08"	: "Zillo CD 06/08",
-		"Zillo CD 04-05"	: "Zillo CD 04/05",
-		"Zillo CD 09-04"	: "Zillo CD 09/04",
-		"Zillo CD 10-04"	: "Zillo CD 10/04",
-		"Zillo CD 11-04"	: "Zillo CD 11/04",
-		"Zillo CD 07-08-05"	: "Zillo CD 07-08/05",
-		"Zillo CD 07-08-06"	: "Zillo CD 07-08/06",
-		"Zillo CD 11-05"	: "Zillo CD 11/05",
-		"Zillo CD 12-04-01-05"	: "Zillo CD 12/04-01/05",
-		"Zillo CD 12-05-01-06"	: "Zillo CD 12/05-01/06",
-#		"Zillo CD 12-05-01-06"	: "Zillo CD 12/05-01/06 (Spoken Word - Dunkle Lesungen)",
-		"ZilloScope 11-98"	: "ZilloScope 11/98",
-		"ZilloScope 2-04"	: "ZilloScope 2/04",
-		"ZilloScope 3-00"	: "ZilloScope 3/00",
-		"ZilloScope 4-04"	: "ZilloScope 4/04",
-		"ZilloScope 5-04"	: "ZilloScope 5/04",
-		"ZilloScope 6-04"	: "ZilloScope 6/04",
-		"ZilloScope 4-99"	: "ZilloScope 4/99",
-		"ZilloScope 7-8-99"	: "ZilloScope 7-8/99",
-		"ZilloScope New Signs & Sounds 10-03"	: "ZilloScope 10/03",
 		"Zwischenfall - From The 80's To The 90's Vol. 2 (CD1)"	: "Zwischenfall Vol. 2 (CD1)",
 		"Zwischenfall - From The 80's To The 90's Vol. 2 (CD2)"	: "Zwischenfall Vol. 2 (CD2)",
 	},
@@ -365,6 +302,7 @@ substitutions = {
 ### files
 unique_artists_file = "unique_artists.txt"
 unique_albums_file = "unique_albums.txt"
+substitutions_file = "substitutions.txt"
 
 ### strip trailing newline and convert to UTF-8
 def strip_shell(txt):
@@ -538,12 +476,24 @@ def std_repl(cat, f_item, t_item):
 		### Perfect match
 		return True
 
+	### Single substitution
 	if cat in substitutions:
 		subs = substitutions[cat]
 		for i,v in enumerate(subs):
 			for sub in subs[v]:
 				if f_item == t_item.replace(v, sub):
 					report_substitution('{}{}'.format(cat, i), t_item, f_item)
+					return True
+
+	### Multiple substitutions
+	t_item_mod = t_item
+	if cat in substitutions:
+		subs = substitutions[cat]
+		for i,v in enumerate(subs):
+			for sub in subs[v]:
+				t_item_mod = t_item_mod.replace(v, sub)
+				if f_item == t_item_mod:
+					report_substitution('{}{}'.format(cat, i+10), t_item_mod, f_item)
 					return True
 
 	if cat in ['AL', 'AR']:
@@ -783,8 +733,9 @@ def analyse_csv(csv_file):
 			f.write('{}\n'.format(album))
 
 	if enable_report_substitutions:
-		for line in substitutions_done:
-			my_print(line)
+		with open(substitutions_file, "w", encoding='utf8') as f:
+			for line in sorted(substitutions_done):
+				f.write('{}\n'.format(line))
 
 	my_print('----------------------------------------------------')
 	my_print('Path (max): {} {}'.format(len(file_longest), file_longest))
