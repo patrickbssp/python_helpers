@@ -109,11 +109,8 @@ substitutions = {
 		### Example:    "Bahntier"	: ":Bahntier//",
 
 		"à;Grumh"							: "à;Grumh...",
-		"A7IE"								: ":A7IE:",
-		"Ascetic"							: "Ascetic:",
 		"Bahntier"							: ":Bahntier//",
 		"Ditto - Destroyer"					: "Ditto ≠ Destroyer",
-		"Fïx8-Sëd8"							: "Fïx8:Sëd8",
 		"Howden & Wakeford"         		: "Howden/Wakeford",
 		"ProTech"							: "Pro>Tech",
 		"Sixth Comm - Mother Destruction"	: "Sixth Comm / Mother Destruction",
