@@ -132,12 +132,9 @@ substitutions = {
 		"Bellum, Sacrum Bellum"														: "Bellum, Sacrum Bellum!?",
 		"Blade Runner Trilogy (CD2) - BR Prev. Unrel. & Bonus Material"				: "Blade Runner Trilogy (CD2) - Blade Runner Previously Unreleased & Bonus Material",
 		"Blinded By The Light - The Very Best Of"									: "Blinded By The Light - The Very Best Of Manfred Mann's Earth Band",
-		"Campo Di Marte (CD2 - Bonus CD)"											: "Campo Di Marte (CD2: Bonus CD With Rare And Live Tracks)",
 		"Celebrant 2004-05 - Der Mittelalterliche Klangkörper Zum WGT"				: "Celebrant 2004/05 - Der Mittelalterliche Klangkörper Zum Wave-Gotik-Treffen",
 		"Cold Hands Seduction Vol. 36 (2004-04) (CD2)"								: "Cold Hands Seduction Vol. 36 (2004-04) (CD2) (Mittelaltermusik-Special Vol. II)", 
 		"Cold Hands Seduction Vol. 46 (2005-03) (CD2)"								: "Cold Hands Seduction Vol. 46 (2005-03) (CD2) (Mittelalter-Special Vol. 3)",
-		"Cold Hands Seduction Vol. 31 (2003-10) - CD1"								: "Cold Hands Seduction Vol. 31-1",
-		"Cold Hands Seduction Vol. 31 (2003-10) - CD2"								: "Cold Hands Seduction Vol. 31-2",
 		"Conan The Barbarian - Original Soundtrack (Re-Release)"					: "Conan The Barbarian - Original Motion Picture Soundtrack (Re-Release)",
 		"Construct Destruct"														: "Construct >< Destruct",
 		"Crocodile Dundee - Original Motion Picture Score"							: "\"Crocodile\" Dundee - Original Motion Picture Score",
@@ -168,7 +165,6 @@ substitutions = {
 		"Götterdämmerung (Pierre Boulez) (CD3)"					: "Götterdämmerung (Bayreuther Festspiele, Pierre Boulez) (CD3)",
 		"Götterdämmerung (Pierre Boulez) (CD4)"					: "Götterdämmerung (Bayreuther Festspiele, Pierre Boulez) (CD4)",
 		"Gymnastic Label Compilation 1991-1995"					: "Gymnastic Label Compilation",
-		"Have You Seen This Ghost (PE)"							: "Have You Seen This Ghost? (Premiere Edition)",
 		"Highlander II - The Quickening - O.S.T"				: "Highlander II - The Quickening - Music From And Inspired By The Film",
 		"Ich Töte Mich Jedesmal Aufs Neue"						: "Ich Töte Mich Jedesmal Aufs Neue, Doch Ich Bin Unsterblich, Und Ich Erstehe Wieder Auf ... - In Einer Vision Des Untergangs",
 		"In Case You Didn't Feel Like Showing Up (Original Album Series)"	: "In Case You Didn't Feel Like Showing Up (Live) (Original Album Series)",
@@ -218,7 +214,6 @@ substitutions = {
 		"The Hunt For Red October - Original Soundtrack" 	: "The Hunt For Red October - Music From The Original Motion Picture Soundtrack",
 		"The Infinite (Promo)"								: "... The Infinite (Promo)",
 		"The Last Embrace" 									: "... The Last Embrace",
-		"The Last Embrace (The First Era 1996-2002)" 		: "...The Last Embrace (The First Era 1996-2002)",
 		"The Most Spectacular Synthesizer Hits" 			: "The Most Spectacular Synthesizer Hits Of Vangelis, Jean-Michel Jarre & Jan Hammer Played By Star Inc.",
 		"The Naked Gun 21-2 - The Smell Of Fear - O.S.T"	: "The Naked Gun 21/2: The Smell Of Fear - Music From The Motion Picture",
 		"The Triumph Of Light"								: "The Triumph Of Light... And Thy Thirteen Shadows Of Love",
@@ -474,17 +469,17 @@ def std_repl(cat, f_item, t_item):
 	if cat in ['AL', 'AR']:
 
 		### Remove trailing "..."
-		m = re.search(r'^(.*)\.\.\.$', t_item)
+		m = re.search(r'^(.*)\.\.\.$', t_item_mod)
 		if m and f_item == m.group(1):
 			return True
 
 		### Remove leading "..." or "... "
-		m = re.search(r'^\.\.\.\s{0,1}(.*)$', t_item)
+		m = re.search(r'^\.\.\.\s{0,1}(.*)$', t_item_mod)
 		if m and f_item == m.group(1):
 			return True
 
 		### Remove trailing "."
-		m = re.search(r'^(.*)\.$', t_item)
+		m = re.search(r'^(.*)\.$', t_item_mod)
 		if m and f_item == m.group(1):
 			return True
 
