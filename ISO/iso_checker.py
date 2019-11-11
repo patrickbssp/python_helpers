@@ -128,7 +128,11 @@ if __name__ == '__main__':
 			scan_iso_content = True
 		if arg == '-m':
 			create_checksums = True
-		
+	
+	if not os.path.exists(mount_point):
+		print("Mount point {} does not exist".format(mount_point))
+		sys.exit(0)
+
 	### last arg is supposed to be the start folder
 	start_dir = sys.argv[-1]
 	if not os.path.isdir(start_dir):
