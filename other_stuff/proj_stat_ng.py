@@ -6,24 +6,19 @@ from io import StringIO
 import re, os
 import pandas as pd
 
-header = ['Date', 'Employee_ID', 'Phase_ID', 'Project_ID', 'Note', 'Time']
+debug = False
+
+header = ['Date', 'Employee_ID', 'Phase_ID', 'Project_ID', 'Time']
+employee_header = ['Employee_ID', 'Username']
+project_header = ['Project_ID', 'Name', 'Description', 'Employee_ID']
+
 hours_per_day = 8.0
 
-example_time_table = """INSERT INTO `time` VALUES 
-(1,1,1,1,'2010-11-19',2,15,'Besprechung mit Patrick über Motorregler (Test), Pattern','2010-11-19 14:47:32','2010-12-06 13:52:57',1),
-(2,1,1,1,'2010-11-12',0,15,'Telefongespräch mit Herrn Knecht über chin. Zeichen.','2010-11-19 14:48:45','2010-12-06 13:52:32',1),
-(3,1,1,1,'2010-11-28',3,0,'bla','2010-11-19 14:54:38','2010-12-06 13:53:35',1),
-(4,1,1,2,'2010-12-06',1,30,'','2010-12-06 14:47:30','2010-12-06 13:47:30',0),
-(1776,731,'Vorbereitung, Durchführung, Nachlese','2020-12-01 09:59:25','2020-12-01 08:59:25',0),
-(1857,745,'TCA5 (Intel Atom) Rechner Inbetriebnahme','2021-02-08 13:12:07','2021-02-08 12:12:07',0);
-"""
-
-example_time_table2 = """INSERT INTO `time` VALUES (1,1,1,1,'2010-11-19',2,15,'Besprechung mit Patrick über Motorregler','2010-11-19 14:47:32','2010-12-06 13:52:57',1),(2,1,1,1,'2010-11-12',0,15,'Telefongespräch mit Herrn Knecht über chin. Zeichen.','2010-11-19 14:48:45','2010-12-06 13:52:32',1);"""
-
-
-example_time_table3 = """INSERT INTO `time` VALUES (AAA),(BBB),(CCC);"""
-
-example_time_table4 = """INSERT INTO `time` VALUES (1,1,1,1,'2010-11-19',2,15,'Besprechung mit Patrick über Motorregler','2010-11-19 14:47:32','2010-12-06 13:52:57',1);"""
+date_pattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}'
+datetime_pattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}'
+datetime_or_null_pattern = '\'[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}\'|NULL'
+string_pattern = '.*?'
+number_pattern = '[0-9]+'
 
 time_pattern = r'''
 (?P<t_id>{number}),
@@ -37,27 +32,81 @@ time_pattern = r'''
 '(?P<t_created>{datetime})',
 '(?P<t_modified>{datetime})',
 (?P<t_del>{number})'''.format(
-number = '[0-9]+',
-date = '[0-9]{4}-[0-9]{2}-[0-9]{2}',
-datetime = '[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}')
+number = number_pattern,
+date = date_pattern,
+datetime = datetime_pattern)
+
+employee_pattern = r'''
+(?P<t_id>{number}),
+'(?P<t_name>{string})',
+'(?P<t_surname>{string})',
+'(?P<t_login>{string})',
+'(?P<t_passwd>{string})',
+(?P<t_unknown>{number}),
+'(?P<t_created>{datetime})',
+'(?P<t_modified>{datetime})',
+(?P<t_del>{number})'''.format(
+number = number_pattern,
+string = string_pattern,
+date = date_pattern,
+datetime = datetime_pattern)
+
+project_pattern = r'''
+(?P<t_id>{number}),
+'(?P<t_name>{string})',
+(?P<t_customer>{number}),
+(?P<t_employee>{number}),
+'(?P<t_order>{string})',
+'(?P<t_description>{string})',
+(?P<t_start_date>{datetime_or_null}),
+(?P<t_end_date>{datetime_or_null}),
+(?P<t_hours>{number}),
+'(?P<t_status>{string})',
+'(?P<t_created>{datetime})',
+'(?P<t_modified>{datetime})',
+(?P<t_del>{number})'''.format(
+number = number_pattern,
+string = string_pattern,
+date = date_pattern,
+datetime = datetime_pattern,
+datetime_or_null = datetime_or_null_pattern)
+
 
 time_table = []
+employee_table = []
+
+def debug_print(str):
+	if debug:
+		print(str)
+
+def get_employee_short_by_id(id):
+	for i in employee_table:
+		if id == i[employee_header.index('Employee_ID')]:
+			return i[employee_header.index('Username')]
+
+def get_project_by_id(id):
+	for i in project_table:
+		if id == i[project_header.index('Project_ID')]:
+			return i[project_header.index('Name')]
+
 
 def dump_monthly_table(monthly_table, user_list, use_days = False):
 
 	time_scale = hours_per_day if use_days else 1.0
 
+	print(user_list)
+
 	# Determine field width based on longest user name, but maintain min. width
 	width = 8
 	for user in user_list:
-		if len(user) > width:
-			width = len(user)
+		user_str = get_employee_short_by_id(user)
+		width = max(len(user_str), width)
 
 	str = '_______'
 	totals_table = {}
 	for user in user_list:
 		totals_table[user] = 0.0
-		str += ' | {:{width}}'.format(user, width=width)
+		str += ' | {:{width}}'.format(get_employee_short_by_id(user), width=width)
 	str += ' | {:{width}}'.format('Total', width=width)
 	str += ' | {:{width}}'.format('Cumul.', width=width)
 	print(str)
@@ -102,19 +151,19 @@ def analyse_project(table, project_id):
 	monthly_table = {}
 	user_list = []
 
+	debug_print(table)
+
 	for i,item in enumerate(table):
 
-		print(item)
+		debug_print(item)
 		if item[header.index('Project_ID')] != project_id:
 			continue
 
-
 		# times from table are in format e.g. '7.00\xa0h'
-		time_str = item[header.index('Time')]
 		date_str = item[header.index('Date')]
+		time = item[header.index('Time')]
 
-		user_str = item[header.index('Employee')]
-		user = item['user']
+		user = item[header.index('Employee_ID')]
 		if user not in user_list:
 			user_list.append(user)
 
@@ -133,8 +182,6 @@ def analyse_project(table, project_id):
 			if date > end_date:
 				end_date = date
 
-		time = float(time_str.split('\xa0', 1)[0])
-
 		# use month as hash for
 		if not month in monthly_table:
 			monthly_table[month] = {user : time}
@@ -146,6 +193,8 @@ def analyse_project(table, project_id):
 
 		total_hours += time
 
+	print()
+	print('Report for #{} {}'.format(project_id, get_project_by_id(project_id)))
 	print('Total: {} h, {} d'.format(total_hours, total_hours / hours_per_day))
 	print('Start: {}'.format(start_date))
 	print('End:   {}'.format(end_date))
@@ -158,9 +207,6 @@ def analyse_project(table, project_id):
 	print('Overview (days)')
 	dump_monthly_table(monthly_table, user_list, True)
 
-
-
-
 def find_tables(dump_filename):
 	line_num = 0
 	tables = []
@@ -170,8 +216,6 @@ def find_tables(dump_filename):
 			line_num += 1
 			line = line.decode('latin-1')
 			line = line.strip()
-
-
 			m = re.match('INSERT INTO `(.*)` VALUES (.*)', line)
 			if m:
 				table_title = m.group(1)
@@ -179,50 +223,6 @@ def find_tables(dump_filename):
 				tables.append(table_title)
 
 	return tables
-
-
-# Generate a pattern to separate elements
-def generate_pattern(num_items):
-
-	p = "\("
-	for i in range(num_items):
-		p += ".*?"
-		if i < num_items-1:
-			p += ","
-	p += "\)"
-	return p
-
-def sql_table_to_list(vals, table_type, table):
-
-	num_items = 0
-
-	print('sql')
-#	m = re.findall("(\(.*?\))[,;]", vals)
-	pattern = None
-
-	if table_type == 'time':
-		pat = generate_pattern(11)
-		pattern = time_pattern5
-
-
-	else:
-		print('Unable to handle table {}'.format(table_type))
-		return 0
-
-	print('Search pattern: {}'.format(pat))
-
-	# Split table into elements
-	m = re.findall(pat, vals)
-	print('{} entries'.format(len(m)))
-	for e in m:
-		print(e)
-
-		# Split elements into values
-		if pattern:
-			m = re.findall(pattern, e, re.VERBOSE)
-			for v in m:
-				print(v)	
-				table.append(v)
 
 # Check whether string is an SQL table. If yes, return a tuple of table title and value string. Otherwise return none.
 def check_for_sql_table(str):
@@ -233,29 +233,11 @@ def check_for_sql_table(str):
 	else:
 		return None, None
 
-def get_entries(str, table_type):
-
-	table = []
-	str = str.replace('\n','')
-
-	m = re.match('INSERT INTO `(.*)` VALUES (.*);', str)
-	print("-----------------------X---------------------------")
-
-	if m and len(m.groups()) > 1:
-		print('found')
-		print('len: {}'.format(len(m.groups())))
-
-		table_title = m.group(1)
-		table_values = m.group(2)
-		print(table_values)
-		sql_table_to_list(table_values, table_type, table)
-
 # Search dump for target_table, note that target_table might be split into several pieces
-def read_dump(dump_filename, target_table):
+def read_dump(dump_filename, target_table, transformation_cb):
 	table = []
 	line_num = 0
 	fast_forward = True
-	print('reading dump')
 	with open(dump_filename, 'rb') as f:
 		for line in f:
 			line_num += 1
@@ -264,29 +246,81 @@ def read_dump(dump_filename, target_table):
 
 			t,v = check_for_sql_table(line)
 			if t and v:
-				print('found')
 				if t == target_table:
 					num = split_elements(v, table)
-#					num = sql_table_to_list(v, target_table, table)
 					print('Found table {} at line {} with {} items'.format(target_table, line_num, num))
-	return table
+	if transformation_cb:
+		return transformation_cb(table)
+	else:
+		return table
+
+def transform_project_table(table):
+	out_table = []
+	num_items = 0
+	pattern = project_pattern
+	for item in table:
+		print(item)
+		m = re.match(pattern, item, re.VERBOSE)
+		if m:
+			entry = []
+			num_items += 1
+
+			for h_item in project_header:
+				if h_item == 'Project_ID':
+					entry.append(int(m.group('t_id')))
+				elif h_item == 'Employee_ID':
+					entry.append(int(m.group('t_employee')))
+				elif h_item == 'Name':
+					entry.append(m.group('t_name'))
+		else:
+			print('Failed to match entry')
+			print('|{}|'.format(item))
+			print('Pattern:')
+			print(pattern)
+			sys.exit(0)
+		out_table.append(entry)
+	return out_table
+
+def transform_employee_table(table):
+	out_table = []
+	num_items = 0
+	for item in table:
+		m = re.match(employee_pattern, item, re.VERBOSE)
+		if m:
+			entry = []
+			num_items += 1
+
+			for h_item in employee_header:
+				if h_item == 'Employee_ID':
+					entry.append(int(m.group('t_id')))
+				elif h_item == 'Username':
+					entry.append(m.group('t_login'))
+		else:
+			print('Failed to match entry')
+			print('|{}|'.format(item))
+			print('Pattern:')
+			print(pattern)
+			sys.exit(0)
+		out_table.append(entry)
+	return out_table
 
 def transform_time_table(table):
 
 	out_table = []
 	num_del_items = 0
 	num_items = 0
-
-	pattern = time_pattern
+	max_id = 0
 
 	for item in table:
-		m = re.match(pattern, item, re.VERBOSE)
+		m = re.match(time_pattern, item, re.VERBOSE)
 		if m:
 			entry = []
 			num_items += 1
 
+			max_id = max(max_id, int(m.group('t_id')))
+
 			if m.group('t_del') == '1':
-				print('Found deleted entry')
+				# Found deleted entry
 				num_del_items += 1
 				continue
 
@@ -311,48 +345,15 @@ def transform_time_table(table):
 			print(pattern)
 			sys.exit(0)
 
-			print(entry)
-			out_table.append(entry)
+		debug_print(entry)
+		out_table.append(entry)
 
 	print('{}/{} deleted entries'.format(num_del_items, num_items))
+	if num_del_items + len(out_table) != max_id:
+		print('Warning: there might be items missing in the table')
 	return out_table
 
-
-
-
-
-def split_elements_old(str, table):
-
-	start_pos = 0
-	sep = ','
-	depth = 0
-	num_elems_found = 0
-	for i,v in enumerate(str):
-
-		if v == '(':
-			if depth == 0:
-				start_pos = i
-			depth += 1
-		elif v == ')':
-			depth -= 1
-			if depth == 0:
-				# Found end of element
-				s = str[start_pos+1:i]
-				table.append(s)
-				num_elems_found += 1
-		else:
-			if depth == 0:
-				# Outside of bracket, only separator is expected
-				if v != sep:
-	#				print('Warning: separator not found')
-					pass
-
-	return num_elems_found
-
 def split_elements(str, table):
-
-
-
 	start_pos = 0
 	sep = ','
 	num_elems_found = 0
@@ -361,6 +362,7 @@ def split_elements(str, table):
 
 		if v == '(':
 			if (i == 0) or (str[i-1] == sep):
+				# Found start of element
 				start_pos = i
 		elif v == ')':
 			if (i == len(str)-1) or (str[i+1] == sep):
@@ -369,24 +371,12 @@ def split_elements(str, table):
 					s = str[start_pos+1:i]
 					table.append(s)
 					num_elems_found += 1
-					print('end at {}'.format(i))
-					print('strlen: {}'.format(len(str)))
-
-					print(s)
-					m = re.match(time_pattern, s, re.VERBOSE)
-					if not m:
-						print('mismatch:')
-						print('is_comment: {}'.format(is_comment))
-						sys.exit(0)
-
 		elif v == "'":
 			if (i > 0) and (str[i-1] == '\\'):
 				if (i > 1) and (str[i-2] == '\\'):
-					print('found double backslash, i: {}, offset: {}, str: {}'.format(i, i-start_pos, str[start_pos:i+20]))
+					# Found double backslash (escaped backslash)
 					is_comment = not is_comment
-					pass # backslash escaped with another backslash
 				else:
-					print('found single tick, i: {}, offset: {}, str: {}'.format(i, i-start_pos, str[start_pos:i+20]))
 					# Skip ticks escaped with single backslash
 					pass
 			else:
@@ -394,62 +384,37 @@ def split_elements(str, table):
 
 	return num_elems_found
 
+def read_activity_table(infile):
+	table = read_dump(infile, "activity", None)
+	return table
 
-def extract_proj_table():
-#'''
-#	Extract project table from HTML file generated by Time. Make sure, that no filters are set.
-#	I.e. do not select any employees or phases and leave start/end date on defaults.
-#'''
-	print()
+def read_time_table(infile):
+	return read_dump(infile, "time", transform_time_table)
+
+def read_employee_table(infile):
+	return read_dump(infile, "employee", transform_employee_table)
+
+def read_project_table(infile):
+	return read_dump(infile, "project", transform_project_table)
 
 if __name__ == '__main__':
-	if len(sys.argv) != 2:
+	if len(sys.argv) != 4:
 		print('Error: Invalid number of arguments.')
+		print('Usage: {} <sql_file> -p <proj_id>'.format(sys.argv[0]))
 		sys.exit()
 
 	infile = sys.argv[1]
 
 	print('\n===========================================\n')
 
-#	get_entries(example_time_table2, 'time')
-
-	print('\n===========================================\n')
-
-
-
-	table = []
-	s = "(930,53,90,6,'2011-11-01',8,0,'Einarbeiten in Maschinencode - wieder einmal gar nicht so einfach wie gedacht...','2011-11-01 19:26:49','2011-11-01 18:26:49',0),(931,52,91,5,'2011-11-01',3,0,'Testaufbau (mit I-Base Simulator), HW-Testschuss Debugging','2011-11-02 12:08:33','2011-11-02 11:08:33',0)"
-	print(s)
-	split_elements(s, table)
-	print(table)
-
-	table = []
-	s = "(1232,54,118,5,'2011-11-21',4,0,'Aufwandschätzung Update auf V1.2','2011-12-21 17:37:25','2011-12-21 16:37:25',0),(1233,59,106,5,'2011-11-21',4,30,'Erstellen einer ersten Test Applikation auf dem Eval Board (STM3220G-EVAL), d. h. Makefile, Liker Script, BDI, ...','2011-12-21 17:41:33','2011-12-21 16:41:33',0),(1234,59,106,5,'2011-11-22',9,15,'dito','2011-12-21 17:42:02','2011-12-21 16:42:02',0),(1235,59,106,5,'2011-11-23',8,45,'Test USB Test Applikation (HID Device)','2011-12-21 17:42:54','2011-12-21 16:42:54',0)"
-
-	print(s)
-	split_elements(s, table)
-	for t in table:
-		print(t)
-		m = re.match(time_pattern, t, re.VERBOSE)
-		print(m)
-
-#	sys.exit(0)
-
-
 	tables = find_tables(infile)
-	print(tables)
 
-#	act_table = read_dump(infile, "activity")
-#	print(len(act_table))
-#	print(act_table)
+	act_table = read_activity_table(infile)
+	time_table = read_time_table(infile)
+	employee_table = read_employee_table(infile)
+	project_table = read_project_table(infile)
 
-	time_table_raw = read_dump(infile, "time")
-	print(len(time_table))
-
-	time_table = transform_time_table(time_table_raw)
-
-	print('\n--- XXX ----------------------------------------\n')
-
-
-	analyse_project(time_table, 722)
+	if sys.argv[2] == '-p' and len(sys.argv) > 2:
+		proj_id = int(sys.argv[3])
+		analyse_project(time_table, proj_id)
 
