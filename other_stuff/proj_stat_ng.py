@@ -8,10 +8,6 @@ import pandas as pd
 
 debug = False
 
-header = ['Date', 'Employee_ID', 'Phase_ID', 'Project_ID', 'Time']
-employee_header = ['Employee_ID', 'Username']
-project_header = ['Project_ID', 'Name', 'Description', 'Employee_ID']
-
 hours_per_day = 8.0
 
 date_pattern = '[0-9]{4}-[0-9]{2}-[0-9]{2}'
@@ -20,74 +16,81 @@ datetime_or_null_pattern = '\'[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9
 string_pattern = '.*?'
 number_pattern = '[0-9]+'
 
-time_pattern = r'''
-(?P<t_id>{number}),
-(?P<t_proj>{number}),
-(?P<t_phase>{number}),
-(?P<t_employee>{number}),
-'(?P<t_date>{date})',
-(?P<t_hours>{number}),
-(?P<t_mins>{number}),
-'(?P<t_note>.*?)',
-'(?P<t_created>{datetime})',
-'(?P<t_modified>{datetime})',
-(?P<t_del>{number})'''.format(
-number = number_pattern,
-date = date_pattern,
-datetime = datetime_pattern)
+time_db = {
+	'pattern' : r'''
+		(?P<t_id>{number}),
+		(?P<t_proj>{number}),
+		(?P<t_phase>{number}),
+		(?P<t_employee>{number}),
+		'(?P<t_date>{date})',
+		(?P<t_hours>{number}),
+		(?P<t_mins>{number}),
+		'(?P<t_note>.*?)',
+		'(?P<t_created>{datetime})',
+		'(?P<t_modified>{datetime})',
+		(?P<t_del>{number})'''.format(
+		number = number_pattern,
+		date = date_pattern,
+		datetime = datetime_pattern),
+	'header' : ['Date', 'Employee_ID', 'Phase_ID', 'Project_ID', 'Time']
+}
 
-employee_pattern = r'''
-(?P<t_id>{number}),
-'(?P<t_name>{string})',
-'(?P<t_surname>{string})',
-'(?P<t_login>{string})',
-'(?P<t_passwd>{string})',
-(?P<t_unknown>{number}),
-'(?P<t_created>{datetime})',
-'(?P<t_modified>{datetime})',
-(?P<t_del>{number})'''.format(
-number = number_pattern,
-string = string_pattern,
-date = date_pattern,
-datetime = datetime_pattern)
+employee_db = {
+	'pattern' : r'''
+		(?P<t_id>{number}),
+		'(?P<t_name>{string})',
+		'(?P<t_surname>{string})',
+		'(?P<t_login>{string})',
+		'(?P<t_passwd>{string})',
+		(?P<t_unknown>{number}),
+		'(?P<t_created>{datetime})',
+		'(?P<t_modified>{datetime})',
+		(?P<t_del>{number})'''.format(
+		number = number_pattern,
+		string = string_pattern,
+		date = date_pattern,
+		datetime = datetime_pattern),
+	'header' : ['Employee_ID', 'Username'],
+	'table' : []
+}
 
-project_pattern = r'''
-(?P<t_id>{number}),
-'(?P<t_name>{string})',
-(?P<t_customer>{number}),
-(?P<t_employee>{number}),
-'(?P<t_order>{string})',
-'(?P<t_description>{string})',
-(?P<t_start_date>{datetime_or_null}),
-(?P<t_end_date>{datetime_or_null}),
-(?P<t_hours>{number}),
-'(?P<t_status>{string})',
-'(?P<t_created>{datetime})',
-'(?P<t_modified>{datetime})',
-(?P<t_del>{number})'''.format(
-number = number_pattern,
-string = string_pattern,
-date = date_pattern,
-datetime = datetime_pattern,
-datetime_or_null = datetime_or_null_pattern)
-
-
-time_table = []
-employee_table = []
+project_db = {
+	'pattern' : r'''
+		(?P<t_id>{number}),
+		'(?P<t_name>{string})',
+		(?P<t_customer>{number}),
+		(?P<t_employee>{number}),
+		'(?P<t_order>{string})',
+		'(?P<t_description>{string})',
+		(?P<t_start_date>{datetime_or_null}),
+		(?P<t_end_date>{datetime_or_null}),
+		(?P<t_hours>{number}),
+		'(?P<t_status>{string})',
+		'(?P<t_created>{datetime})',
+		'(?P<t_modified>{datetime})',
+		(?P<t_del>{number})'''.format(
+		number = number_pattern,
+		string = string_pattern,
+		date = date_pattern,
+		datetime = datetime_pattern,
+		datetime_or_null = datetime_or_null_pattern),
+	'header' : ['Project_ID', 'Name', 'Description', 'Employee_ID'],
+	'table' : []
+}
 
 def debug_print(str):
 	if debug:
 		print(str)
 
 def get_employee_short_by_id(id):
-	for i in employee_table:
-		if id == i[employee_header.index('Employee_ID')]:
-			return i[employee_header.index('Username')]
+	for i in employee_db['table']:
+		if id == i[employee_db['header'].index('Employee_ID')]:
+			return i[employee_db['header'].index('Username')]
 
 def get_project_by_id(id):
-	for i in project_table:
-		if id == i[project_header.index('Project_ID')]:
-			return i[project_header.index('Name')]
+	for i in project_db['table']:
+		if id == i[project_db['header'].index('Project_ID')]:
+			return i[project_db['header'].index('Name')]
 
 
 def dump_monthly_table(monthly_table, user_list, use_days = False):
@@ -142,7 +145,7 @@ def dump_monthly_table(monthly_table, user_list, use_days = False):
 	str += ' | {:{width}.2f}'.format(cum_monthly_total / time_scale, width=width)
 	print(str)	
 
-def analyse_project(table, project_id):
+def analyse_project(project_id):
 
 	total_hours = 0.0
 	start_date = None
@@ -151,19 +154,17 @@ def analyse_project(table, project_id):
 	monthly_table = {}
 	user_list = []
 
-	debug_print(table)
-
-	for i,item in enumerate(table):
+	for i,item in enumerate(time_db['table']):
 
 		debug_print(item)
-		if item[header.index('Project_ID')] != project_id:
+		if item[time_db['header'].index('Project_ID')] != project_id:
 			continue
 
 		# times from table are in format e.g. '7.00\xa0h'
-		date_str = item[header.index('Date')]
-		time = item[header.index('Time')]
+		date_str = item[time_db['header'].index('Date')]
+		time = item[time_db['header'].index('Time')]
 
-		user = item[header.index('Employee_ID')]
+		user = item[time_db['header'].index('Employee_ID')]
 		if user not in user_list:
 			user_list.append(user)
 
@@ -257,7 +258,8 @@ def read_dump(dump_filename, target_table, transformation_cb):
 def transform_project_table(table):
 	out_table = []
 	num_items = 0
-	pattern = project_pattern
+	pattern = project_db['pattern']
+	header = project_db['header']
 	for item in table:
 		print(item)
 		m = re.match(pattern, item, re.VERBOSE)
@@ -265,7 +267,7 @@ def transform_project_table(table):
 			entry = []
 			num_items += 1
 
-			for h_item in project_header:
+			for h_item in header:
 				if h_item == 'Project_ID':
 					entry.append(int(m.group('t_id')))
 				elif h_item == 'Employee_ID':
@@ -284,13 +286,15 @@ def transform_project_table(table):
 def transform_employee_table(table):
 	out_table = []
 	num_items = 0
+	pattern = employee_db['pattern']
+	header = employee_db['header']
 	for item in table:
-		m = re.match(employee_pattern, item, re.VERBOSE)
+		m = re.match(pattern, item, re.VERBOSE)
 		if m:
 			entry = []
 			num_items += 1
 
-			for h_item in employee_header:
+			for h_item in header:
 				if h_item == 'Employee_ID':
 					entry.append(int(m.group('t_id')))
 				elif h_item == 'Username':
@@ -310,9 +314,11 @@ def transform_time_table(table):
 	num_del_items = 0
 	num_items = 0
 	max_id = 0
+	pattern = time_db['pattern']
+	header = time_db['header']
 
 	for item in table:
-		m = re.match(time_pattern, item, re.VERBOSE)
+		m = re.match(pattern, item, re.VERBOSE)
 		if m:
 			entry = []
 			num_items += 1
@@ -389,13 +395,13 @@ def read_activity_table(infile):
 	return table
 
 def read_time_table(infile):
-	return read_dump(infile, "time", transform_time_table)
+	time_db['table'] = read_dump(infile, "time", transform_time_table)
 
 def read_employee_table(infile):
-	return read_dump(infile, "employee", transform_employee_table)
+	employee_db['table'] = read_dump(infile, "employee", transform_employee_table)
 
 def read_project_table(infile):
-	return read_dump(infile, "project", transform_project_table)
+	project_db['table'] = read_dump(infile, "project", transform_project_table)
 
 if __name__ == '__main__':
 	if len(sys.argv) != 4:
@@ -409,12 +415,12 @@ if __name__ == '__main__':
 
 	tables = find_tables(infile)
 
-	act_table = read_activity_table(infile)
-	time_table = read_time_table(infile)
-	employee_table = read_employee_table(infile)
-	project_table = read_project_table(infile)
+	read_activity_table(infile)
+	read_time_table(infile)
+	read_employee_table(infile)
+	read_project_table(infile)
 
 	if sys.argv[2] == '-p' and len(sys.argv) > 2:
 		proj_id = int(sys.argv[3])
-		analyse_project(time_table, proj_id)
+		analyse_project(proj_id)
 
