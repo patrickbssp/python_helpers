@@ -6,7 +6,7 @@ from io import StringIO
 import re, os
 import pandas as pd
 
-debug = False
+debug = True
 
 hours_per_day = 8.0
 
@@ -50,7 +50,7 @@ db = {
 		string = string_pattern,
 		date = date_pattern,
 		datetime = datetime_pattern),
-	'header' : ['Employee_ID', 'Username'],
+	'header' : ['Employee_ID', 'Username', 'Fullname'],
 	'table' : []
 },
 'project' : {
@@ -86,17 +86,24 @@ def get_employee_short_by_id(id):
 		if id == i[db['employee']['header'].index('Employee_ID')]:
 			return i[db['employee']['header'].index('Username')]
 
+def get_employee_full_by_id(id):
+	for i in db['employee']['table']:
+		if id == i[db['employee']['header'].index('Employee_ID')]:
+			return i[db['employee']['header'].index('Fullname')]
+
+def get_user_id_by_employee_short(user_name):
+	for i in db['employee']['table']:
+		if user_name == i[db['employee']['header'].index('Username')]:
+			return i[db['employee']['header'].index('Employee_ID')]
+
 def get_project_by_id(id):
 	for i in db['project']['table']:
 		if id == i[db['project']['header'].index('Project_ID')]:
 			return i[db['project']['header'].index('Name')]
 
-
 def dump_monthly_table(monthly_table, user_list, use_days = False):
 
 	time_scale = hours_per_day if use_days else 1.0
-
-	print(user_list)
 
 	# Determine field width based on longest user name, but maintain min. width
 	width = 8
@@ -143,6 +150,53 @@ def dump_monthly_table(monthly_table, user_list, use_days = False):
 	str += ' | {:{width}.2f}'.format(total / time_scale, width=width)
 	str += ' | {:{width}.2f}'.format(cum_monthly_total / time_scale, width=width)
 	print(str)	
+
+def analyse_user(user_name, start_date_str="2000-01-01", end_date_str="2999-12-31"):
+
+	total_hours = 0.0
+	start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
+	end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+	proj_table = {}
+
+	# Get user_id for user_name
+	print(user_name)
+	user_id = get_user_id_by_employee_short(user_name)
+	print(user_id)
+
+	for i,item in enumerate(db['time']['table']):
+		# Filter unrelated users
+		if item[db['time']['header'].index('Employee_ID')] != user_id:
+			continue
+
+		# Filter dates before start date
+		date = datetime.datetime.strptime(item[db['time']['header'].index('Date')], '%Y-%m-%d').date()
+		if (date < start_date) or (date > end_date):
+			continue
+
+		proj = item[db['time']['header'].index('Project_ID')]
+		hours = item[db['time']['header'].index('Time')]
+		if not proj in proj_table:
+			proj_table[proj] = hours
+		else:
+			proj_table[proj] += hours
+
+		total_hours += hours
+
+	print()
+	print('Report for {} ({})'.format(get_employee_full_by_id(user_id), user_id))
+	print('From: {}'.format(start_date))
+	print('To:   {}'.format(end_date))
+	print()
+
+	desc_width = 50
+	print('{:5} | {:{desc_width}} | {:8} | {:8} '.format('ID', 'Description', 'Hours', 'Days', desc_width=desc_width))
+	for proj in sorted(proj_table):
+		desc = get_project_by_id(proj)[0:desc_width]
+		hours = proj_table[proj]
+		print('{:5} | {:{desc_width}} | {:8.2f} | {:8.2f} '.format(proj, desc, hours, hours / hours_per_day, desc_width=desc_width))
+	print()
+	print('{:5} | {:{desc_width}} | {:8.2f} | {:8.2f} '.format('Total', '', total_hours, total_hours / hours_per_day, desc_width=desc_width))
 
 def analyse_project(project_id):
 
@@ -222,7 +276,7 @@ def find_tables(dump_filename):
 
 # Check whether string is an SQL table. If yes, return a tuple of table title and value string. Otherwise return none.
 def check_for_sql_table(str):
-	str = str.decode('latin-1')
+	str = str.decode('utf-8')
 	str = str.strip()
 	m = re.match('INSERT INTO `(.*)` VALUES (.*);', str)
 	if m and len(m.groups()) == 2:
@@ -279,6 +333,9 @@ def transform_table(table, table_type):
 						entry.append(int(m.group('t_id')))
 					elif h_item == 'Username':
 						entry.append(m.group('t_login'))
+					elif h_item == 'Fullname':
+						fname = m.group('t_name') + ' ' + m.group('t_surname')
+						entry.append(fname)
 				elif table_type == 'time':
 					if h_item == 'Project_ID':
 						entry.append(int(m.group('t_proj')))
@@ -356,7 +413,11 @@ def read_sql_dump(infile):
 if __name__ == '__main__':
 	if len(sys.argv) != 4:
 		print('Error: Invalid number of arguments.')
-		print('Usage: {} <sql_file> -p <proj_id>'.format(sys.argv[0]))
+		print('Usage: {} <sql_file> -p <proj_id> | -u <username>'.format(sys.argv[0]))
+		print('Where:')
+		print('  <sql_file> Dump of mySQL database, typically named mysqldump_dsp_ssp.sql')
+		print('  -p <proj_id>  Show statistics for project <proj_id>')
+		print('  -u <user_name> Show statistics for user <user_name>')
 		sys.exit()
 
 	infile = sys.argv[1]
@@ -366,3 +427,6 @@ if __name__ == '__main__':
 	if sys.argv[2] == '-p' and len(sys.argv) > 2:
 		proj_id = int(sys.argv[3])
 		analyse_project(proj_id)
+	elif sys.argv[2] == '-u' and len(sys.argv) > 2:
+		user_name = sys.argv[3]
+		analyse_user(user_name, "2021-01-01", "2021-01-31")
