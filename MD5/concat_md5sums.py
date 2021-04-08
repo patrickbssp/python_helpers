@@ -23,10 +23,14 @@ no_files = 0;
 no_mp3 = 0;
 no_violations = 0;
 
+if len(sys.argv) != 2:
+	print('Argument missing')
+	sys.exit(1)
+
 with open('outfile.txt', 'w') as out_file:
-	for i in range(1,2):
+	for i in range(1,291):
 		gt = 'GT{:03}'.format(i)
-		filename = 'checksums/Checksums_CD_GT001-290/{}.md5'.format(gt)
+		filename = '{}/{}.md5'.format(sys.argv[1], gt)
 		print(filename)
 		with open(filename, 'r') as in_file:
 			for line in in_file:
