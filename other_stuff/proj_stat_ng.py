@@ -1,10 +1,10 @@
 #! /usr/bin/python3
 
 import sys, datetime
-from html_table_parser import HTMLTableParser
 from io import StringIO
 import re, os
 import pandas as pd
+import calendar
 
 debug = True
 
@@ -410,15 +410,18 @@ def read_sql_dump(infile):
 	print('  Employee: {}'.format(len(db['employee']['table'])))
 	print('  Time: {}'.format(len(db['time']['table'])))
 
+
+def print_usage_and_die():
+	print('Error: Invalid number of arguments.')
+	print('Usage: {} <sql_file> -p <proj_id> | -u <username> <month>'.format(sys.argv[0]))
+	print('Where:')
+	print('  <sql_file> Dump of mySQL database, typically named mysqldump_dsp_ssp.sql')
+	print('  -p <proj_id>  Show statistics for project <proj_id>')
+	print('  -u <user_name> Show statistics for user <user_name>')
+	print('  <month>		Month in format YYYY-MM, e.g. 2021-04 for April 2021')
+	sys.exit()
+
 if __name__ == '__main__':
-	if len(sys.argv) != 4:
-		print('Error: Invalid number of arguments.')
-		print('Usage: {} <sql_file> -p <proj_id> | -u <username>'.format(sys.argv[0]))
-		print('Where:')
-		print('  <sql_file> Dump of mySQL database, typically named mysqldump_dsp_ssp.sql')
-		print('  -p <proj_id>  Show statistics for project <proj_id>')
-		print('  -u <user_name> Show statistics for user <user_name>')
-		sys.exit()
 
 	infile = sys.argv[1]
 
@@ -429,4 +432,20 @@ if __name__ == '__main__':
 		analyse_project(proj_id)
 	elif sys.argv[2] == '-u' and len(sys.argv) > 2:
 		user_name = sys.argv[3]
-		analyse_user(user_name, "2021-01-01", "2021-01-31")
+		if len(sys.argv) > 3:
+			year_month = sys.argv[4]
+
+		ym = year_month.split("-")
+		y = int(ym[0])
+		m = int(ym[1])
+		mr = calendar.monthrange(y, m)
+		l = mr[1]
+
+		first_day = "{:04}-{:02}-{:02}".format(y, m, 1)
+		last_day = "{:04}-{:02}-{:02}".format(y, m, l)
+
+		print("Range: {} {}".format(first_day, last_day))
+
+		analyse_user(user_name, first_day, last_day)
+	else:
+		print_usage_and_die()
