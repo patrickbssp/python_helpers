@@ -20,12 +20,30 @@ file_ext_whitelist = ['.mov', '.dcr', '.ins', '.pkg', '.ex_', '.bin', '.ins', '.
 def strip_shell(txt):
 	return txt[:-1].decode('utf-8')
 
-def mount_iso(file, mount_point):
+def _mount_iso(file, mount_point):
 	cmd = '/bin/mount -r "{}" {}'.format(file, mount_point)
 	args = shlex.split(cmd)
-	p = subprocess.Popen(args, stdout=subprocess.PIPE)
-	txt = p.stdout.read()
+	res = subprocess.run(args, stdout=subprocess.PIPE)
+	return res
+	
+	txt = res.stdout
+	ec = res.returncode
+	print('Returncode {}'.format(ec))
 	return txt
+
+def mount_iso(file, mount_point):
+
+	res = _mount_iso(file, mount_point)
+	if res.returncode == 1:
+		# Already mounted, unmount and try again
+		unmount_iso(mount_point)
+
+		res = _mount_iso(file, mount_point)
+		if res.returncode != 0:
+			# Failed again
+			print('Failed to mount {} on {}'.format(file, mount_point))
+
+	return res.stdout
 
 def unmount_iso(mount_point):
 	cmd = '/bin/umount "{}"'.format(mount_point)
@@ -128,7 +146,11 @@ if __name__ == '__main__':
 			scan_iso_content = True
 		if arg == '-m':
 			create_checksums = True
-		
+	
+	if not os.path.exists(mount_point):
+		print("Mount point {} does not exist".format(mount_point))
+		sys.exit(0)
+
 	### last arg is supposed to be the start folder
 	start_dir = sys.argv[-1]
 	if not os.path.isdir(start_dir):
