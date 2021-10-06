@@ -28,6 +28,11 @@
 
 import sys,re,os.path
 
+ext_map = {
+	"JPG" : "JPG",
+	"ARW" : "RAW"
+}
+
 def split_file(in_f, out_f):
 
 	table = [];
@@ -43,10 +48,12 @@ def split_file(in_f, out_f):
 			ext = fname.split('.')[-1]
 
 			# create intermediate folder if not existent
-			if ext == "JPG" and splitted_path[-2] != "JPG":
-				splitted_path.insert(-1, "JPG")
-			elif ext == "ARW" and splitted_path[-2] != "RAW":
-				splitted_path.insert(-1, "RAW")
+			if ext in ext_map:
+				folder_name = ext_map[ext]
+
+				# if path only contains filename or no format-specific upper folder exists, create it
+				if (len(splitted_path) == 1) or (len(splitted_path) > 1 and splitted_path[-2] != folder_name):
+					splitted_path.insert(-1, folder_name)
 
 			# Replace filename
 			item['file'] = "/".join(splitted_path)
