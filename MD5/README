@@ -1,0 +1,4 @@
+When comparing unicode documents containing special characters (e.g. umlauts) in different encodings (composed versus decomposed), use uconv from icu tools to normalise them. For example:
+
+uconv -f utf8 -t utf8 -x nfc File_A.md5 > File_B
+
