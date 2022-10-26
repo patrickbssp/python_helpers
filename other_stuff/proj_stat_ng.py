@@ -423,6 +423,9 @@ def print_usage_and_die():
 
 if __name__ == '__main__':
 
+	if len(sys.argv) < 3:
+		print_usage_and_die()
+
 	infile = sys.argv[1]
 
 	read_sql_dump(infile)
