@@ -7,13 +7,14 @@
 # If that fails, the file is opened in encoding Latin-1 (ISO-8859-15) instead, as if created with
 # MD5Summer on Windows.
 #
+# TODO: Add variant comparing whether files in LHS checksum file are contained in RHS checksum file.
+# Don't care about files present in RHS checksum file, but missing in LHS checksum file.
+# If considering the LHS file as the older list, and the RHS file as the newer one respectively,
+# then LHS only files are files were deleted, and RHS only files were added.
+
+
 
 import sys,re,os.path
-
-result = {}
-
-new_files = {}
-rem_files = {}
 
 def print_usage_and_die():
 	print('Error: Invalid number of arguments.')
@@ -22,82 +23,108 @@ def print_usage_and_die():
 
 # Return tuple consisting of hash and filename, or None
 def split_hash_filename(line):
-    pattern = re.compile("([0-9a-f]{32})(\s+\**)(.*)")
-    m = re.search(pattern, line)
-    if m:
-        d = dict()
-        d['hash'] = m.group(1)
-        d['file'] = m.group(3)
-        return d
+	pattern = re.compile("([0-9a-f]{32})\s+\**(.*)")
+	m = re.search(pattern, line)
+	if m:
+		d = dict()
+		d['hash'] = m.group(1)
+		d['file'] = m.group(2)
+		return d
 
-def read_file(filename, pos):
+def read_file_core(in_f, pos, work_list):
 
-    with open(filename, encoding='utf-8') as in_f:
+	# Validate pos
+	if ((pos != "left") and (pos != "right")):
+		return
 
-    	# Validate pos
-    	if ((pos != "left") and (pos != "right")):
-    		return
+	lines = in_f.read().splitlines()
+	for line in lines:
+		m = split_hash_filename(line)
+		if m:
+			m_hash = m['hash']
+			m_file = m['file']
 
-    	lines = in_f.read().splitlines()
-    	for line in lines:
-            m = split_hash_filename(line)
-            if m:
-                m_hash = m['hash']
-                m_file = m['file']
+			if not m_hash in work_list:
+				# First file with this hash, create empty entry
+				work_list[m_hash] = {"left" : [], "right" : []}
 
-                if not m_hash in result:
-    				# First file with this hash, create empty entry
-                    result[m_hash] = {"left" : [], "right" : []}
+			work_list[m_hash][pos].append(m_file)
 
-                result[m_hash][pos].append(m_file)
+def read_file(in_fname, pos, work_list):
 
-def analyse_results():
-	for m_hash in result:
-		v = result[m_hash]
+	try:
+		encoding = 'utf-8'
+		print('Opening file {} with encoding {}'.format(in_fname, encoding))
+		with open(in_fname, encoding=encoding) as in_f:
+			read_file_core(in_f, pos, work_list)
+	except:
+		print('Failed to open file {} with encoding {}, trying again with different encoding'.format(in_fname, encoding))
+		encoding = 'latin-1'
+		print('Opening file {} with encoding {}'.format(in_fname, encoding))
+		with open(in_fname, encoding=encoding) as in_f:
+			read_file_core(in_f, pos, work_list)
+
+def analyse_results(work_list):
+
+	rhs_only = {}
+	lhs_only = {}
+	both = {}
+
+	for m_hash in work_list:
+		v = work_list[m_hash]
 
 		if((len(v["left"]) == 0) and len(v["right"]) > 0):
-			print("New files:")
-			if not m_hash in new_files:
-				new_files[m_hash] = []
+			# New files
+			if not m_hash in rhs_only:
+				rhs_only[m_hash] = []
 			for f in v["right"]:
-				print("  {}".format(f))
-				new_files[m_hash].append(f)
+				rhs_only[m_hash].append(f)
 		elif((len(v["right"]) == 0) and len(v["left"]) > 0):
-			print("Removed files:")
-			if not m_hash in rem_files:
-				rem_files[m_hash] = []
+			# Removed files
+			if not m_hash in lhs_only:
+				lhs_only[m_hash] = []
 			for f in v["left"]:
-				print("  {}".format(f))
-				rem_files[m_hash].append(f)
+				lhs_only[m_hash].append(f)
 		elif((len(v["right"]) > 0) and len(v["left"]) > 0):
-			print("Identical files:")
+			# Identical files
+			if not m_hash in both:
+				both[m_hash] = []
+			for f in v["right"]:
+				both[m_hash].append(f)
 			for f in v["left"]:
-				print("  {}".format(f))
+				both[m_hash].append(f)
 		else:
 			print("Error")
 
-	print("\nNew files:\n")
-	for m_hash in new_files:
-		for f in new_files[m_hash]:
+	print("\nIdentical files:\n")
+	for m_hash in both:
+		for f in both[m_hash]:
 			print("{} {}".format(m_hash, f))
 
-	print("\nRemoved files:\n")
-	for m_hash in rem_files:
-		for f in rem_files[m_hash]:
+	print("\nRHS files:\n")
+	for m_hash in rhs_only:
+		for f in rhs_only[m_hash]:
+			print("{} {}".format(m_hash, f))
+
+	print("\nLHS files:\n")
+	for m_hash in lhs_only:
+		for f in lhs_only[m_hash]:
 			print("{} {}".format(m_hash, f))
 
 	print("\nStatistics\n")
-	print("  New files: {}\n".format(len(new_files)))
-	print("  Removed files: {}\n".format(len(rem_files)))
+	print("  RHS files: {}\n".format(len(rhs_only)))
+	print("  LHS files: {}\n".format(len(lhs_only)))
 
 if __name__ == '__main__':
 	if len(sys.argv) != 3:
 		print_usage_and_die()
 
+	work_list = {}
+
 	l_file = sys.argv[1];
 	r_file = sys.argv[2];
 
-	read_file(l_file, "left")
-	read_file(r_file, "right")
+	read_file(l_file, "left", work_list)
+	read_file(r_file, "right", work_list)
 
-	analyse_results()
+	analyse_results(work_list)

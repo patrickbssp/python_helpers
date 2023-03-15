@@ -10,7 +10,7 @@ import shutil
 MIN_PYTHON = (3, 6)
 if sys.version_info < MIN_PYTHON:
     sys.exit("Python %s.%s or later is required.\n" % MIN_PYTHON)
-TMP_DIR = '/run/unrar'
+TMP_DIR = '/tmp/unrar'
 
 num_errors = 0
 num_warnings = 0
@@ -27,7 +27,7 @@ def report_warning(str):
 
 # Return MD5 hash of file
 def get_md5(fname):
-	cp = subprocess.run(["md5sum", fname], stdout=subprocess.PIPE, encoding='UTF-8')
+	cp = subprocess.run(["md5", "-r", fname], stdout=subprocess.PIPE, encoding='UTF-8')
 	md5 = cp.stdout.split()[0]
 	return md5
 
