@@ -14,7 +14,7 @@
 
 
 
-import sys,re,os.path
+import sys,re,os.path, chardet
 
 def print_usage_and_die():
 	print('Error: Invalid number of arguments.')
@@ -31,38 +31,36 @@ def split_hash_filename(line):
 		d['file'] = m.group(2)
 		return d
 
-def read_file_core(in_f, pos, work_list):
 
-	# Validate pos
-	if ((pos != "left") and (pos != "right")):
-		return
+def open_and_decode_file(in_fname):
 
-	lines = in_f.read().splitlines()
-	for line in lines:
-		m = split_hash_filename(line)
-		if m:
-			m_hash = m['hash']
-			m_file = m['file']
-
-			if not m_hash in work_list:
-				# First file with this hash, create empty entry
-				work_list[m_hash] = {"left" : [], "right" : []}
-
-			work_list[m_hash][pos].append(m_file)
+	with open(in_fname, 'rb', encoding=None) as in_f:
+		raw_data = in_f.read()
+		det = chardet.detect(raw_data)
+		print('File {}, encoding: {} (confidence: {})'.format(in_fname, det['encoding'], det['confidence']))
+		data = raw_data.decode(det['encoding'])
+		return data
 
 def read_file(in_fname, pos, work_list):
 
-	try:
-		encoding = 'utf-8'
-		print('Opening file {} with encoding {}'.format(in_fname, encoding))
-		with open(in_fname, encoding=encoding) as in_f:
-			read_file_core(in_f, pos, work_list)
-	except:
-		print('Failed to open file {} with encoding {}, trying again with different encoding'.format(in_fname, encoding))
-		encoding = 'latin-1'
-		print('Opening file {} with encoding {}'.format(in_fname, encoding))
-		with open(in_fname, encoding=encoding) as in_f:
-			read_file_core(in_f, pos, work_list)
+		data = open_and_decode_file(in_fname)
+
+		# Validate pos
+		if ((pos != "left") and (pos != "right")):
+			return
+
+		lines = data.splitlines()
+		for line in lines:
+			m = split_hash_filename(line)
+			if m:
+				m_hash = m['hash']
+				m_file = m['file']
+
+				if not m_hash in work_list:
+					# First file with this hash, create empty entry
+					work_list[m_hash] = {"left" : [], "right" : []}
+
+				work_list[m_hash][pos].append(m_file)
 
 def analyse_results(work_list):
 
@@ -111,9 +109,10 @@ def analyse_results(work_list):
 		for f in lhs_only[m_hash]:
 			print("{} {}".format(m_hash, f))
 
-	print("\nStatistics\n")
-	print("  RHS files: {}\n".format(len(rhs_only)))
-	print("  LHS files: {}\n".format(len(lhs_only)))
+	print("\nStatistics")
+	print("  RHS files: {}".format(len(rhs_only)))
+	print("  LHS files: {}".format(len(lhs_only)))
+	print("  Both:      {}".format(len(both)))
 
 if __name__ == '__main__':
 	if len(sys.argv) != 3:
