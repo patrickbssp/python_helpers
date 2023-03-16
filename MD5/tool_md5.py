@@ -10,19 +10,19 @@
 #	2017-10-06	Improved recognition/treatment of white-space.
 #	2018-10-09	Merged convert and sort modes
 #	2018-12-03	Removed obsolete regex
+#	2023-03-16	Improved file import
 #
 
-import sys,re,os.path
+import sys,re,os.path, chardet, helpers
 
-def sort_file(in_f, out_f):
+def sort_file(data, out_f):
 
 	table = [];
-	lines = in_f.read().splitlines()
+	lines = data.splitlines()
 	for line in lines:
-		pattern = re.compile("([0-9a-f]{32})(\s+\**)(.*)")
-		m = re.search(pattern, line)
-		if m:
-			item = {'hash': m.group(1), 'ws': m.group(2), 'file': m.group(3)}
+
+		item = helpers.split_hash_filename(line)
+		if item:
 			table.append(item)
 		else:
 			### line does not match, copy verbatim
@@ -42,14 +42,5 @@ in_fname = sys.argv[1];
 out_fname = root+"_sorted"+ext;
 out_f = open(out_fname, 'w', encoding='utf-8')
 
-try:
-	encoding = 'utf-8'
-	print('Opening file {} with encoding {}'.format(in_fname, encoding))
-	with open(in_fname, encoding=encoding) as in_f:
-		sort_file(in_f, out_f)
-except:
-	print('Failed to open file {} with encoding {}, trying again with different encoding'.format(in_fname, encoding))
-	encoding = 'latin-1'
-	print('Opening file {} with encoding {}'.format(in_fname, encoding))
-	with open(in_fname, encoding=encoding) as in_f:
-		sort_file(in_f, out_f)
+data = helpers.open_and_decode_file(in_fname)
+sort_file(data, out_f)

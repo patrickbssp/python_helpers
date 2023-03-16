@@ -24,24 +24,24 @@
 #
 # History:
 #	2021-10-05	First version
+#	2023-03-16	Improved file import
 #
 
-import sys,re,os.path
+import sys,re,os.path, helpers
 
-ext_map = {
-	"JPG" : "JPG",
-	"ARW" : "RAW"
-}
+def split_file(data, out_f):
 
-def split_file(in_f, out_f):
+	ext_map = {
+		"JPG" : "JPG",
+		"ARW" : "RAW"
+	}
 
 	table = [];
-	lines = in_f.read().splitlines()
+	lines = data.splitlines()
 	for line in lines:
-		pattern = re.compile("([0-9a-f]{32})(\s+\**)(.*)")
-		m = re.search(pattern, line)
-		if m:
-			item = {'hash': m.group(1), 'ws': m.group(2), 'file': m.group(3)}
+
+		item = helpers.split_hash_filename(line)
+		if item:
 
 			splitted_path = item['file'].split('/')
 			fname = splitted_path[-1]
@@ -77,14 +77,5 @@ in_fname = sys.argv[1];
 out_fname = root+"_splitted"+ext;
 out_f = open(out_fname, 'w', encoding='utf-8')
 
-try:
-	encoding = 'utf-8'
-	print('Opening file {} with encoding {}'.format(in_fname, encoding))
-	with open(in_fname, encoding=encoding) as in_f:
-		split_file(in_f, out_f)
-except:
-	print('Failed to open file {} with encoding {}, trying again with different encoding'.format(in_fname, encoding))
-	encoding = 'latin-1'
-	print('Opening file {} with encoding {}'.format(in_fname, encoding))
-	with open(in_fname, encoding=encoding) as in_f:
-		split_file(in_f, out_f)
+data = helpers.open_and_decode_file(in_fname)
+split_file(data, out_f)

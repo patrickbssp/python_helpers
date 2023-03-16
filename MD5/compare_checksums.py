@@ -12,38 +12,16 @@
 # If considering the LHS file as the older list, and the RHS file as the newer one respectively,
 # then LHS only files are files were deleted, and RHS only files were added.
 
-
-
-import sys,re,os.path, chardet
+import sys,re,os.path, chardet, helpers
 
 def print_usage_and_die():
 	print('Error: Invalid number of arguments.')
 	print('Usage: {} <left_file> <right_file>'.format(sys.argv[0]))
 	sys.exit()
 
-# Return tuple consisting of hash and filename, or None
-def split_hash_filename(line):
-	pattern = re.compile("([0-9a-f]{32})\s+\**(.*)")
-	m = re.search(pattern, line)
-	if m:
-		d = dict()
-		d['hash'] = m.group(1)
-		d['file'] = m.group(2)
-		return d
-
-
-def open_and_decode_file(in_fname):
-
-	with open(in_fname, 'rb', encoding=None) as in_f:
-		raw_data = in_f.read()
-		det = chardet.detect(raw_data)
-		print('File {}, encoding: {} (confidence: {})'.format(in_fname, det['encoding'], det['confidence']))
-		data = raw_data.decode(det['encoding'])
-		return data
-
 def read_file(in_fname, pos, work_list):
 
-		data = open_and_decode_file(in_fname)
+		data = helpers.open_and_decode_file(in_fname)
 
 		# Validate pos
 		if ((pos != "left") and (pos != "right")):
@@ -51,7 +29,7 @@ def read_file(in_fname, pos, work_list):
 
 		lines = data.splitlines()
 		for line in lines:
-			m = split_hash_filename(line)
+			m = helpers.split_hash_filename(line)
 			if m:
 				m_hash = m['hash']
 				m_file = m['file']
