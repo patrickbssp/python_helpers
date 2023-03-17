@@ -15,11 +15,13 @@
 
 import sys,re,os.path, chardet, helpers
 
-def sort_file(data, out_f):
+def sort_file(in_fname, out_fname):
+
+	out_f = open(out_fname, 'w', encoding='utf-8')
 
 	table = [];
-	lines = data.splitlines()
-	for line in lines:
+	data = helpers.open_and_decode_file(in_fname)
+	for line in data.splitlines():
 
 		item = helpers.split_hash_filename(line)
 		if item:
@@ -35,12 +37,13 @@ def sort_file(data, out_f):
 	for item in table:
 		out_f.write(item['hash']+item['ws']+item['file']+'\n')
 
+if __name__ == '__main__':
+	if len(sys.argv) != 2:
+		print('Error: Invalid number of arguments.')
+		sys.exit()
 
-in_fname = sys.argv[1];
-(root, ext) = os.path.splitext(in_fname);
+	in_fname = sys.argv[1];
+	(root, ext) = os.path.splitext(in_fname);
+	out_fname = root+"_sorted"+ext;
 
-out_fname = root+"_sorted"+ext;
-out_f = open(out_fname, 'w', encoding='utf-8')
-
-data = helpers.open_and_decode_file(in_fname)
-sort_file(data, out_f)
+	sort_file(in_fname, out_fname)

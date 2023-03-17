@@ -29,16 +29,13 @@
 
 import sys,re,os.path, helpers
 
-def split_file(data, out_f):
+def split_file(in_fname, out_fname):
 
-	ext_map = {
-		"JPG" : "JPG",
-		"ARW" : "RAW"
-	}
+	out_f = open(out_fname, 'w', encoding='utf-8')
 
 	table = [];
-	lines = data.splitlines()
-	for line in lines:
+	data = helpers.open_and_decode_file(in_fname)
+	for line in data.splitlines():
 
 		item = helpers.split_hash_filename(line)
 		if item:
@@ -48,6 +45,10 @@ def split_file(data, out_f):
 			ext = fname.split('.')[-1]
 
 			# create intermediate folder if not existent
+			ext_map = {
+				"JPG" : "JPG",
+				"ARW" : "RAW"
+			}
 			if ext in ext_map:
 				folder_name = ext_map[ext]
 
@@ -70,12 +71,13 @@ def split_file(data, out_f):
 	for item in table:
 		out_f.write(item['hash']+item['ws']+item['file']+'\n')
 
+if __name__ == '__main__':
+	if len(sys.argv) != 2:
+		print('Error: Invalid number of arguments.')
+		sys.exit()
 
-in_fname = sys.argv[1];
-(root, ext) = os.path.splitext(in_fname);
+	in_fname = sys.argv[1];
+	(root, ext) = os.path.splitext(in_fname);
+	out_fname = root+"_splitted"+ext;
 
-out_fname = root+"_splitted"+ext;
-out_f = open(out_fname, 'w', encoding='utf-8')
-
-data = helpers.open_and_decode_file(in_fname)
-split_file(data, out_f)
+	split_file(in_fname, out_fname)
