@@ -1,0 +1,3 @@
+Worst case test.
+LHS file is expected from a SD card with camera-specific folder naming.
+RHS file is expected from a photo library, sorted by event and raw/jpg images
