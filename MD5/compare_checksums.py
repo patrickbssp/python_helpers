@@ -21,24 +21,21 @@ def print_usage_and_die():
 
 def read_file(in_fname, pos, work_list):
 
-		data = helpers.open_and_decode_file(in_fname)
+	data = helpers.open_and_decode_file(in_fname)
 
-		# Validate pos
-		if ((pos != "left") and (pos != "right")):
-			return
+	# Validate pos
+	if ((pos != "left") and (pos != "right")):
+		return
 
-		lines = data.splitlines()
-		for line in lines:
-			m = helpers.split_hash_filename(line)
-			if m:
-				m_hash = m['hash']
-				m_file = m['file']
+	lines = data.splitlines()
+	for line in lines:
+		m = helpers.split_hash_filename(line)
+		if m:
+			if not m['hash'] in work_list:
+				# First file with this hash, create empty entry
+				work_list[m['hash']] = {"left" : [], "right" : []}
 
-				if not m_hash in work_list:
-					# First file with this hash, create empty entry
-					work_list[m_hash] = {"left" : [], "right" : []}
-
-				work_list[m_hash][pos].append(m_file)
+			work_list[m['hash']][pos].append(m['file'])
 
 def analyse_results(work_list):
 
