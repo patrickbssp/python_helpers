@@ -1,0 +1,143 @@
+\section{Elektrotechnik}
+
+	\begin{symbolbox}
+		U = Spannung, [U] = V (Volt)\\
+		I = Strom, [I] = A (Ampere)\\
+		R = Widerstand, [R] = Ω (Ohm)\\
+		G = Leitwert, [G] = S (Siemens)
+	\end{symbolbox}
+	
+\begin{sectionbox}
+	\subsection{Ohmsches Gesetz}
+
+	\begin{emphbox}
+	$ U = R \cdot I = \frac{I}{G} $
+	\end{emphbox}
+
+	\subsection{Leistung}
+
+	\begin{emphbox}
+	$ P = U \cdot I = \frac{U^2}{R} = I^2 \cdot R $
+	\end{emphbox}
+	
+
+		
+\end{sectionbox}
+
+\begin{sectionbox}
+	\subsection{Kirchoffsche Gesetze}
+
+	Knotenregel:
+	\begin{emphbox}
+		In einem Knoten: Summe der zufliessenden Ströme = Summe der abfliessenden Ströme\\
+		$\sum _{k=1}^{n}I_k = 0$
+	\end{emphbox}
+	
+	Maschenregel:
+	\begin{emphbox}
+		In einer Masche: Summe der Teilspannungen addieren sich zu Null. Pfeilrichtungen beachten!\\
+		$\sum _{k=1}^{n}U_k = 0$
+	\end{emphbox}
+
+\end{sectionbox}
+
+
+\begin{sectionbox}
+	\subsection{Widerstand}
+
+	Leitwert:
+	\begin{emphbox}
+		$ R = \frac{1}{G} $\\
+	\end{emphbox}	
+	
+	Parallelschaltung:
+	\begin{emphbox}
+		\begin{align*}
+			\frac{1}{R_{tot}} &= \sum _{k=1}^{n}\frac{1}{R_k} &= \frac{1}{R_{1}} + \frac{1}{R_{2}} + \ldots + \frac{1}{R_k}\\
+			G_{tot} &= \sum _{k=1}^{n}G_k &= G_1 + G_2 + \ldots + G_k
+		\end{align*}
+	\end{emphbox}
+	
+	Serieschaltung:
+	\begin{emphbox}
+			\begin{align*}
+			R_{tot} &= \sum _{k=1}^{n}R_k &= R_1 + R_2 + \ldots + R_k
+		\end{align*}
+
+	\end{emphbox}
+
+	
+\end{sectionbox}
+
+
+\begin{sectionbox}
+	\subsection{Kondensator}
+
+Lade-/Entladevorgang:
+\begin{emphbox}
+	$u_C(t) = U_0+ ΔU \cdot e^{-{\frac{t}{τ}}} = U_0+ (U_{C,t0}-U_0) \cdot e^{-{\frac{t}{τ}}}$
+
+	$i_C(t) = \frac{u_C(t)}{R_C} = \frac{U_0}{R_C}+\frac{ΔU}{R_C}\cdot e^{-{\frac{t}{τ}}}$
+\end{emphbox}
+
+Ladevorgang:
+\begin{emphbox}
+
+	$u_C(t) = U_0 \cdot (1-e^{-{\frac{t}{τ}}})$
+
+	$i_C(t) = I_0 \cdot e^{-{\frac{t}{τ}}}$
+
+\end{emphbox}
+
+Entladevorgang:
+\begin{emphbox}
+	$u_C(t) = U_0 \cdot e^{-{\frac{t}{τ}}}$
+
+	$i_C(t) = -I_0 \cdot e^{-{\frac{t}{τ}}}$
+\end{emphbox}
+
+mit
+\begin{emphbox}
+	$I_0 = \frac{U_0}{R_C}$
+	
+	$τ = R_C \cdot C$
+\end{emphbox}
+
+	
+\end{sectionbox}
+
+\begin{sectionbox}
+	\subsection{Spule}
+
+Lade-/Entladevorgang:
+\begin{emphbox}
+	$u_C(t) = U_0+ ΔU \cdot e^{-{\frac{t}{τ}}} = U_0+ (U_{C,t0}-U_0) \cdot e^{-{\frac{t}{τ}}} ???$
+
+	$i_C(t) = \frac{u_C(t)}{R_C} = \frac{U_0}{R_C}+\frac{ΔU}{R_C}\cdot e^{-{\frac{t}{τ}}} ???$
+\end{emphbox}
+
+Ladevorgang:
+\begin{emphbox}
+
+	$i_L(t) = I_0 \cdot (1-e^{-{\frac{t}{τ}}})$
+
+	$u_L(t) = U_0 \cdot e^{-{\frac{t}{τ}}}$
+
+\end{emphbox}
+
+Entladevorgang:
+\begin{emphbox}
+	$u_L(t) = -U_0 \cdot e^{-{\frac{t}{τ}}}$
+
+	$i_L(t) = I_0 \cdot e^{-{\frac{t}{τ}}}$
+\end{emphbox}
+
+mit
+\begin{emphbox}
+	$I_0 = \frac{U_0}{R_L}$
+	
+	$τ = \frac{L}{R_L}$	
+\end{emphbox}
+
+	
+\end{sectionbox}

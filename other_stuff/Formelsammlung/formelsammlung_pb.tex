@@ -1,0 +1,135 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% LaTeX4EI Template for Cheat Sheets                                Version 1.1
+%
+% Authors: Emanuel Regnath, Martin Zellner
+% Contact: info@latex4ei.de
+% Encode: UTF-8, tabwidth = 4, newline = LF
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+% ======================================================================
+% Document Settings
+% ======================================================================
+
+% possible options: color/nocolor, english/german, threecolumn
+% defaults: color, english
+\documentclass[english]{latex4ei/latex4ei_sheet}
+\usepackage{empheq}
+\usepackage{gensymb}
+\usepackage{tikz}
+
+
+% set document information
+\title{LaTeX4EI \\ Cheat Sheet}
+\author{LaTeX4EI}					% optional, delete if unchanged
+\myemail{info@latex4ei.de}			% optional, delete if unchanged
+\mywebsite{www.latex4ei.de}			% optional, delete if unchanged
+
+
+% ======================================================================
+% Begin
+% ======================================================================
+\begin{document}
+
+% Title
+% ----------------------------------------------------------------------
+\maketitle   % requires ./img/Logo.pdf
+
+% Section
+% ----------------------------------------------------------------------
+\input{sub_docs/elektrotechnik}
+
+
+\section{Trigonometrie}
+
+\begin{sectionbox}
+	\subsection{Sinus}
+		\begin{emphbox}
+			\begin{align*}
+			 \sin \alpha &= \frac{Gegenkathete}{Hypotenuse} \\
+			 \sin (-\alpha) &= -\sin \alpha \\
+			 \sin (90 \degree + \alpha) &= \sin (90 \degree - \alpha)
+			\end{align*}
+		\end{emphbox}
+		ungerade Funktion
+	\subsection{Cosinus}
+		\begin{emphbox}
+			\begin{align*}
+			\cos \alpha &= \frac{Ankathete}{Hypotenuse}\\
+			\cos (-\alpha) &= \cos \alpha\\
+			\cos (90 \degree + \alpha) &= -\cos (90 \degree - \alpha)
+			\end{align*}
+		\end{emphbox}
+		Gerade Funktion
+
+	\subsection{Tangens}
+		\begin{emphbox}
+			\begin{align*}
+			\tan \alpha &= \frac{Gegenkathete}{Ankathete} \\
+			\tan \alpha &= \frac{\sin \alpha}{\cos \alpha} 
+			\end{align*}
+		\end{emphbox}
+		
+	\subsection{Cotangens}
+		\begin{emphbox}
+			\begin{align*}
+			\cot \alpha &= \frac{Ankathete}{Gegenkathete} \\
+			\cot \alpha &= \frac{\cos \alpha}{\sin \alpha} 		
+			\end{align*}
+		\end{emphbox}
+	mit:\\
+	a = Gegenkathete\\
+	b = Ankathete\\
+	c = Hypotenuse
+
+	\begin{tikzpicture}
+		\draw (0, 0) -- (3, 0) -- (2, 2) -- (0, 0);
+		\coordinate[label=left:$A$] (A) at (0, 0);
+		\coordinate[label=right:$B$] (B) at (3, 0);
+		\coordinate[label=above:$C$] (C) at (2, 2);
+	\end{tikzpicture}
+
+	\subsection{Trigonometrischer Pythagoras}
+		\begin{emphbox}
+			$ \sin ^2 \alpha + \cos ^2 \alpha = 1 $
+		\end{emphbox}
+		
+	\subsection{Sinussatz}
+		\begin{emphbox}
+			$ \frac{a}{\sin \alpha} = \frac{b}{\sin \beta} = \frac{c}{\sin \gamma} = \frac{a \cdot b \cdot c}{2 \cdot A} = 2 \cdot R$
+		\end{emphbox}
+
+	\subsection{Cosinussatz}
+		\begin{emphbox}
+			$ c^2 = a^2 + b^2 - 2 \cdot a \cdot b \cdot \cos \gamma$
+		\end{emphbox}
+
+\begin{symbolbox}
+	A = Fläche\\
+	R = Radius des Umkreises
+\end{symbolbox}
+
+\begin{bluebox}
+	Test
+\end{bluebox}
+
+
+\end{sectionbox}
+
+
+\begin{sectionbox}
+	\subsection{Cosinus}
+
+	Text goes here ...
+
+
+\end{sectionbox}
+
+
+
+
+
+% ======================================================================
+% End
+% ======================================================================
+\end{document}
