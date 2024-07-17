@@ -1,112 +1,42 @@
 \section{Einheiten}
-%\sectionbox{
-%\subsection{SI-Einheiten}
-%\symbolbox{
-
-%}
-%}
-\sectionbox{
-\topicbox{SI-Präfixe}{
-	\begin{tabular}{ccl|ccl}
-	Symbol & Vorsatz & Faktor & Symbol & Vorsatz & Faktor \\
-	Y&Yotta&$10^{24}$& d &Dezi&$10^{-1}$\\
-	Z&Zetta&$10^{21}$& c &Zenti&$10^{-2}$\\
-	E&Exa&$10^{18}$& m & Milli&$10^{-3}$\\
-	P&Peta&$10^{15}$& $\mu$ & Mikro&$10^{-6}$\\
-	T&Tera&$10^{12}$& n &Nano&$10^{-9}$\\
- 	G&Giga&$10^9$& p &Piko&$10^{-12}$\\
-	M&Mega&$10^6$& f &Femto&$10^{-15}$\\
-	k&Kilo&$10^3$& a &Atto&$10^{-18}$\\
-	h&Hekto&$10^2$& z & Zepto&$10^{-21}$\\
-	da&Deka&$10^1$ & y &Yokto&$10^{-24}$\\
-	\end{tabular}
-}
-}
-
-
-\section{Trigonometrie}
 
 \begin{sectionbox}
-	\subsection{Sinus}
+	\subsection{SI-Präfixe}
 		\begin{emphbox}
-			\begin{align*}
-			 \sin \alpha &= \frac{Gegenkathete}{Hypotenuse} \\
-			 \sin (-\alpha) &= -\sin \alpha \\
-			 \sin (90 \degree + \alpha) &= \sin (90 \degree - \alpha)
-			\end{align*}
-		\end{emphbox}
-		ungerade Funktion
-	\subsection{Cosinus}
-		\begin{emphbox}
-			\begin{align*}
-			\cos \alpha &= \frac{Ankathete}{Hypotenuse}\\
-			\cos (-\alpha) &= \cos \alpha\\
-			\cos (90 \degree + \alpha) &= -\cos (90 \degree - \alpha)
-			\end{align*}
-		\end{emphbox}
-		Gerade Funktion
+			\begin{tabular}{ccl|ccl}
+				Symbol & Präfix & Faktor & Symbol & Präfix & Faktor \\
 
-	\subsection{Tangens}
-		\begin{emphbox}
-			\begin{align*}
-			\tan \alpha &= \frac{Gegenkathete}{Ankathete} \\
-			\tan \alpha &= \frac{\sin \alpha}{\cos \alpha} 
-			\end{align*}
-		\end{emphbox}
-		
-	\subsection{Cotangens}
-		\begin{emphbox}
-			\begin{align*}
-			\cot \alpha &= \frac{Ankathete}{Gegenkathete} \\
-			\cot \alpha &= \frac{\cos \alpha}{\sin \alpha} 		
-			\end{align*}
-		\end{emphbox}
-	mit:\\
-	a = Gegenkathete\\
-	b = Ankathete\\
-	c = Hypotenuse
-
-	\begin{tikzpicture}
-		\draw (0, 0) -- (3, 0) -- (2, 2) -- (0, 0);
-		\coordinate[label=left:$A$] (A) at (0, 0);
-		\coordinate[label=right:$B$] (B) at (3, 0);
-		\coordinate[label=above:$C$] (C) at (2, 2);
-	\end{tikzpicture}
-
-	\subsection{Trigonometrischer Pythagoras}
-		\begin{emphbox}
-			$ \sin ^2 \alpha + \cos ^2 \alpha = 1 $
-		\end{emphbox}
-		
-	\subsection{Sinussatz}
-		\begin{emphbox}
-			$ \frac{a}{\sin \alpha} = \frac{b}{\sin \beta} = \frac{c}{\sin \gamma} = \frac{a \cdot b \cdot c}{2 \cdot A} = 2 \cdot R$
+				Q  & Quetta & $10^{30}$ & d & Dezi & $10^{-1}$\\
+				R  & Ronna  & $10^{27}$ & c & Zenti & $10^{-2}$\\
+				Y  & Yotta  & $10^{24}$ & m & Milli & $10^{-3}$\\
+				Z  & Zetta  & $10^{21}$ & µ & Mikro & $10^{-6}$\\ 
+				E  & Exa    & $10^{18}$ & n & Nano  & $10^{-9}$\\
+				P  & Peta   & $10^{15}$ & p & Piko  & $10^{-12}$\\
+				T  & Tera   & $10^{12}$ & f & Femto  & $10^{-15}$\\
+			 	G  & Giga   & $10^9$    & a & Atto   & $10^{-18}$\\
+				M  & Mega   & $10^6$    & z & Zepto  & $10^{-21}$\\
+				k  & Kilo   & $10^3$    & y & Yokto  & $10^{-24}$\\
+				h  & Hekto  & $10^2$    & r & Ronto  & $10^{-27}$\\
+				da & Deka   & $10^1$    & q & Quekto & $10^{-30}$\\
+			\end{tabular}
 		\end{emphbox}
 
-	\subsection{Cosinussatz}
+	\subsection{Binäre Präfixe}
 		\begin{emphbox}
-			$ c^2 = a^2 + b^2 - 2 \cdot a \cdot b \cdot \cos \gamma$
+			\begin{tabular}{ccll}
+				Symbol & Präfix & Faktor & Dez. Äquiv. \\
+			
+				Ki & Kibi  & $2^{10}$  & $= 1.024e3$ \\
+				Mi & Mebi  & $2^{20}$  & $≈ 1.049e6$ \\
+				Gi & Gibi  & $2^{30}$  & $≈ 1.074e9$ \\
+				Ti & Tebi  & $2^{40}$  & $≈ 1.100e12$ \\
+				Pi & Pebi  & $2^{50}$  & $≈ 1.126e15$ \\
+				Ei & Exbi  & $2^{60}$  & $≈ 1.152e18$ \\
+				Zi & Zebi  & $2^{70}$  & $≈ 1.181e21$ \\
+				Yi & Yobi  & $2^{80}$  & $≈ 1.209e24$ \\
+				Ri & Robi  & $2^{90}$  & $≈ 1.238e27$ \\
+				Qi & Quebi & $2^{100}$ & $≈ 1.268e30$ \\
+
+			\end{tabular}
 		\end{emphbox}
-
-\begin{symbolbox}
-	A = Fläche\\
-	R = Radius des Umkreises
-\end{symbolbox}
-
-\begin{bluebox}
-	Test
-\end{bluebox}
-
-
-\end{sectionbox}
-
-
-\begin{sectionbox}
-	\subsection{Cosinus}
-
-	Text goes here ...
-
-
-\end{sectionbox}
-
-
+	\end{sectionbox}
