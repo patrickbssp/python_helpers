@@ -75,3 +75,84 @@
 		\end{emphbox}
 	
 \end{sectionbox}
+
+\begin{sectionbox}
+	\subsection{Mach}
+	
+		\begin{emphbox}
+				\begin{align*}
+					\sin \mu &= \frac{c}{v} = \frac{1}{m}\\
+					\mu &= \arcsin \frac{1}{M}
+				\end{align*}
+				mit:\\
+					c: Schallgeschwindigkeit\\
+					v: Objektgeschwindigkeit\\
+					$\mu: Machwinkel$
+		\end{emphbox}
+
+%		\centering\noindent%
+
+	\resizebox{5cm}{!}{
+			
+			\def\dotMarkRightAngle[size=#1](#2,#3,#4){%
+				\draw ($(#3)!#1!(#2)$) -- 
+				($($(#3)!#1!(#2)$)!#1!90:(#2)$) --
+				($(#3)!#1!(#4)$);
+				\path (#3) --node[circle,fill,inner sep=.5pt]{} ($($(#3)!#1!(#2)$)!#1!90:(#2)$);
+			}
+
+			\begin{tikzpicture}
+				\coordinate (A) at (0,0);				
+				\coordinate (B) at (4,0);
+				\coordinate (C) at (0,3);
+				\coordinate (D) at ($(C)!(A)!(B)$);
+		
+				\draw [-Stealth] (A) -- node[below] {Objektgeschwindigkeit v} (B);
+				\draw [-Stealth] (A) -- node[below] {Schallgeschwindigkeit c} (D);
+				\draw [dashed] (B) -- node[above] {Machwelle} (C);
+
+				\pic [draw, angle radius=5mm, angle eccentricity=1.2mm] {angle = D--B--A};
+				
+				\node[above left = 0.1cm and 0.8cm of B] {$\mu$};
+
+				\dotMarkRightAngle[size=6pt](A,D,B);			
+			\end{tikzpicture}
+			
+	}		
+	\resizebox{5cm}{!}{
+	
+	\def\dotMarkRightAngle[size=#1](#2,#3,#4){%
+		\draw ($(#3)!#1!(#2)$) -- 
+		($($(#3)!#1!(#2)$)!#1!90:(#2)$) --
+		($(#3)!#1!(#4)$);
+		\path (#3) --node[circle,fill,inner sep=.5pt]{} ($($(#3)!#1!(#2)$)!#1!90:(#2)$);
+	}
+	
+	\begin{tikzpicture}
+		\coordinate (A) at (0,0);				
+		\coordinate (B) at (4,0);
+		\coordinate (C) at (0,3);
+		\coordinate (D) at ($(C)!(A)!(B)$);
+		
+		\draw [-Stealth] (A) -- node[below] {Objektgeschwindigkeit v} (B);
+		\draw [-Stealth] (A) -- node[below] {Schallgeschwindigkeit c} (D);
+		\draw [dashed] (B) -- node[above] {Machwelle} (C);
+		
+		\pic [draw, angle radius=5mm, angle eccentricity=1.2mm] {angle = D--B--A};
+		
+		\node[above left = 0.1cm and 0.8cm of B] {$\mu$};
+		
+		\dotMarkRightAngle[size=6pt](A,D,B);
+		
+		\draw (2,0) circle (2cm);
+		\draw (3,0) circle (1cm);
+		
+	\end{tikzpicture}
+	
+}		
+	$M < 1.0$: Subsonic \\
+	$M = 1.0$: Transonic \\
+	$M > 1.0$: Supersonic \\
+	$M > 5.0$: Hypersonic
+	
+\end{sectionbox}
