@@ -14,11 +14,15 @@
 % possible options: color/nocolor, english/german, threecolumn
 % defaults: color, english
 \documentclass[english]{latex4ei/latex4ei_sheet}
+\usepackage{amsmath}
 \usepackage{empheq}
 \usepackage{gensymb}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,angles,positioning}
 
+\def\centerarc[#1](#2)(#3:#4:#5)
+% Syntax: [draw options] (center) (initial angle:final angle:radius)
+{ \draw[#1] ($(#2)+({#5*cos(#3)},{#5*sin(#3)})$) arc (#3:#4:#5); }
 
 % set document information
 \title{LaTeX4EI \\ Cheat Sheet}

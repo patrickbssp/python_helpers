@@ -1,6 +1,120 @@
 \section{Trigonometrie}
 
 \begin{sectionbox}
+	
+	\subsection{Allgemeines Dreieck}
+	Winkelsumme im Dreick
+	
+	\begin{tikzpicture}
+
+		% Define the points of the triangle
+		\coordinate (A) at (0,0);
+		\coordinate (B) at (4,0);
+		\coordinate (C) at (3.0,2.0);
+		
+		% Draw the triangle
+		\draw [thick] (A) -- (B) -- (C) -- cycle;
+		
+		% Mark the angles
+		\draw (A) ++(0.4,0) arc[start angle=0,end angle=33.7,radius=0.4];
+		\node[above right= 0.1cm and 0.5cm of A] {$\alpha$};
+		
+
+		\centerarc[](B)(180.0:116.6:0.4)
+		\node[above left= 0.1cm and 0.5cm of B] {$\beta$};
+
+		\centerarc[](C)(213.7:296.6:0.4)
+		\node[below left= 0.5cm and 0.1cm of C] {$\gamma$};
+
+		% Label the vertices
+		\node[below left] at (A) {A};
+		\node[below right] at (C) {C};
+		\node[above right] at (B) {B};
+
+		% Label the sides
+		\node (a) at ($(B)!0.5!(C)$) [anchor=west] {$a$};
+		\node (b) at ($(A)!0.5!(C)$) [anchor=south east] {$b$};
+		\node (c) at ($(A)!0.5!(B)$) [anchor=north] {$c$};
+		
+	\end{tikzpicture}
+	
+	\subsection{Rechtwinkliges Dreieck}
+	AK: Ankathete \\
+	GK: Gegenkathete \\
+	HT: Hypotenuse \\
+	
+	\begin{tikzpicture}
+		
+		% Define the points A, B (endpoints of the diameter)
+		\coordinate (A) at (0, 0);
+		\coordinate (B) at (5, 0);
+		
+		% Define the midpoint M
+		\coordinate (M) at ($(A)!0.5!(B)$);
+		
+		% Define point C on the semicircle
+		\coordinate (C) at ($(M) + (50:2.5cm)$);  % Angle 50 degrees from the horizontal
+		
+		% Draw the semicircle
+		\draw[thick] (A) arc[start angle=180, end angle=0, radius=2.5cm];
+		
+		% Draw the diameter
+		\draw[thick] (A) -- (B);
+		
+		% Draw right-angled triangle
+		\draw[thick] (A) -- (C) -- (B) -- cycle;
+
+		% Mark the points A, B, C
+		\fill[black] (A) circle (2pt) node[below left] {$A$};
+		\fill[black] (B) circle (2pt) node[below right] {$B$};
+		\fill[black] (C) circle (2pt) node[above right] {$C$};
+
+		% Draw angle arcs
+		\draw[thick] ($(A) + (0.5,0)$) arc[start angle=0, end angle=25.0, radius=0.5cm];
+		\draw[thick] ($(B) + (-0.5,0)$) arc[start angle=180, end angle=115.0, radius=0.5cm];
+
+		% Label the angles
+		\node [above right= 0.3cm and 1cm of A] [anchor=north east] {$\alpha$};
+%				\node at ($(A)!0.3!(C)$) [anchor=north east] {$\alpha$};
+%		\node at ($(B)!0.6!(C)$) [anchor=north west] {$\beta$};
+%		\node at ($(A)!0.5!(B)$) [below] {$\gamma = 90^\circ$};
+
+		\node at ($(A)!0.5!(C)$) [anchor=south east] {$Ankathete$};
+		\node at ($(B)!0.5!(C)$) [anchor=west] {$Gegenkathete$};
+		\node at ($(A)!0.5!(B)$) [below] {$Hypotenuse$};
+		
+	\end{tikzpicture}
+
+	\subsection{Sinus und Cosinus}
+
+	
+	% Two emphboxes side by side using parbox
+	\parbox[t]{0.50\textwidth}{
+		\begin{emphbox}
+			\begin{align*}
+				\sin \alpha &= \frac{GK}{HT} \\
+				\sin (-\alpha) &= -\sin \alpha \\
+				\sin (90 \degree + \alpha) &= \sin (90 \degree - \alpha)
+			\end{align*}
+		\end{emphbox}
+	}
+	\hfill
+	\parbox[t]{0.50\textwidth}{
+		\begin{emphbox}
+			\begin{align*}
+				\cos \alpha &= \frac{AK}{HT}\\
+				\cos (-\alpha) &= \cos \alpha\\
+				\cos (90 \degree + \alpha) &= -\cos (90 \degree - \alpha)
+			\end{align*}
+		\end{emphbox}
+	}
+	
+	ungerade Funktion
+	
+	
+	
+	
+	
 	\subsection{Sinus}
 		\begin{emphbox}
 			\begin{align*}
@@ -59,7 +173,7 @@
 
 	\subsection{Cosinussatz}
 		\begin{emphbox}
-			$ c^2 = a^2 + b^2 - 2 \cdot a \cdot b \cdot \cos \gamma$
+			$ c^2 = a^2 + b^2 - 2 \cdot a \cdot b \cdot \cos \gamma $
 		\end{emphbox}
 
 \begin{symbolbox}
