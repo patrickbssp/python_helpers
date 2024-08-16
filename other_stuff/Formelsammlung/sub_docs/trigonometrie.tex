@@ -16,9 +16,8 @@
 		\draw [thick] (A) -- (B) -- (C) -- cycle;
 		
 		% Mark the angles
-		\draw (A) ++(0.4,0) arc[start angle=0,end angle=33.7,radius=0.4];
+		\centerarc[](A)(0.0:33.7:0.4)
 		\node[above right= 0.1cm and 0.5cm of A] {$\alpha$};
-		
 
 		\centerarc[](B)(180.0:116.6:0.4)
 		\node[above left= 0.1cm and 0.5cm of B] {$\beta$};
@@ -28,8 +27,8 @@
 
 		% Label the vertices
 		\node[below left] at (A) {A};
-		\node[below right] at (C) {C};
-		\node[above right] at (B) {B};
+		\node[above right] at (C) {C};
+		\node[below right] at (B) {B};
 
 		% Label the sides
 		\node (a) at ($(B)!0.5!(C)$) [anchor=west] {$a$};
@@ -39,9 +38,10 @@
 	\end{tikzpicture}
 	
 	\subsection{Rechtwinkliges Dreieck}
-	AK: Ankathete \\
-	GK: Gegenkathete \\
-	HT: Hypotenuse \\
+	
+	a: Ankathete von $\beta$, Gegenkathete von $\alpha$\\
+	b: Ankathete von $\alpha$, Gegenkathete von $\beta$\\
+	c: Hypotenuse \\
 	
 	\begin{tikzpicture}
 		
@@ -56,7 +56,7 @@
 		\coordinate (C) at ($(M) + (50:2.5cm)$);  % Angle 50 degrees from the horizontal
 		
 		% Draw the semicircle
-		\draw[thick] (A) arc[start angle=180, end angle=0, radius=2.5cm];
+		\draw[] (A) arc[start angle=180, end angle=0, radius=2.5cm];
 		
 		% Draw the diameter
 		\draw[thick] (A) -- (B);
@@ -69,83 +69,56 @@
 		\fill[black] (B) circle (2pt) node[below right] {$B$};
 		\fill[black] (C) circle (2pt) node[above right] {$C$};
 
-		% Draw angle arcs
-		\draw[thick] ($(A) + (0.5,0)$) arc[start angle=0, end angle=25.0, radius=0.5cm];
-		\draw[thick] ($(B) + (-0.5,0)$) arc[start angle=180, end angle=115.0, radius=0.5cm];
+		% Draw angle arcs and labels
+		\centerarc[](A)(0:25:0.4)
+		\node[above right= 0.1cm and 0.5cm of A] {$\alpha$};
 
-		% Label the angles
-		\node [above right= 0.3cm and 1cm of A] [anchor=north east] {$\alpha$};
-%				\node at ($(A)!0.3!(C)$) [anchor=north east] {$\alpha$};
-%		\node at ($(B)!0.6!(C)$) [anchor=north west] {$\beta$};
-%		\node at ($(A)!0.5!(B)$) [below] {$\gamma = 90^\circ$};
+		\centerarc[](B)(180:115:0.4)
+		\node[above left= 0.1cm and 0.5cm of B] {$\beta$};
 
-		\node at ($(A)!0.5!(C)$) [anchor=south east] {$Ankathete$};
-		\node at ($(B)!0.5!(C)$) [anchor=west] {$Gegenkathete$};
-		\node at ($(A)!0.5!(B)$) [below] {$Hypotenuse$};
+		% Right angle dot
+		\centerarc[](C)(205:295:0.4)
+		\draw[thick,fill=black] ($(C) + (250:0.2)$) circle[radius=0.05];
+
+		\node at ($(A)!0.5!(C)$) [anchor=south east] {$b$};
+		\node at ($(B)!0.5!(C)$) [anchor=west] {$a$};
+		\node at ($(A)!0.5!(B)$) [below] {$c$};
 		
 	\end{tikzpicture}
 
 	\subsection{Sinus und Cosinus}
+		Der Sinus ist eine ungerade Funktion \\
+		Der Cosinus ist eine gerade Funktion
+		\begin{emphbox}
+			\begin{align*}
+				\sin(\alpha) &= \frac{a}{c} = \cos(\beta) \\
+				\sin(\beta) &= \frac{b}{c} = \cos(\alpha)
+			\end{align*}
+		\end{emphbox}
 
-	
-	% Two emphboxes side by side using parbox
-	\parbox[t]{0.50\textwidth}{
+	\subsection{Symmetrieeigenschaften}
 		\begin{emphbox}
 			\begin{align*}
-				\sin \alpha &= \frac{GK}{HT} \\
-				\sin (-\alpha) &= -\sin \alpha \\
-				\sin (90 \degree + \alpha) &= \sin (90 \degree - \alpha)
-			\end{align*}
-		\end{emphbox}
-	}
-	\hfill
-	\parbox[t]{0.50\textwidth}{
-		\begin{emphbox}
-			\begin{align*}
-				\cos \alpha &= \frac{AK}{HT}\\
-				\cos (-\alpha) &= \cos \alpha\\
-				\cos (90 \degree + \alpha) &= -\cos (90 \degree - \alpha)
-			\end{align*}
-		\end{emphbox}
-	}
-	
-	ungerade Funktion
-	
-	
-	
-	
-	
-	\subsection{Sinus}
-		\begin{emphbox}
-			\begin{align*}
-			 \sin \alpha &= \frac{Gegenkathete}{Hypotenuse} \\
-			 \sin (-\alpha) &= -\sin \alpha \\
-			 \sin (90 \degree + \alpha) &= \sin (90 \degree - \alpha)
-			\end{align*}
-		\end{emphbox}
-		ungerade Funktion
-	\subsection{Cosinus}
-		\begin{emphbox}
-			\begin{align*}
-			\cos \alpha &= \frac{Ankathete}{Hypotenuse}\\
-			\cos (-\alpha) &= \cos \alpha\\
+			\sin (-\alpha) &= -\sin(\alpha) \\
+			\sin (90 \degree + \alpha) &= \sin (90 \degree - \alpha) \\
+			\cos (-\alpha) &= \cos(\alpha)\\
 			\cos (90 \degree + \alpha) &= -\cos (90 \degree - \alpha)
 			\end{align*}
 		\end{emphbox}
-		Gerade Funktion
+
 
 	\subsection{Tangens}
 		\begin{emphbox}
 			\begin{align*}
-			\tan \alpha &= \frac{Gegenkathete}{Ankathete} \\
-			\tan \alpha &= \frac{\sin \alpha}{\cos \alpha} 
+			\tan(\alpha) &= \frac{a}{b} &= \frac{\sin(\alpha)}{\cos(\alpha)} \\
+			\tan(\beta) &= \frac{b}{a} &= \frac{\sin(\beta)}{\cos(\beta)}
 			\end{align*}
 		\end{emphbox}
 		
 	\subsection{Cotangens}
 		\begin{emphbox}
 			\begin{align*}
-			\cot \alpha &= \frac{Ankathete}{Gegenkathete} \\
+			\cot(\alpha) &= \frac{1}{\tan(\alpha)} \\
 			\cot \alpha &= \frac{\cos \alpha}{\sin \alpha} 		
 			\end{align*}
 		\end{emphbox}
