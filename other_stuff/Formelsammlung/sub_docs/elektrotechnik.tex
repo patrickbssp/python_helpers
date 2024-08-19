@@ -1,17 +1,10 @@
 \section{Elektrotechnik}
-
-	\begin{symbolbox}
-		U = Spannung, [U] = V (Volt)\\
-		I = Strom, [I] = A (Ampere)\\
-		R = Widerstand, [R] = Ω (Ohm)\\
-		G = Leitwert, [G] = S (Siemens)
-	\end{symbolbox}
 	
 \begin{sectionbox}
 	\subsection{Ohmsches Gesetz}
 
 	\begin{emphbox}
-	$ U = R \cdot I = \frac{I}{G} $
+	Ohmsches Gesestz: $ U = R \cdot I = \frac{I}{G} $
 	\end{emphbox}
 
 	\subsection{Leistung}
@@ -45,9 +38,8 @@
 \begin{sectionbox}
 	\subsection{Widerstand}
 
-	Leitwert:
 	\begin{emphbox}
-		$ R = \frac{1}{G} $\\
+	Leitwert:	$ G = \frac{1}{R} $\\
 	\end{emphbox}	
 	
 	Parallelschaltung:
@@ -73,28 +65,29 @@
 \begin{sectionbox}
 	\subsection{Kondensator}
 
-Lade-/Entladevorgang:
-\begin{emphbox}
-	$u_C(t) = U_0+ ΔU \cdot e^{-{\frac{t}{τ}}} = U_0+ (U_{C,t0}-U_0) \cdot e^{-{\frac{t}{τ}}}$
+	Lade-/Entladevorgang:
+	\begin{emphbox}
+		\begin{align*}
+			u_C(t) &= U_0+ ΔU \cdot e^{-{\frac{t}{τ}}} = U_0+ (U_{C,t0}-U_0) \cdot e^{-{\frac{t}{τ}}} \\
+			i_C(t) &= \frac{u_C(t)}{R_C} = \frac{U_0}{R_C}+\frac{ΔU}{R_C}\cdot e^{-{\frac{t}{τ}}}
+		\end{align*}
+	\end{emphbox}
 
-	$i_C(t) = \frac{u_C(t)}{R_C} = \frac{U_0}{R_C}+\frac{ΔU}{R_C}\cdot e^{-{\frac{t}{τ}}}$
-\end{emphbox}
+	Ladevorgang:
+	\begin{emphbox}
+		\begin{align*}
+			u_C(t) &= U_0 \cdot (1-e^{-{\frac{t}{τ}}}) \\
+			i_C(t) &= I_0 \cdot e^{-{\frac{t}{τ}}}
+		\end{align*}
+	\end{emphbox}
 
-Ladevorgang:
-\begin{emphbox}
-
-	$u_C(t) = U_0 \cdot (1-e^{-{\frac{t}{τ}}})$
-
-	$i_C(t) = I_0 \cdot e^{-{\frac{t}{τ}}}$
-
-\end{emphbox}
-
-Entladevorgang:
-\begin{emphbox}
-	$u_C(t) = U_0 \cdot e^{-{\frac{t}{τ}}}$
-
-	$i_C(t) = -I_0 \cdot e^{-{\frac{t}{τ}}}$
-\end{emphbox}
+	Entladevorgang:
+	\begin{emphbox}
+		\begin{align*}
+			u_C(t) &= U_0 \cdot e^{-{\frac{t}{τ}}} \\
+			i_C(t) &= -I_0 \cdot e^{-{\frac{t}{τ}}}
+		\end{align*}
+	\end{emphbox}
 
 mit
 \begin{emphbox}
