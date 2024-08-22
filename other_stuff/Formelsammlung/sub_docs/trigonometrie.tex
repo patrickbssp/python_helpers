@@ -3,16 +3,31 @@
 \begin{sectionbox}
 	
 	\subsection{Allgemeines Dreieck}
-		Winkelsumme im Dreick
 		\begin{emphbox}
-			Winkelsumme: $ \alpha + \beta + \gamma = 180° $
+			\begin{align*}
+				\text{Winkelsumme:} && \alpha + \beta + \gamma = 180° \\
+				\text{Umfang:} && U = a+b+c \\
+				\text{Fläche:} && A = \frac{c \cdot h_c}{2} = \frac{b \cdot h_b}{2} = \frac{c \cdot h_c}{2} \\
+			\end{align*}
 		\end{emphbox}
+		Satz von Heron
+		\begin{emphbox}
+			A = $ \sqrt{s \cdot (s-a) \cdot (s-b) \cdot (s-c)} $\\
+			mit s = $\frac{a+b+c}{2}$
+		\end{emphbox}
+		
+		Inkreismittelpunkt: Schnittpunkt der Winkelhalbierenden \\
+		Umkreismittelpunkt: Schnittpunkt der Mittelsenkrechten \\
 	\begin{tikzpicture}
 
 		% Define the points of the triangle
 		\coordinate (A) at (0,0);
 		\coordinate (B) at (4,0);
 		\coordinate (C) at (3.0,2.0);
+
+		\coordinate (CH) at (3, 0);
+		
+		\draw [thin] (C) -- (CH);
 		
 		% Draw the triangle
 		\draw [thick] (A) -- (B) -- (C) -- cycle;
@@ -36,9 +51,14 @@
 		\node (a) at ($(B)!0.5!(C)$) [anchor=west] {$a$};
 		\node (b) at ($(A)!0.5!(C)$) [anchor=south east] {$b$};
 		\node (c) at ($(A)!0.5!(B)$) [anchor=north] {$c$};
-		
+		\node (q) at ($(A)!0.5!(CH)$) [anchor=south] {$q$};
+		\node (p) at ($(CH)!0.5!(B)$) [anchor=south] {$p$};
+		\node (hc) at ($(CH)!0.5!(C)$) [anchor=east] {$h_c$};
 	\end{tikzpicture}
-	
+\end{sectionbox}
+
+
+\begin{sectionbox}
 	\subsection{Rechtwinkliges Dreieck}
 	
 	a: Ankathete von $\beta$, Gegenkathete von $\alpha$\\
@@ -56,6 +76,11 @@
 		
 		% Define point C on the semicircle
 		\coordinate (C) at ($(M) + (50:2.5cm)$);  % Angle 50 degrees from the horizontal
+	
+		\coordinate (CH) at ($(A)!(C)!(B)$);
+		
+		\draw (C) -- (CH);
+	
 		
 		% Draw the semicircle
 		\draw[] (A) arc[start angle=180, end angle=0, radius=2.5cm];
@@ -85,8 +110,23 @@
 		\node at ($(A)!0.5!(C)$) [anchor=south east] {$b$};
 		\node at ($(B)!0.5!(C)$) [anchor=west] {$a$};
 		\node at ($(A)!0.5!(B)$) [below] {$c$};
+		\node (q) at ($(A)!0.5!(CH)$) [anchor=south] {$q$};
+		\node (p) at ($(CH)!0.5!(B)$) [anchor=south] {$p$};
+		\node (h) at ($(CH)!0.5!(C)$) [anchor=east] {$h$};
 		
 	\end{tikzpicture}
+
+		\begin{emphbox}
+			\begin{align*}
+				\text{Satz des Pythagoras: } c^2 &= a^2 + b^2 \\
+				\text{Kathetensatz von Euklid: } a^2 &= c \cdot p  \\
+					 b^2 &= c \cdot q \\
+		 		\text{Höhensatz von Euklid:} h^2 &= p \cdot q
+			\end{align*}
+		\end{emphbox}
+\end{sectionbox}
+
+
 
 	\subsection{Sinus und Cosinus}
 		Der Sinus ist eine ungerade Funktion \\
@@ -150,15 +190,5 @@
 \end{bluebox}
 
 
-\end{sectionbox}
-
-
-\begin{sectionbox}
-	\subsection{Cosinus}
-
-	Text goes here ...
-
-
-\end{sectionbox}
 
 
