@@ -13,7 +13,11 @@
 #	2023-03-16	Improved file import
 #
 
-import sys,re,os.path, chardet, helpers
+import sys,glob,os.path
+import argparse
+
+# custom modules
+import helpers
 
 def sort_file(in_fname, out_fname):
 
@@ -38,12 +42,20 @@ def sort_file(in_fname, out_fname):
 		out_f.write(item['hash']+item['ws']+item['file']+'\n')
 
 if __name__ == '__main__':
-	if len(sys.argv) != 2:
-		print('Error: Invalid number of arguments.')
-		sys.exit()
 
-	in_fname = sys.argv[1];
-	(root, ext) = os.path.splitext(in_fname);
-	out_fname = root+"_sorted"+ext;
+	parser = argparse.ArgumentParser()
+	parser.add_argument('path', nargs='+', help='Single or multiple files and/or folders to be processed.')
 
-	sort_file(in_fname, out_fname)
+	args = parser.parse_args()
+
+	filelist = helpers.create_filelist(args.path)
+
+	print(args.path)
+	print(filelist)
+
+	# Process files
+	for in_fname in filelist:
+		(root, ext) = os.path.splitext(in_fname);
+		out_fname = root+"_sorted"+ext;
+
+		sort_file(in_fname, out_fname)
