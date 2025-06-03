@@ -19,10 +19,19 @@
 \usepackage{gensymb}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,angles,positioning}
+\usepackage{circuitikz}
+\ctikzset{voltage/distance from node=.2}% defines arrow's distance from nodes
+\ctikzset{voltage/distance from line=.02}% defines arrow's distance from wires
+%\ctikzset{voltage/bump b/.initial=.1}% defines arrow's curvature
+\usepackage{bodegraph}
 
 \def\centerarc[#1](#2)(#3:#4:#5)
 % Syntax: [draw options] (center) (initial angle:final angle:radius)
 { \draw[#1] ($(#2)+({#5*cos(#3)},{#5*sin(#3)})$) arc (#3:#4:#5); }
+
+\makeatletter
+\newcommand\currentcoordinate{\the\tikz@lastxsaved,\the\tikz@lastysaved}
+\makeatother
 
 % set document information
 \title{LaTeX4EI \\ Cheat Sheet}
@@ -45,6 +54,7 @@
 
 \input{sub_docs/allgemein}
 \input{sub_docs/elektrotechnik}
+\input{sub_docs/elektronik}
 \input{sub_docs/trigonometrie}
 \input{sub_docs/physik}
 

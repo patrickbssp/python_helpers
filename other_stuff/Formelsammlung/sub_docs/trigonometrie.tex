@@ -18,43 +18,58 @@
 		
 		Inkreismittelpunkt: Schnittpunkt der Winkelhalbierenden \\
 		Umkreismittelpunkt: Schnittpunkt der Mittelsenkrechten \\
+
 	\begin{tikzpicture}
+	
+	% Define the points of the triangle
+	\coordinate (A) at (0,0);
+	\coordinate (B) at (5,0);
+	\coordinate (C) at (3.0,2.0);
+	
+	\coordinate (CH) at (3, 0);
+	
+	\draw [thin] (C) -- (CH);
+	
+	% Draw the triangle
+	\draw [thick] (A) -- (B) -- (C) -- cycle;
+	
+	% Mark the angles
+	\centerarc[](A)(0.0:33.7:0.4)
+	\node[above right= 0.1cm and 0.5cm of A] {$\alpha$};
+	
+	\centerarc[](B)(180.0:135:0.4)
+	\node[above left= 0.1cm and 0.5cm of B] {$\beta$};
+	
+	\centerarc[](C)(213.7:315:0.4)
+	\node[below left= 0.5cm and 0.1cm of C] {$\gamma$};
+	
+	% Label the vertices
+	\node[below left] at (A) {A};
+	\node[above right] at (C) {C};
+	\node[below right] at (B) {B};
+	
+	% Label the sides
+	\node (a) at ($(B)!0.5!(C)$) [anchor=west] {$a$};
+	\node (b) at ($(A)!0.5!(C)$) [anchor=south east] {$b$};
+	\node (c) at ($(A)!0.5!(B)$) [anchor=north] {$c$};
+	\node (q) at ($(A)!0.5!(CH)$) [anchor=south] {$q$};
+	\node (p) at ($(CH)!0.5!(B)$) [anchor=south] {$p$};
+	\node (hc) at ($(CH)!0.5!(C)$) [anchor=east] {$h_c$};
+\end{tikzpicture}
 
-		% Define the points of the triangle
-		\coordinate (A) at (0,0);
-		\coordinate (B) at (4,0);
-		\coordinate (C) at (3.0,2.0);
+\begin{tikzpicture}
+	% axes
+	\draw[->] (-1.5,0)--(1.5,0) coordinate (x axis);
+	\draw[->] (0,-1.5)--(0,1.5) coordinate (y axis);
 
-		\coordinate (CH) at (3, 0);
-		
-		\draw [thin] (C) -- (CH);
-		
-		% Draw the triangle
-		\draw [thick] (A) -- (B) -- (C) -- cycle;
-		
-		% Mark the angles
-		\centerarc[](A)(0.0:33.7:0.4)
-		\node[above right= 0.1cm and 0.5cm of A] {$\alpha$};
+	% axes label
+	\node [right] at (1.5,0)(x){$x$};
+	\node [above] at (0,1.5)(y){$y$};
+	% circle
+	\draw (0,0) circle[radius=1];
+\end{tikzpicture}
 
-		\centerarc[](B)(180.0:116.6:0.4)
-		\node[above left= 0.1cm and 0.5cm of B] {$\beta$};
 
-		\centerarc[](C)(213.7:296.6:0.4)
-		\node[below left= 0.5cm and 0.1cm of C] {$\gamma$};
-
-		% Label the vertices
-		\node[below left] at (A) {A};
-		\node[above right] at (C) {C};
-		\node[below right] at (B) {B};
-
-		% Label the sides
-		\node (a) at ($(B)!0.5!(C)$) [anchor=west] {$a$};
-		\node (b) at ($(A)!0.5!(C)$) [anchor=south east] {$b$};
-		\node (c) at ($(A)!0.5!(B)$) [anchor=north] {$c$};
-		\node (q) at ($(A)!0.5!(CH)$) [anchor=south] {$q$};
-		\node (p) at ($(CH)!0.5!(B)$) [anchor=south] {$p$};
-		\node (hc) at ($(CH)!0.5!(C)$) [anchor=east] {$h_c$};
-	\end{tikzpicture}
 \end{sectionbox}
 
 
@@ -160,8 +175,7 @@
 	\subsection{Cotangens}
 		\begin{emphbox}
 			\begin{align*}
-			\cot(\alpha) &= \frac{1}{\tan(\alpha)} \\
-			\cot \alpha &= \frac{\cos \alpha}{\sin \alpha} 		
+			\cot(\alpha) &= \frac{1}{\tan(\alpha)} &= \frac{\cos \alpha}{\sin \alpha} 		
 			\end{align*}
 		\end{emphbox}
 
@@ -184,10 +198,6 @@
 	A = Fläche\\
 	R = Radius des Umkreises
 \end{symbolbox}
-
-\begin{bluebox}
-	Test
-\end{bluebox}
 
 
 

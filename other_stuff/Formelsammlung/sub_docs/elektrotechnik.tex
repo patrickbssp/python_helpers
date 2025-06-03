@@ -126,30 +126,70 @@
 
 \end{sectionbox}
 
+\begin{sectionbox}
+	\subsection{Strom}
+	Elektronen bewegen sich entgegengesetzt zur Stromrichtung
+
+	\begin{tabular}{cc}
+	\parbox{1cm}{
+		\begin{emphbox}
+			\begin{align*}
+				b &= \frac{v}{E} \\
+				J &= \frac{I}{A}
+			\end{align*}
+		\end{emphbox}
+	} & 
+	
+	\parbox{5cm}{
+		\begin{symbolbox}
+			$b$: Ladungsträgerbeweglichkeit (in $m^2/Vs$) \\
+			$v$: Driftgeschwindigkeit (in m/s) \\
+			$E$: el. Feldstärke (in V/m) \\
+			$J$: Stromdichte \\
+			$I$: Stromstärke \\
+			$A$: Leiterquerschnitt
+		\end{symbolbox}
+	}
+\end{tabular}
+
+\end{sectionbox}
 
 \begin{sectionbox}
 	\subsection{Widerstand}
 
-	\begin{emphbox}
-	Leitwert:	$ G = \frac{1}{R} $\\
-	\end{emphbox}	
-	
-	Parallelschaltung:
-	\begin{emphbox}
-		\begin{align*}
-			\frac{1}{R_{tot}} &= \sum _{k=1}^{n}\frac{1}{R_k} &= \frac{1}{R_{1}} + \frac{1}{R_{2}} + \ldots + \frac{1}{R_k}\\
-			G_{tot} &= \sum _{k=1}^{n}G_k &= G_1 + G_2 + \ldots + G_k
-		\end{align*}
-	\end{emphbox}
-	
-	Serieschaltung:
-	\begin{emphbox}
+	\begin{tabular}{cc}
+	\parbox{2.5cm}{
+		\begin{emphbox}
 			\begin{align*}
-			R_{tot} &= \sum _{k=1}^{n}R_k &= R_1 + R_2 + \ldots + R_k
-		\end{align*}
+				R &= \frac{\rho \cdot l}{A} = \frac{l}{\gamma \cdot A} \\
+				\gamma &= \frac{1}{\rho} \\
+				R &= \frac{1}{G}
+			\end{align*}
+		\end{emphbox}
+	} & 
 
+	\parbox{3cm}{
+		\begin{symbolbox}
+			R: Widerstand (in \ohm) \\
+			G: Leitwert (in S) \\
+			$\rho$ : spez. Widerstand \\
+			$\gamma$ : Leitfähigkeit \\
+			A : Leiterquerschnitt \\
+			l: Leiterlänge
+		\end{symbolbox}
+	}
+	\end{tabular}
+
+	\begin{emphbox}
+	
+		\begin{tabular}{l|l}
+			Parallelschaltung & Serieschaltung \\
+			%\hline
+			$ \frac{1}{R_{tot}} = \sum\limits _{k=1}^{n}\frac{1}{R_k} $	&
+			$ R_{tot} = \sum\limits _{k=1}^{n}R_k $ \\
+			$ G_{tot} = \sum\limits _{k=1}^{n}G_k $ & \\
+		\end{tabular}
 	\end{emphbox}
-
 	
 \end{sectionbox}
 
@@ -165,21 +205,24 @@
 		\end{align*}
 	\end{emphbox}
 
-	Ladevorgang:
-	\begin{emphbox}
-		\begin{align*}
-			u_C(t) &= U_0 \cdot (1-e^{-{\frac{t}{τ}}}) \\
-			i_C(t) &= I_0 \cdot e^{-{\frac{t}{τ}}}
-		\end{align*}
-	\end{emphbox}
 
-	Entladevorgang:
-	\begin{emphbox}
-		\begin{align*}
-			u_C(t) &= U_0 \cdot e^{-{\frac{t}{τ}}} \\
-			i_C(t) &= -I_0 \cdot e^{-{\frac{t}{τ}}}
-		\end{align*}
-	\end{emphbox}
+
+
+\begin{emphbox}
+	\begin{tabular}{l|l}
+		Ladevorgang & Entladevorgang \\
+		
+		$ u_C(t) = U_0 \cdot (1-e^{-{\frac{t}{τ}}}) $ &
+		$ u_C(t) = U_0 \cdot e^{-{\frac{t}{τ}}} $ \\
+
+		$ i_C(t) = I_0 \cdot e^{-{\frac{t}{τ}}} $ &
+		$ i_C(t) = -I_0 \cdot e^{-{\frac{t}{τ}}} $ \\
+		
+	\end{tabular}
+
+
+
+\end{emphbox}
 
 mit
 \begin{emphbox}
@@ -194,35 +237,79 @@ mit
 \begin{sectionbox}
 	\subsection{Spule}
 
-Lade-/Entladevorgang:
-\begin{emphbox}
-	$u_C(t) = U_0+ ΔU \cdot e^{-{\frac{t}{τ}}} = U_0+ (U_{C,t0}-U_0) \cdot e^{-{\frac{t}{τ}}} ???$
+	Lade-/Entladevorgang:
+	\begin{emphbox}
+		$u_C(t) = U_0+ ΔU \cdot e^{-{\frac{t}{τ}}} = U_0+ (U_{C,t0}-U_0) \cdot e^{-{\frac{t}{τ}}} ???$
 
-	$i_C(t) = \frac{u_C(t)}{R_C} = \frac{U_0}{R_C}+\frac{ΔU}{R_C}\cdot e^{-{\frac{t}{τ}}} ???$
-\end{emphbox}
+		$i_C(t) = \frac{u_C(t)}{R_C} = \frac{U_0}{R_C}+\frac{ΔU}{R_C}\cdot e^{-{\frac{t}{τ}}} ???$
+	\end{emphbox}
 
-Ladevorgang:
-\begin{emphbox}
+	\begin{emphbox}
+		\begin{tabular}{l|l}
+			Ladevorgang & Entladevorgang \\
+			$u_L(t) = U_0 \cdot e^{-{\frac{t}{τ}}}$ &
+			$u_L(t) = -U_0 \cdot e^{-{\frac{t}{τ}}}$ \\
+			$i_L(t) = I_0 \cdot (1-e^{-{\frac{t}{τ}}})$ &
+			$i_L(t) = I_0 \cdot e^{-{\frac{t}{τ}}}$ \\
+		\end{tabular}
+	\end{emphbox}
 
-	$i_L(t) = I_0 \cdot (1-e^{-{\frac{t}{τ}}})$
-
-	$u_L(t) = U_0 \cdot e^{-{\frac{t}{τ}}}$
-
-\end{emphbox}
-
-Entladevorgang:
-\begin{emphbox}
-	$u_L(t) = -U_0 \cdot e^{-{\frac{t}{τ}}}$
-
-	$i_L(t) = I_0 \cdot e^{-{\frac{t}{τ}}}$
-\end{emphbox}
-
-mit
-\begin{emphbox}
-	$I_0 = \frac{U_0}{R_L}$
-	
-	$τ = \frac{L}{R_L}$	
-\end{emphbox}
+	mit: $I_0 = \frac{U_0}{R_L}, τ = \frac{L}{R_L}$	
 
 	
+\end{sectionbox}
+
+
+\begin{sectionbox}
+	\subsection{Phasenwinkel}
+
+	\begin{emphbox}
+		Kreisfrequenz: $\omega = 2\pi f = 2\pi/T$\\
+		Phasenwinkel: $\varphi(t) = \omega t + \varphi_0$\\
+		Kosinusform: $x(t) = \hat{x} \cos(\omega t + \varphi_0)$\\
+	\end{emphbox}
+
+		mit: f = Frequenz\\
+		T = Periodendauer\\
+		$\varphi_0$ = Nullphasenwinkel, Phasenwinkel zum Zeitpunkt t=0
+
+\end{sectionbox}
+	
+
+\begin{sectionbox}
+	\subsection{Phasor/komplexe Amplitude}
+	Für harmonisch schwingende zeitabhängige Grössen:
+	\begin{emphbox}
+		$a(t) = \hat{a} \cos(\omega t + \varphi_0)$\\
+	
+	\end{emphbox}
+\end{sectionbox}
+
+\begin{sectionbox}
+	\subsection{Frequenzgang}
+	\begin{emphbox}
+		Verstärkung/Dämpfung: $v = 20\log \frac{G}{G_0}$
+	\end{emphbox}
+	mit:
+	$G$ : Grösse\\
+	$G_0$ : Bezugsgrösse\\
+	$[v]$ = dB
+	
+	Grenzfrequenz $f_g$ / Grenzkreisfrequenz $\omega_g$):
+	Bei dieser Frequenz ist der Betrag einer frequenzabhängigen Grösse	um $\sqrt{2}$ grösser oder kleiner als eine konstante Bezugsgrösse.
+	
+	
+	Dekade: lin.: $\cdot 10$ o. $/10$, log.: $\pm 20 \si{\dB}$\\
+	Oktave:	lin.: $\cdot 2$ o. $/2$, log.: $\pm 6 \si{\dB}$
+	\begin{emphbox}
+		Normierte Frequenz: $\Omega = \frac{\omega}{\omega_g}$
+	\end{emphbox}
+
+\end{sectionbox}
+
+\begin{sectionbox}
+	
+
+
+
 \end{sectionbox}

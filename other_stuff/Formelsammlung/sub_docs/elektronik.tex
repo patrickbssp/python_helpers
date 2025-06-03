@@ -1,0 +1,107 @@
+\section{Elektronik}
+
+\subsection{Operationsverstärker}
+
+\subsubsection{Allgemein}
+	
+	\resizebox{3cm}{!}{	
+	\begin{circuitikz}[european]
+		\draw (0, 5) node[op amp,yscale=-1] (opamp) {}
+		(opamp.-) to[short,-o] ++(-0.5, 0) coordinate(N)
+		(opamp.+) to[short,-o] ++(-1, 0) coordinate(P)
+		(opamp.out) to[short,-o] ++(0.5, 0) coordinate(O)
+		(O |- 0,4) node[rground](OG){} node[ocirc] {}
+		(OG -| N) node[rground](ON){} node[ocirc]{}
+		(OG -| P) node[rground](OP){} node[ocirc]{}
+		% draw voltage arrows
+		(P) to [open, v_=$u_+$, voltage=straight] (OP)
+		(N) to [open, v^=$u_-$, voltage=straight] (ON)
+		(O) to [open, v^=$u_{out}$, voltage=straight] (OG)
+		;
+	\end{circuitikz}
+	} % resizebox
+
+	\begin{tabular}{cc}
+	\parbox{2.5cm}{
+		\begin{emphbox}
+			\begin{align*}
+				u_{out} &= A_{OL} \cdot (u_+ - u_-)
+			\end{align*}
+		\end{emphbox}
+	} & 
+	
+	\parbox{3cm}{
+		\begin{symbolbox}
+			$A_{OL}$: Open-loop gain
+		\end{symbolbox}
+	}
+\end{tabular}
+
+\subsubsection{Nichtinvertierender Verstärker (Elektrometerverstärker)}
+
+	\resizebox{3cm}{!}{	
+		\input{sub_docs/fig_non_inv_opamp}
+	} % resizebox
+
+	\begin{emphbox}
+		\begin{align*}
+			U_{out} &= (1 + \frac{R_2}{R_1}) \cdot U_{in}
+		\end{align*}
+	\end{emphbox}
+
+\subsubsection{Spannungsfolger}
+
+Spezialfall des nichtinv. Verstärkers mit $R_2 = 0\ohm$ und $R_1 = \infty\ohm$.
+
+
+\subsubsection{Invertierender Addierer/Summierverstärker}
+
+	\resizebox{6cm}{!}{
+		\input{sub_docs/fig_inv_sum_opamp}
+	}
+	
+	\begin{emphbox}
+		\begin{align*}
+			U_{out} &= -R_f \cdot (\frac{U_1}{R_1} + \frac{U_2}{R_2} + \frac{U_3}{R_3})
+		\end{align*}
+	\end{emphbox}
+
+\subsubsection{Invertierender Verstärker}
+
+Der invertierende Verstärker ist ein Spezialfall des inv. Addierers mit einem einzelnen Eingang.
+
+\subsubsection{Differenzverstärker/Subtrahierverstärker}
+
+	\resizebox{6cm}{!}{
+		\input{sub_docs/fig_sub_opamp.tex}
+	}
+
+	\begin{emphbox}
+		\begin{align*}
+			not checked!
+%			U_{out} &= U_2 \cdot \frac{R_1+R_f}{R_1} \cdot \frac{R_g}{R_2+R_g} - U_1 \frac{R_f}{R_1}
+		\end{align*}
+	\end{emphbox}
+
+\subsubsection{Instrumentenverstärker}
+	\resizebox{6cm}{!}{
+		\input{sub_docs/fig_instr_opamp.tex}
+	}
+	\begin{emphbox}
+		\begin{align*}
+			U_{out} &= (1+\frac{2R}{Rg}) \cdot \frac{R_3}{R_2} \cdot (U_2-U_1)
+		\end{align*}
+	\end{emphbox}
+\subsubsection{Integrierer}
+\subsubsection{Differenzierer}
+\subsubsection{Tiefpass 1. Ordnung}
+
+	\begin{circuitikz}
+		% Paths, nodes and wires:
+		\coordinate (I) at (0, 1);
+		\draw (I) to[european resistor, l=$R$, o-*] ++(2,0) coordinate(N) -- ++(1,0) coordinate(O) node[ocirc]{};
+		\draw (N) to[capacitor] ++(0,-2) coordinate(N2) node[ocirc]{};
+		\draw (I|-N2) to[short,o-o] (O|-N2);
+		\draw (I) to[open,v^=$U_1$, voltage=straight] (I|-N2);
+		\draw (O) to[open,v^=$U_2$, voltage=straight] (O|-N2);
+	\end{circuitikz}

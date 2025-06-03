@@ -1,0 +1,29 @@
+\begin{tikzpicture}
+	% Paths, nodes and wires:
+	\coordinate (I3) at (0,7);
+	\coordinate (I2) at (-1,8);
+	\coordinate (I1) at (-2,9);
+	\coordinate (GO) at (7,5);
+	\draw node[op amp](op) at (4.2, 6.5) {};
+	\draw (I1 -| op.+) to[european resistor, l=$R_f$] (I1 -| op.out) to[short,-*] (op.out);
+	\draw (I1) to[short,o-] (I1 -| I3) to[european resistor, l=$R_1$] (I1 -| op.-);
+	\draw (I2) to[short,o-] (I2 -| I3) to[european resistor, l=$R_2$] (I2 -| op.-);
+	\draw (I3) to[european resistor, l=$R_3$] (I3 -| op.-);
+	\draw (3, 8) to[short,-*] (3, 9);
+	\draw (3, 7) to[short,*-*] (3, 8);
+	
+	\draw (I3) node[ocirc] {};
+	
+	\draw (op.out) to[short,-o] (op.out -| GO) to[open,v^=$U_{out}$, voltage=straight] (GO) node[rground] {};
+	
+	\draw (5.4, 6.5) -| (6, 6.5);
+	\draw (op.+) -- (op.+ |- GO) node[rground]{};
+	
+	% draw voltage arrows and ground symbols, aligned to GO
+	\draw (I3) to [open, v^=$U_3$, voltage=straight] (GO -| I3)
+	node[rground] {} node[ocirc] {};
+	\draw (I2) to [open, v^=$U_2$, voltage=straight] (GO -| I2)
+	node[rground] {} node[ocirc] {};
+	\draw (I1) to [open, v^=$U_1$, voltage=straight] (GO -| I1)
+	node[rground] {} node[ocirc] {};
+\end{tikzpicture}

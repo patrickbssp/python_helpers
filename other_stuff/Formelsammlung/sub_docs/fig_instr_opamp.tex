@@ -1,0 +1,19 @@
+\begin{circuitikz}
+	% Paths, nodes and wires:
+	
+	\draw node[op amp,yscale=-1](op1) at (1.2, 6.5) {};
+	\draw node[op amp](op2) at (1.2, 0.5) {};
+	\draw node[op amp](op3) at (5.6, 3.5) {};
+	\draw (op1.out) to[european resistor, l=$R_1$] ++(0,-2) coordinate (N1) -| (op1.-);
+	\draw (N1) node[circ]{} to[european resistor, l=$R_g$]  ++(0,-2) coordinate (N2) node[circ]{};
+	\draw (op2.out) to[european resistor, l=$R_1$] ++(0,2) (N2) -| (op2.-);
+	\draw (op1.out) to[european resistor, l=$R_2$, *-] ++(2,0) coordinate (N3) -- (op3.-);
+	\draw (N3) to[european resistor, l=$R_3$, *-] ++(2,0) -| (op3.out) to[short,*-] ++(0.5,0) node[ocirc]{} to[open,v^=$U_{out}$, voltage=straight] ++(0,-5) coordinate(GND) node[ocirc]{} node[rground] {};
+	\draw (op2.out) to[european resistor, l=$R_2$, *-] ++(2,0) coordinate (N4) -- (op3.+);
+	
+	\draw (op1.+) -- ++(-0.5,0) coordinate(I1) node[ocirc]{} to[open,v^=$U_1$, voltage=straight] ++(0,-2) node[ocirc]{} node[rground] {};
+	
+	\draw (op2.+) -- ++(-0.5,0) coordinate(I2) node[ocirc]{} to[open,v^=$U_2$, voltage=straight] ++(0,-2) node[ocirc]{} node[rground] {};
+	
+	\draw (N4) to[european resistor, l=$R_3$, *-] ++(2,0) coordinate(N5) -- (N5 |- GND) node[rground]{};
+\end{circuitikz}

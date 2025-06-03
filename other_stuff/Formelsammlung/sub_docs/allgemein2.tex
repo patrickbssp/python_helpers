@@ -1,0 +1,156 @@
+\section{Einheiten}
+
+\begin{sectionbox}
+	\subsection{SI-Präfixe}
+		\begin{emphbox}
+			\begin{tabular}{ccl|ccl}
+				Symbol & Präfix & Faktor & Symbol & Präfix & Faktor \\
+
+				Q  & Quetta & $10^{30}$ & d & Dezi & $10^{-1}$\\
+				R  & Ronna  & $10^{27}$ & c & Zenti & $10^{-2}$\\
+				Y  & Yotta  & $10^{24}$ & m & Milli & $10^{-3}$\\
+				Z  & Zetta  & $10^{21}$ & µ & Mikro & $10^{-6}$\\ 
+				E  & Exa    & $10^{18}$ & n & Nano  & $10^{-9}$\\
+				P  & Peta   & $10^{15}$ & p & Piko  & $10^{-12}$\\
+				T  & Tera   & $10^{12}$ & f & Femto  & $10^{-15}$\\
+			 	G  & Giga   & $10^9$    & a & Atto   & $10^{-18}$\\
+				M  & Mega   & $10^6$    & z & Zepto  & $10^{-21}$\\
+				k  & Kilo   & $10^3$    & y & Yokto  & $10^{-24}$\\
+				h  & Hekto  & $10^2$    & r & Ronto  & $10^{-27}$\\
+				da & Deka   & $10^1$    & q & Quekto & $10^{-30}$\\
+			\end{tabular}
+		\end{emphbox}
+
+	\subsection{Binäre Präfixe}
+		\begin{emphbox}
+			\begin{tabular}{ccll}
+				Symbol & Präfix & Faktor & Dez. Äquiv. \\
+			
+				Ki & Kibi  & $2^{10}$  & $= 1.024e3$ \\
+				Mi & Mebi  & $2^{20}$  & $≈ 1.049e6$ \\
+				Gi & Gibi  & $2^{30}$  & $≈ 1.074e9$ \\
+				Ti & Tebi  & $2^{40}$  & $≈ 1.100e12$ \\
+				Pi & Pebi  & $2^{50}$  & $≈ 1.126e15$ \\
+				Ei & Exbi  & $2^{60}$  & $≈ 1.152e18$ \\
+				Zi & Zebi  & $2^{70}$  & $≈ 1.181e21$ \\
+				Yi & Yobi  & $2^{80}$  & $≈ 1.209e24$ \\
+				Ri & Robi  & $2^{90}$  & $≈ 1.238e27$ \\
+				Qi & Quebi & $2^{100}$ & $≈ 1.268e30$ \\
+
+			\end{tabular}
+		\end{emphbox}
+	
+	\subsection{SI-Einheiten}
+		\begin{emphbox}
+			\begin{tabular}{llc}
+				Grösse & Einheit & Symbol \\
+				Länge & Meter & m \\
+				Masse & Kilogramm & kg \\
+				Zeit & Sekunde & s \\
+				Stromstärke & Ampere & A \\
+				Temperatur & Kelvin & K \\
+				Stoffmenge & - & mol \\
+				Lichtstärke & Candela & cd			
+		\end{tabular}
+	\end{emphbox}
+	
+	
+	\subsection{Abgeleitete Einheiten}
+		\begin{emphbox}
+			\begin{tabular}{lcllc}
+				Grösse & Symbol & Einheit & Einheit & SI \\
+				Kraft & F & Newton & N & $kg\cdot m/s^2$ \\
+				Energie/Arbeit & E/W & Joule & J & $Nm$ \\
+				Leistung & P & Watt & W & $J/s$ \\
+				El. Ladung & Q & Coulomb & C & $A \cdot s$ \\
+				El. Potential & $\phi$ & Volt & V & $J/C$ \\
+				Spannung & U & Volt & V & $J/C$ \\
+				El. Widerstand & R & Ohm & $\ohm$ & $V/A$ \\
+				El. Leitwert & G & Siemens & S & $A/V$ \\
+				Spez. el. Widerstand & $\rho$ & - & - & $Ωm$ \\
+				Spez. el. Leitwert & $\gamma$ & - & - & $S/m$ \\
+				El. Feldstärke & E & - & - & $V/m$ \\
+				El. Stromdichte & J & - & - & $A/m^2$ \\
+			\end{tabular}
+		\end{emphbox}
+	
+\end{sectionbox}
+
+\begin{sectionbox}
+	\subsection{Mach}
+	
+		\begin{emphbox}
+				\begin{align*}
+					\sin \mu &= \frac{c}{v} = \frac{1}{m}\\
+					\mu &= \arcsin \frac{1}{M}
+				\end{align*}
+		\end{emphbox}
+		\begin{symbolbox}
+			c: Schallgeschwindigkeit\\
+			v: Objektgeschwindigkeit\\
+			$\mu: Machwinkel$
+		\end{symbolbox}
+			
+			
+			
+%		\centering\noindent%
+
+
+	\resizebox{5cm}{!}{
+	
+	\def\dotMarkRightAngle[size=#1](#2,#3,#4){%
+		\draw ($(#3)!#1!(#2)$) -- 
+		($($(#3)!#1!(#2)$)!#1!90:(#2)$) --
+		($(#3)!#1!(#4)$);
+		\path (#3) --node[circle,fill,inner sep=.5pt]{} ($($(#3)!#1!(#2)$)!#1!90:(#2)$);
+	}
+	
+	\begin{tikzpicture}
+
+		\coordinate (OO) at (0,0);				
+
+		% Circle centers
+		\coordinate (P3) at (1,0);				
+		\coordinate (P2) at (2,0);				
+		\coordinate (P1) at (3,0);				
+
+		% Tangential points
+		\coordinate (S3) at ({1 *(1-sin(30)*sin(30)},{1*sin(30)*cos(30)});				
+		\coordinate (S2) at ({2 *(1-sin(30)*sin(30)},{2*sin(30)*cos(30)});				
+		\coordinate (S1) at ({3 *(1-sin(30)*sin(30)},{3*sin(30)*cos(30)});				
+
+		% Endpoint of Mach front
+		\coordinate (SX) at (4,{4*tan(30)});				
+
+		\draw [-Stealth,dashed] (P3) -- node[above] {} (S3);
+		\draw [-Stealth,dashed] (P2) -- node[above] {} (S2);
+		\draw [-Stealth] (P1) -- node[right] {Schallgeschwindigkeit c} (S1);
+
+		\coordinate (O) at (4,0);
+		\coordinate (C) at (0,3);
+		\coordinate (D) at ($(C)!(P3)!(B)$);
+		
+		\draw [-Stealth] (O) -- node[below] {Objektgeschwindigkeit v} (OO);
+		\draw [dashed] (OO) -- node[left] {Machwelle} (SX);
+		
+		\pic [draw, angle radius=3mm, angle eccentricity=1.2mm] {angle = P3--OO--S3};
+		\node[above = 0.1cm and 0.8cm of OO] {$\mu$};
+		
+		\dotMarkRightAngle[size=6pt](OO,S1,P1);
+		
+		\draw (P3) [dashed] circle ({1*sin(30)});
+		\draw (P2) [dashed] circle ({2*sin(30)});
+		\draw (P1) circle ({3*sin(30)});
+
+		
+	\end{tikzpicture}
+	
+}		
+
+		
+	$M < 1.0$: Subsonic \\
+	$M = 1.0$: Transonic \\
+	$M > 1.0$: Supersonic \\
+	$M > 5.0$: Hypersonic
+	
+\end{sectionbox}

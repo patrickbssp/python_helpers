@@ -1,0 +1,15 @@
+\begin{circuitikz}
+	% Paths, nodes and wires:
+	
+	\draw node[op amp](op) at (4.2, 6.5) {};
+	\draw (op.-) to[short,*-] ++(0,1) coordinate(N) to[european resistor,l=$R_f$] (N-|op.out) to[short,-*] (op.out);
+	
+	\draw (op.+) node[circ]{} to[european resistor,l=$R_g$] ++(0, -2) coordinate(G) node[rground] {};
+	
+	\draw (op.+) to[european resistor, l=$R_2$] ++(-2, 0) coordinate(I2) node[ocirc]{} to[open,v^=$U_2$, voltage=straight] (G-|I2) node[ocirc]{} node[rground] {};
+	
+	\draw (op.-) to[european resistor, l=$R_1$]  ++(-2, 0) to[short] ++(-0.5, 0) coordinate(I1) node[ocirc]{} to[open,v^=$U_1$, voltage=straight] (G-|I1) node[ocirc]{} node[rground] {};
+	
+	\draw (op.out) to[short,-o] ++(0.5,0) coordinate(O) to[open,v^=$U_{out}$, voltage=straight] (O|-G) node[ocirc]{} node[rground] {};
+	
+\end{circuitikz}
