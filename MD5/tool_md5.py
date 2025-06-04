@@ -11,12 +11,15 @@
 #	2018-10-09	Merged convert and sort modes
 #	2018-12-03	Removed obsolete regex
 #	2023-03-16	Improved file import
-#
+#	2025-06-04	Use improved file list generation
 
 import sys,glob,os.path
 import argparse
+import pathlib
 
 # custom modules
+mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
+sys.path.insert(0, str(mod_path))
 import helpers
 
 def sort_file(in_fname, out_fname):
@@ -49,9 +52,6 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	filelist = helpers.create_filelist(args.path)
-
-	print(args.path)
-	print(filelist)
 
 	# Process files
 	for in_fname in filelist:
