@@ -34,20 +34,12 @@ def create_filelist(args, file_ext=None, recursive=False):
     '''args is a list or single item containing files and/or paths.
     file_ext is a string specifiying the allowed file extensions.
     '''
-    # Using set to prevent duplicates
     filelist = []
     for path in args:
         if os.path.isdir(path):
-            print('Got path: ', path)
             # Path is a directory. Collect all files and add them
-            # TODO if file_ext is None, don't filter files
-            if file_ext:
-                glob_patt = '{}/*.{}'.format(path, file_ext)
-            else:
-                if recursive:
-                    glob_patt = '**/*'
-                else:
-                    glob_patt = '*'
+            file_patt = '*.{}'.format(file_ext) if file_ext else '*'
+            glob_patt = '**/*{}'.format(file_patt) if recursive else '*{}'.format(file_patt)
             res = glob.glob(glob_patt, root_dir=path, recursive=recursive)
             for r in res:
                 f = os.path.join(path, r)
@@ -55,7 +47,6 @@ def create_filelist(args, file_ext=None, recursive=False):
                     filelist.append(f)
 
         elif os.path.isfile(path):
-            print('Got file: ', path)
             # Path is a single file
             filelist.append(path)
         else:
