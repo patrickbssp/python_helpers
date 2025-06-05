@@ -281,7 +281,8 @@ def my_print(str):
     """
         Wrapper to use alternate stdout handle capable of UTF-8 irregarding of environment.
     """
-    print(str, file=uni_stdout)
+    if 'uni_stdout' in globals():
+        print(str, file=uni_stdout)
 
 def parse_file(top_dir, full_path, md5_fh, csv_wh):
     global num_violations
@@ -537,24 +538,30 @@ def check_cdm(str):
                 e = ba[i-1:i+2].decode('utf-8')
                 return e
 
+# Extract track number and title from filename
+# Returns either a tuple of track and title or None
+def get_track_title(fname):
+    m = re.match(r"^(\d\d) - (.*)\.mp3", fname)
+    if m and len(m.groups()) == 2:
+        return m.group(1), m.group(2)
+
 # check, whether MP3 filename convention is maintained 
 def is_valid_mp3_filename(filename):
-    m = re.match("^(\d\d) - (.*)\.mp3", filename)
-    return True if m else False
+    return True if get_track_title(filename) else False
 
 # Extract info from file identified by path
 def extract_tag(full_path):
 
     path = pathlib.PurePath(full_path)
     
-    m = re.match("^(\d\d) - (.*)\.mp3", path.parts[-1])
-    if m and len(m.groups()) == 2:
+    track, title = get_track_title(path.parts[-1])
+    if track and title:
         ### Extract info from file and path
         tag = {}
         tag['f_artist'] = path.parts[-3]
         tag['f_album']  = path.parts[-2]
-        tag['f_track'] = m.group(1)
-        tag['f_title'] = m.group(2)
+        tag['f_track'] = track
+        tag['f_title'] = title
 
         ### Extract info from ID3 tag
         f = mutagen.File(full_path)
@@ -645,6 +652,10 @@ def parse_dir(top_dir, md5_fh, csv_wh):
 
     return num_files, num_violations, num_mp3
 
+# Generate report.
+# Depending on the options chosen, either MD5 hashes are calculated, CSV entries
+# are generated, or both
+# This function returns the number of violations for testability
 def generate_list(top_dir, csv_file=None, md5_file=None):
 
     md5_fh = None
@@ -675,7 +686,7 @@ def generate_list(top_dir, csv_file=None, md5_file=None):
     if csv_file:
         csv_fh.close()
 
-    sys.exit(0)
+    return num_violations
 
 def analyse_csv(csv_file):
 
