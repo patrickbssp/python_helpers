@@ -279,13 +279,12 @@ substitutions_file = "substitutions.txt"
 
 def my_print(str):
     """
-        Wraper to use alternate stdout handle capable of UTF-8 irregarding of environment.
+        Wrapper to use alternate stdout handle capable of UTF-8 irregarding of environment.
     """
     print(str, file=uni_stdout)
 
 def parse_file(top_dir, full_path, md5_fh, csv_wh):
     global num_violations
-
 
     path_rel = pathlib.PurePath(full_path).relative_to(top_dir)
 
@@ -626,9 +625,9 @@ def check_tag(tag):
     return tag
 
 def parse_dir(top_dir, md5_fh, csv_wh):
-    global num_files
-    global num_violations
-    global num_mp3
+    num_files = 0
+    num_violations = 0
+    num_mp3 = 0
 
     for dirpath, dirnames, filenames in os.walk(top_dir):
         dirnames.sort()
@@ -643,6 +642,8 @@ def parse_dir(top_dir, md5_fh, csv_wh):
             tag = parse_file(top_dir, os.path.join(dirpath, fname), md5_fh, csv_wh)
             if tag:
                 num_mp3 += 1
+
+    return num_files, num_violations, num_mp3
 
 def generate_list(top_dir, csv_file=None, md5_file=None):
 
@@ -659,7 +660,7 @@ def generate_list(top_dir, csv_file=None, md5_file=None):
         csv_wh = csv.DictWriter(csv_fh, fieldnames=field_names, dialect='mp3_csv')
         csv_wh.writeheader()
 
-    parse_dir(str(pathlib.PurePath(top_dir)), md5_fh, csv_wh)
+    num_files, num_violations, num_mp3 = parse_dir(str(pathlib.PurePath(top_dir)), md5_fh, csv_wh)
 
     if md5_file:
         md5_fh.write('-------------------------------------------------------------\n')
@@ -720,7 +721,7 @@ def print_usage_and_die():
     print("""Usage:
     -m <top_dir> <md5_file>             Check file hierarchy, naming rules etc. and dump MD5 hashes.
     -e <top_dir> <csv_file>             Extract MP3 tags starting from folder <top_dir> and dump tags to CSV file.
-    -c <top_dir> <csv_file> <md5_file>  Combines options -m and -c.
+    -c <top_dir> <csv_file> <md5_file>  Combines options -m and -e.
     -a <csv_file>                  Analyse CSV file.
     """.format(sys.argv[0]))
     sys.exit(1)
@@ -736,18 +737,22 @@ def main():
     ###         over SSH.
     uni_stdout = open(1, 'w', encoding='utf-8', closefd=False)
 
-    if len(sys.argv) == 3 and sys.argv[1] == '-a':
+    # Require at least one argument
+    if len(sys.argv) < 2:
+        print_usage_and_die()
+    if sys.argv[1] == '-a' and len(sys.argv) == 3:
         analyse_csv(sys.argv[2])
-    elif len(sys.argv) == 4 and sys.argv[1] == '-e':
+    elif sys.argv[1] == '-e' and len(sys.argv) == 4:
         generate_list(sys.argv[2], csv_file=sys.argv[3])
-    elif len(sys.argv) == 4 and sys.argv[1] == '-m':
+    elif sys.argv[1] == '-m' and len(sys.argv) == 4:
         generate_list(sys.argv[2], md5_file=sys.argv[3])
-    elif len(sys.argv) == 5 and sys.argv[1] == '-c':
+    elif sys.argv[1] == '-c' and len(sys.argv) == 5:
         generate_list(sys.argv[2], csv_file=sys.argv[3], md5_file=sys.argv[4])
     else:
         print_usage_and_die()
 
     sys.exit(0)
 
-main()
+if __name__ == '__main__':
+    main()
 

@@ -9,12 +9,9 @@ def strip_shell(txt):
 
 ### Calculate MD5 hash of file, using md5sum
 def file_md5(file):
-	cmd = '/usr/bin/md5sum "{}"'.format(file)
-	args = shlex.split(cmd)
+	args = shlex.split('/usr/bin/md5sum "{}"'.format(file))
 	p = subprocess.Popen(args, stdout=subprocess.PIPE)
-	txt = strip_shell(p.stdout.read())
-	md5 = txt.split()[0]
-	return md5
+	return p.stdout.read().decode('utf-8').split()[0]
 
 # Determine file type
 def file_type(file):
@@ -30,7 +27,7 @@ def file_size(file):
 
 # Return tuple consisting of hash and filename, or None
 def split_hash_filename(line):
-    pattern = re.compile("([0-9a-f]{32})(\s+\**)(.*)")
+    pattern = re.compile(r"([0-9a-f]{32})(\s+\**)(.*)")
     m = re.search(pattern, line)
     if m:
         d = dict()

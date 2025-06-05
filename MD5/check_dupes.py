@@ -1,6 +1,12 @@
 #! /usr/bin/python3
 
-import sys,re,os.path, chardet, helpers
+import sys,re,os.path, chardet
+
+# custom modules
+import pathlib
+mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
+sys.path.insert(0, str(mod_path))
+import helpers
 
 def check_dupes(in_fname):
 	tot_num_files = 0
