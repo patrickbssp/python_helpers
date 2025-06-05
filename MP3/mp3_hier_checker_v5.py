@@ -49,6 +49,11 @@ import pathlib
 import mutagen
 import csv
 
+# custom modules
+mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
+sys.path.insert(0, str(mod_path))
+import helpers
+
 file_shortest = None
 file_longest = None
 
@@ -274,18 +279,6 @@ unique_artists_file = "unique_artists.txt"
 unique_albums_file = "unique_albums.txt"
 substitutions_file = "substitutions.txt"
 
-### strip trailing newline and convert to UTF-8
-def strip_shell(txt):
-	return txt[:-1].decode('utf-8')
-
-def file_md5(file):
-	cmd = '/usr/bin/md5sum "{}"'.format(file)
-	args = shlex.split(cmd)
-	p = subprocess.Popen(args, stdout=subprocess.PIPE)
-	txt = strip_shell(p.stdout.read())
-	md5 = txt.split()[0]
-	return md5
-
 def my_print(str):
 	"""
 		Wraper to use alternate stdout handle capable of UTF-8 irregarding of environment.
@@ -310,7 +303,7 @@ def parse_file(top_dir, full_path, md5_fh, csv_wh):
 	if m and len(m.groups()) == 2:
 
 		if md5_fh:
-			md5 = file_md5(full_path)
+			md5 = helpers.file_md5(full_path)
 			md5_fh.write('{}  {}\n'.format(md5, path_rel))
 
 		if csv_wh:

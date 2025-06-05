@@ -1,6 +1,32 @@
 #! /usr/bin/python3
 
-import sys,re,os.path, chardet, glob
+import sys, re, os.path, chardet, glob, shlex, subprocess
+
+
+### strip trailing newline and convert to UTF-8
+def strip_shell(txt):
+	return txt[:-1].decode('utf-8')
+
+### Calculate MD5 hash of file, using md5sum
+def file_md5(file):
+	cmd = '/usr/bin/md5sum "{}"'.format(file)
+	args = shlex.split(cmd)
+	p = subprocess.Popen(args, stdout=subprocess.PIPE)
+	txt = strip_shell(p.stdout.read())
+	md5 = txt.split()[0]
+	return md5
+
+# Determine file type
+def file_type(file):
+	cmd = '/usr/bin/file -b "{}"'.format(file)
+	args = shlex.split(cmd)
+	p = subprocess.Popen(args, stdout=subprocess.PIPE)
+	txt = strip_shell(p.stdout.read())
+	return txt
+
+def file_size(file):
+	size = os.stat(file).st_size
+	return size
 
 # Return tuple consisting of hash and filename, or None
 def split_hash_filename(line):

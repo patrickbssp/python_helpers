@@ -3,6 +3,12 @@
 # last modification: 2015-10-25
 
 import sys,re,os.path, subprocess, shlex
+import pathlib
+
+# custom modules
+mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
+sys.path.insert(0, str(mod_path))
+import helpers
 
 num_iso = 0
 num_corrupt = 0
@@ -15,10 +21,6 @@ create_checksums = False
 
 ### file extensions of files which will report as type 'data'
 file_ext_whitelist = ['.mov', '.dcr', '.ins', '.pkg', '.ex_', '.bin', '.ins', '.dmg', '.lay', '.tlb', '.dxr', '.scc']
-
-### strip trailing newline and convert to UTF-8
-def strip_shell(txt):
-	return txt[:-1].decode('utf-8')
 
 def _mount_iso(file, mount_point):
 	cmd = '/bin/mount -r "{}" {}'.format(file, mount_point)
@@ -51,25 +53,6 @@ def unmount_iso(mount_point):
 	p = subprocess.Popen(args, stdout=subprocess.PIPE)
 	txt = p.stdout.read()
 	return txt
-
-def file_md5(file):
-	cmd = '/usr/bin/md5sum "{}"'.format(file)
-	args = shlex.split(cmd)
-	p = subprocess.Popen(args, stdout=subprocess.PIPE)
-	txt = strip_shell(p.stdout.read())
-	md5 = txt.split()[0]
-	return md5
-
-def file_type(file):
-	cmd = '/usr/bin/file -b "{}"'.format(file)
-	args = shlex.split(cmd)
-	p = subprocess.Popen(args, stdout=subprocess.PIPE)
-	txt = strip_shell(p.stdout.read())
-	return txt
-
-def file_size(file):
-	size = os.stat(file).st_size
-	return size
 
 def check_dvd(folder):
 #	global num_corrupt

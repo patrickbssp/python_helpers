@@ -14,17 +14,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import fnmatch
 
-### strip trailing newline and convert to UTF-8
-def strip_shell(txt):
-    return txt[:-1].decode('utf-8')
-
-def file_md5(file):
-    cmd = '/usr/bin/md5sum "{}"'.format(file)
-    args = shlex.split(cmd)
-    p = subprocess.Popen(args, stdout=subprocess.PIPE)
-    txt = strip_shell(p.stdout.read())
-    md5 = txt.split()[0]
-    return md5
+# custom modules
+import pathlib
+mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
+sys.path.insert(0, str(mod_path))
+import helpers
 
 class wave_obj:
 
@@ -37,7 +31,7 @@ class wave_obj:
         self.sample_rate, self.data = wavfile.read(filename)
         self.sample_cnt, self.channel_cnt = self.data.shape
         self.time = self.sample_cnt/44.1e3
-        self.md5 = file_md5(filename)
+        self.md5 = helpers.file_md5(filename)
 
     def dump(self):
         print('filename: {}'.format(self.filename))

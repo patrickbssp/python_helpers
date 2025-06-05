@@ -34,21 +34,15 @@ import sys, os, glob, shutil
 import re
 import shlex
 import subprocess
+import pathlib
+
+# custom modules
+mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
+sys.path.insert(0, str(mod_path))
+import helpers
 
 wav_pattern = r'.*\.wav'
 mp3_pattern = r'.*\.mp3'
-
-### strip trailing newline and convert to UTF-8
-def strip_shell(txt):
-    return txt[:-1].decode('utf-8')
-
-def file_md5(file):
-    cmd = '/usr/bin/md5sum "{}"'.format(file)
-    args = shlex.split(cmd)
-    p = subprocess.Popen(args, stdout=subprocess.PIPE)
-    txt = strip_shell(p.stdout.read())
-    md5 = txt.split()[0]
-    return md5
 
 def print_error_and_exit(msg, exit_code=1):
     print('Error: {}, exitting now'.format(msg))
