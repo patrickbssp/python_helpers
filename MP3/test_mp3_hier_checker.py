@@ -17,8 +17,18 @@ class HelpersTest(TestCase):
 
     def test_generate_list(self):
         # create fake files
-        self.fs.create_file('./DirA/file1.txt')
-        self.fs.create_file('./DirA/file2.txt')
+        self.fs.create_file('./Artist_A/Album_A/01 - Song.mp3')
+        self.fs.create_file('./Artist_A/Album_A/02 - Song.mp3')
+        self.fs.create_file('./Artist_A/Album_B/01 - Song.mp3')
+        self.fs.create_file('./Artist_B/Album_A/01 - Song.mp3')
+        self.fs.create_file('./Artist_B/Album_A/02 - Song.mp3')
+        self.fs.create_file('./Artist_B/Album_A/02 Song.mp3')   # 1 viol. (misnamed track)
+        self.fs.create_dir('./Artist_C/')          # 1 viol. (empty artist)
+        self.fs.create_dir('./Artist_D/Album_A/')   # 1 viol. (empty album)
+        self.fs.create_file('./test.txt')           # 1 viol. (file in level 1)
+        self.fs.create_file('./Artist_A/test.txt')  # 1 viol. (file in level 2)
+        print(self.fs)
         num_vio = hc.generate_list(".")
-        self.assertEqual(num_vio, 3)
+        # pyfakefs will create a folder ./tmp which will trigger one violation
+        self.assertEqual(num_vio, 6)
         

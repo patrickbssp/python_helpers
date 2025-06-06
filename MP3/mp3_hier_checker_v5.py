@@ -285,31 +285,29 @@ def my_print(str):
         print(str, file=uni_stdout)
 
 def parse_file(top_dir, full_path, md5_fh, csv_wh):
-    global num_violations
 
     path_rel = pathlib.PurePath(full_path).relative_to(top_dir)
 
     if len(path_rel.parts) != 3:
-        num_violations += 1
         my_print('violation: invalid file: {}'.format(full_path))
-        return
+        return 1, None
 
     fname = path_rel.parts[2]
     if not is_valid_mp3_filename(fname):
-        num_violations += 1
         print("violation: rule_3b: filenames must have format 'xx - Trackname.mp3'")
         print("file: {}".format(fname))
-        return
+        return 1, None
     
-    # tag is extracted anyway as it comes cheap, contrary to calculating
-    # the MD5 hash which takes quite some time
-    tag = extract_tag(full_path)
     if md5_fh:
         md5 = helpers.file_md5(full_path)
         md5_fh.write('{}  {}\n'.format(md5, path_rel))
     if csv_wh:
+        # Extract tag only if required. In testcase, no ID3 info is available
+        tag = extract_tag(full_path)
         csv_wh.writerow(tag)
-    return tag
+        return 0, tag
+
+    return 0, None
 
 def report_mismatch(fname, item, f_item, t_item):
     global num_violations
@@ -646,10 +644,22 @@ def parse_dir(top_dir, md5_fh, csv_wh):
         ### then, iterate over files
         for fname in filenames:
             num_files += 1
-            tag = parse_file(top_dir, os.path.join(dirpath, fname), md5_fh, csv_wh)
-            if tag:
-                num_mp3 += 1
-
+            p = pathlib.PurePath(dirpath)
+            print("checking: {}".format(fname))
+            print(top_dir, dirpath, fname)
+            print(p, p.parts, len(p.parts))
+            if len(p.parts) == 0:
+                num_violations += 1
+                print("violation: rule_1a: no files are allowed in level 1: {}".format(fname))
+            elif len(p.parts) == 1:
+                num_violations += 1
+                print("violation: rule_1a: no files are allowed in level 1: {}".format(fname))
+            else:
+                num_v, tag = parse_file(top_dir, os.path.join(dirpath, fname), md5_fh, csv_wh)
+                if tag:
+                    num_mp3 += 1
+                num_violations += num_v
+            print("num. violations: {}".format(num_violations))
     return num_files, num_violations, num_mp3
 
 # Generate report.
