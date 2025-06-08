@@ -66,7 +66,21 @@ substitutions_done = set()
 
 num_files = 0
 num_mp3 = 0
-num_violations = 0
+
+class ViolationCounter:
+    _num_violations = 0
+
+    def add_violation(self, text):
+        self._num_violations += 1
+        print(text)
+
+    def report_violations(self):
+        print("num. violations: {}".format(self._num_violations))
+
+    def get_violations(self):
+        return self._num_violations
+
+violations = ViolationCounter()
 
 field_names = [
     'f_artist',         # artist (from filename)
@@ -294,7 +308,7 @@ def parse_file(top_dir, full_path, md5_fh, csv_wh):
 
     fname = path_rel.parts[2]
     if not is_valid_mp3_filename(fname):
-        print("violation: rule_3b: filenames must have format 'xx - Trackname.mp3'")
+        violations.add_violation("violation: rule_3b: filenames must have format 'xx - Trackname.mp3'")
         print("file: {}".format(fname))
         return 1, None
     
@@ -310,10 +324,7 @@ def parse_file(top_dir, full_path, md5_fh, csv_wh):
     return 0, None
 
 def report_mismatch(fname, item, f_item, t_item):
-    global num_violations
-
-    num_violations += 1
-    my_print('Mismatch in {}, file: {} tag: {} (file: {})'.format(item, f_item, t_item, fname))
+    violations.add_violation('Mismatch in {}, file: {} tag: {} (file: {})'.format(item, f_item, t_item, fname))
 
 def report_substitution(reason, orig, sub):
     if enable_report_substitutions:
@@ -577,7 +588,6 @@ def check_tag(tag):
     """
 
     global num_mp3
-    global num_violations
     global file_longest
     global file_shortest
 
@@ -631,15 +641,13 @@ def check_tag(tag):
 
 def parse_dir(top_dir, md5_fh, csv_wh):
     num_files = 0
-    num_violations = 0
     num_mp3 = 0
 
     for dirpath, dirnames, filenames in os.walk(top_dir):
         dirnames.sort()
         filenames.sort()
         if (len(dirnames) == 0) and (len(filenames) == 0):
-            num_violations += 1
-            print("violation: rule_xx: empty folder detected: {}".format(dirpath))
+            violations.add_violation("violation: rule_xx: empty folder detected: {}".format(dirpath))
 
         ### then, iterate over files
         for fname in filenames:
@@ -649,18 +657,15 @@ def parse_dir(top_dir, md5_fh, csv_wh):
             print(top_dir, dirpath, fname)
             print(p, p.parts, len(p.parts))
             if len(p.parts) == 0:
-                num_violations += 1
-                print("violation: rule_1a: no files are allowed in level 1: {}".format(fname))
+                violations.add_violation("violation: rule_1a: no files are allowed in level 1: {}".format(fname))
             elif len(p.parts) == 1:
-                num_violations += 1
-                print("violation: rule_1a: no files are allowed in level 1: {}".format(fname))
+                violations.add_violation("violation: rule_1a: no files are allowed in level 1: {}".format(fname))
             else:
                 num_v, tag = parse_file(top_dir, os.path.join(dirpath, fname), md5_fh, csv_wh)
                 if tag:
                     num_mp3 += 1
-                num_violations += num_v
-            print("num. violations: {}".format(num_violations))
-    return num_files, num_violations, num_mp3
+            violations.report_violations()
+    return num_files, num_mp3
 
 # Generate report.
 # Depending on the options chosen, either MD5 hashes are calculated, CSV entries
@@ -681,14 +686,14 @@ def generate_list(top_dir, csv_file=None, md5_file=None):
         csv_wh = csv.DictWriter(csv_fh, fieldnames=field_names, dialect='mp3_csv')
         csv_wh.writeheader()
 
-    num_files, num_violations, num_mp3 = parse_dir(str(pathlib.PurePath(top_dir)), md5_fh, csv_wh)
+    num_files, num_mp3 = parse_dir(str(pathlib.PurePath(top_dir)), md5_fh, csv_wh)
 
     if md5_file:
         md5_fh.write('-------------------------------------------------------------\n')
         md5_fh.write("Top folder: {}\n".format(top_dir))
         md5_fh.write("{} file(s) checked\n".format(num_files))
         md5_fh.write("{} MP3 file(s) found\n".format(num_mp3))
-        md5_fh.write("{} violation(s) found\n".format(num_violations))
+        md5_fh.write("{} violation(s) found\n".format(violations.get_violations()))
 
     if md5_file:
         md5_fh.close()
@@ -696,7 +701,7 @@ def generate_list(top_dir, csv_file=None, md5_file=None):
     if csv_file:
         csv_fh.close()
 
-    return num_violations
+    return violations.get_violations()
 
 def analyse_csv(csv_file):
 
