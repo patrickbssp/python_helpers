@@ -35,11 +35,14 @@ class wave_obj:
 
     def dump(self):
         print('filename: {}'.format(self.filename))
-        print('size: {}'.format(self.filesize))
         print('MD5: {}'.format(self.md5))
-        print('samples: {}'.format(self.sample_cnt))
-        print('channels: {}'.format(self.channel_cnt))
-        print('duration: {}'.format(self.time))
+        print('channels: {}, samples: {}, size: {}'.format(self.channel_cnt, self.sample_cnt, self.filesize))
+        print('duration: {:.1f}'.format(self.time))
+
+    def dump_short(self):
+        print('{} {}'.format(self.md5, self.filename))
+        print('channels: {}, samples: {}, bytes: {}, duration: {:.1f}'.format(self.channel_cnt, self.sample_cnt,
+                self.filesize, self.time))
 
 # Test pattern with 5 differing samples at the start only
 test_pat_1 = [0,1,2,3,4]
@@ -184,9 +187,9 @@ def compare_waveforms(w1, w2):
 
 def compare_files(fileA, fileB):
     w1 = wave_obj(fileA)
-    w1.dump()
+    w1.dump_short()
     w2 = wave_obj(fileB)
-    w2.dump()
+    w2.dump_short()
 
     offsets = [0, 0]
     match = [False, False]
@@ -202,21 +205,21 @@ def compare_files(fileA, fileB):
         print('No match')
         abs_tot = [0,0,0,0]
         for i in mismatches_uni:
+            # Align waveforms using offset indetified
             w2r_l = np.roll(w2.data[:,0], -offsets[0])
             w2r_r = np.roll(w2.data[:,1], -offsets[1])
             abs_tot[0] += abs(w1.data[i,0])
             abs_tot[1] += abs(w2r_l[i])
             abs_tot[2] += abs(w1.data[i,1])
             abs_tot[3] += abs(w2r_r[i])
+            # Print sample number, left channel of wave 1 and 2, right channel of wave 1 and 2
             print('[{}]: {:2} {:2} {:2} {:2}'.format(i, w1.data[i,0], w2r_l[i], w1.data[i,1], w2r_r[i]))
         print('Abs.tot:   {:2} {:2} {:2} {:2}'.format(abs_tot[0], abs_tot[1], abs_tot[2], abs_tot[3]))
         fp = np.array([mismatches[0][0], mismatches[1][0]])
-        print(fp)
         fp_perc = 100*fp[:]/sample_cnt
         print('{}/{} of {} non-matching samples. First one at: {} ({:.6f}%) and {} ({:.6f}%)'.format(len(mismatches[0]), len(mismatches[1]), sample_cnt,            fp[0], fp_perc[0], fp[1], fp_perc[1]))
     else:
        print('Match with offsets: {} / {}'.format(offsets[0], offsets[1]))
-
 
 def get_files_from_path(path):
     # Collect files recursively
@@ -229,9 +232,6 @@ def get_files_from_path(path):
 def compare_folders(pathA, pathB):
     filesA = get_files_from_path(pathA)
     filesB = get_files_from_path(pathB)
-    print('filelists:')
-    print(filesA)
-    print(filesB)
     if len(filesA) != len(filesB):
         print('Number of files do not match')
         return
@@ -256,7 +256,6 @@ if __name__ == '__main__':
         pathB = sys.argv[2]
         if os.path.isdir(pathA) and os.path.isdir(pathB):
             compare_folders(pathA, pathB)
-            print('Not implemented yet')
         elif os.path.isfile(pathA) and os.path.isfile(pathB):
             compare_files(pathA, pathB)
         else:

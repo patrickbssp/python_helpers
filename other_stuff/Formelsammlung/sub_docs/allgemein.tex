@@ -79,40 +79,5 @@
 		
 		$ \sum\limits_{k=m}^{n}(a_k+b_k) = \sum\limits_{k=m}^{n}a_k + \sum\limits_{k=m}^{n}b_k $
 	\end{emphbox}
-\end{sectionbox}
-
-
-\begin{sectionbox}
-	
-	O bezeichnet den Ursprung (origo)
-	
-	\begin{tikzpicture}
-		% Draw grid
-		\draw[help lines, color=gray!30] (-1,-1) grid (5,4);
-		
-		% Draw axes
-		\draw[thick,->] (-0.5,0) -- (3.5,0) node[right] {$x$};
-		\draw[thick,->] (0,-0.5) -- (0,3.5) node[above] {$y$};
-		
-		% Define points
-		\coordinate (P) at (1,1);
-		\coordinate (Q) at (2,3);
-		
-		% Draw vectors
-		\draw[thick,->,blue] (0,0) -- (P) node[midway,below right] {$\vec{p}$};
-		\draw[thick,->,red] (0,0) -- (Q) node[midway,above left] {$\vec{q}$};
-		\draw[thick,->,green] (P) -- (Q) node[midway,right] {$\vec{r}$};
-		% Draw and label points
-		\fill (P) circle (2pt) node[above right] {$P (1,1)$};
-		\fill (Q) circle (2pt) node[above right] {$Q (2,3)$};
-		
-	\end{tikzpicture}
-
-	\begin{emphbox}
-		$\overrightarrow{p} = \overrightarrow{OP} = \overrightarrow{P}$\\
-		$\overrightarrow{q} = \overrightarrow{OQ} = \overrightarrow{Q}$\\
-		$\overrightarrow{r} = \overrightarrow{PQ} = \overrightarrow{OQ} - \overrightarrow{OP} = \overrightarrow{q} - \overrightarrow{p}$\\
-	\end{emphbox}
-\end{sectionbox}
-	
+\end{sectionbox}	
 	
