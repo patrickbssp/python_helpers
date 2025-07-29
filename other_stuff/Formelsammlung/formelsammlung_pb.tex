@@ -15,14 +15,14 @@
 % defaults: color, english
 \documentclass[english]{latex4ei/latex4ei_sheet}
 \usepackage{amsmath}
-\usepackage{empheq}
+%\usepackage{empheq}
 \usepackage{gensymb}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,angles,positioning}
 \usepackage{circuitikz}
 \ctikzset{voltage/distance from node=.2}% defines arrow's distance from nodes
 \ctikzset{voltage/distance from line=.02}% defines arrow's distance from wires
-%\ctikzset{voltage/bump b/.initial=.1}% defines arrow's curvature
+\ctikzset{voltage/bump b/.initial=.1}% defines arrow's curvature
 \usepackage{bodegraph}
 
 \def\centerarc[#1](#2)(#3:#4:#5)
@@ -34,7 +34,7 @@
 \makeatother
 
 % set document information
-\title{LaTeX4EI Cheat Sheet}
+\title{LaTeX4EI \\ Cheat Sheet}
 \author{LaTeX4EI}					% optional, delete if unchanged
 \myemail{info@latex4ei.de}			% optional, delete if unchanged
 \mywebsite{www.latex4ei.de}			% optional, delete if unchanged
@@ -47,7 +47,7 @@
 
 % Title
 % ----------------------------------------------------------------------
-\maketitle   % requires ./img/Logo.pdf
+%\maketitle   % requires ./img/Logo.pdf
 
 % Section
 % ----------------------------------------------------------------------
@@ -57,7 +57,7 @@
 \input{sub_docs/elektrotechnik}
 \input{sub_docs/elektronik}
 \input{sub_docs/trigonometrie}
-\input{sub_docs/physik}
+	\input{sub_docs/physik}
 
 % ======================================================================
 % End

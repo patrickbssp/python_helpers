@@ -1,9 +1,9 @@
 \section{Mathematik}
+
 \subsection{Vektoren}
 
 Darstellung:
 	$\overrightarrow{a} = \mathbf{a} = \begin{bmatrix} a_1, a_2, a_3 \end{bmatrix} = \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix}$
-
 
 \begin{sectionbox}
 	
@@ -42,7 +42,7 @@ Darstellung:
 	Betrag/Länge eines Vektors
 	\begin{emphbox}
 	\begin{align*}
-		a = |\overrightarrow{a}| = \sqrt{\overrightarrow{a} \cdot \overrightarrow{a}} = \sqrt{a_1^2 + a_2^2 + a_3^2} 
+		a = |\overrightarrow{a}| = \sqrt{\overrightarrow{a} {\cdot} \overrightarrow{a}} = \sqrt{a_1^2 + a_2^2 + a_3^2} 
 	\end{align*}
 \end{emphbox}
 	
@@ -50,25 +50,21 @@ Darstellung:
 	\begin{emphbox}
 		\begin{tabular}{l|l}
 			Vektoraddition/-subtraktion & 	Multiplikation mit Skalar \\
-			\overrightarrow{a} \pm \overrightarrow{b} = \begin{bmatrix} a_1 \pm b_1 \\ a_2 \pm b_2 \\ a_3 \pm b_3 \end{bmatrix} &
-			c \cdot \overrightarrow{a} = \begin{bmatrix} c \cdot a_1 \\ c \cdot a_2 \\ c \cdot a_3 \end{bmatrix}
-		\end{tabular}
-		\begin{tabular}{lc}
-%		\begin{align*}
-			\text{Kommutativgesetz:} & \overrightarrow{a} + \overrightarrow{b} = \overrightarrow{b} + \overrightarrow{a} \\
-			\text{Assoziativgesetz:} & (\overrightarrow{a} + \overrightarrow{b}) + \overrightarrow{c} = \overrightarrow{a} + (\overrightarrow{b} + \overrightarrow{c}) \\
-			\text{Distributivgesetz:} & \lambda \cdot (\overrightarrow{a} + \overrightarrow{b}) = \lambda \cdot \overrightarrow{a} + \lambda \cdot \overrightarrow{b}
-		\end{tabular}
-%		\end{align*}
-	\end{emphbox}
+			$\overrightarrow{a} \pm \overrightarrow{b} = \begin{bmatrix} a_1 \pm b_1 \\ a_2 \pm b_2 \\ a_3 \pm b_3 \end{bmatrix} $ & $
+			c {\cdot} \overrightarrow{a} = \begin{bmatrix} c {\cdot} a_1 \\ c {\cdot} a_2 \\ c {\cdot} a_3 \end{bmatrix} $ \\
 
+			\text{Kommutativgesetz:} & $ \overrightarrow{a} + \overrightarrow{b} = \overrightarrow{b} + \overrightarrow{a} $ \\
+			\text{Assoziativgesetz:} & $ (\overrightarrow{a} + \overrightarrow{b}) + \overrightarrow{c} = \overrightarrow{a} + (\overrightarrow{b} + \overrightarrow{c}) $ \\
+			\text{Distributivgesetz:} & $ \lambda {\cdot} (\overrightarrow{a} + \overrightarrow{b}) = \lambda {\cdot} \overrightarrow{a} + \lambda {\cdot} \overrightarrow{b} $
+		\end{tabular}
+	\end{emphbox}
 
 	Einheitsvektor \\
 	- markiert mit Zirkumflex \\
 	- Zeigt in gleiche Richtung, aber mit Länge 1
 	\begin{emphbox}
 		\begin{align*}
-	 		\hat{a} &= \frac{1}{|\overrightarrow{a}|} \cdot \overrightarrow{a} \\
+	 		\hat{a} &= \frac{1}{|\overrightarrow{a}|} {\cdot} \overrightarrow{a} \\
 	 		|\hat{a}| &= 1
 		\end{align*}
 	\end{emphbox}
@@ -84,7 +80,7 @@ Darstellung:
 	
 	\begin{emphbox}
 		\begin{align*}
-			\overrightarrow{n_0} = \frac{1}{|\overrightarrow{n}|} \cdot \overrightarrow{n} \text{Vektor mit Richtung von a, mit Länge 1}
+			\overrightarrow{n_0} = \frac{1}{|\overrightarrow{n}|} {\cdot} \overrightarrow{n} \text{Vektor mit Richtung von a, mit Länge 1}
 		\end{align*}
 	\end{emphbox}
 	mit: $\overrightarrow{n_0}$: Normaleneinheitsvektor, $\overrightarrow{n}$: Normalenvektor
@@ -96,28 +92,35 @@ Darstellung:
 \begin{sectionbox}
 	Skalarprodukt (Punktprodukt, inneres Produkt)
 	\begin{emphbox}
-		\begin{align*}
-			\overrightarrow{a} \cdot \overrightarrow{b} &= |\overrightarrow{a}| \cdot |\overrightarrow{b}| \cdot \cos \alpha \\
-			\overrightarrow{a} \cdot \overrightarrow{b} &= \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix} \cdot \begin{bmatrix} b_1 \\ b_2 \\ b_3 \end{bmatrix} = a_1 \cdot b_1 + a_2 \cdot b_2 + a_3 \cdot b_3 \\
-			\overrightarrow{a} \perp \overrightarrow{b} &\Leftrightarrow \overrightarrow{a} \cdot \overrightarrow{b} = 0 \\
-			\text{Kommutativgesetz:} \overrightarrow{a} \cdot \overrightarrow{b} &= \overrightarrow{b} \cdot \overrightarrow{a} \\
-			\text{Assoziativgesetz:} (\lambda \cdot \overrightarrow{a}) \cdot \overrightarrow{b} &= \lambda \cdot (\overrightarrow{a} \cdot \overrightarrow{b}) \\
-			\text{Distributivgesetz:}	\overrightarrow{a} \cdot (\overrightarrow{b} + \overrightarrow{c}) &= \overrightarrow{a} \cdot \overrightarrow{b} + \overrightarrow{a} \cdot \overrightarrow{c}
-		\end{align*}
+		\begin{tabular}{lcl}
+			\text{Geom. Form:} & $ \overrightarrow{a} {\cdot} \overrightarrow{b} $ & $ = \lvert \overrightarrow{a} \rvert {\cdot} |\overrightarrow{b}| {\cdot} \cos \alpha $ \\
+
+			\text{Koord.form:} & $ \overrightarrow{a} {\cdot} \overrightarrow{b} $ &= $ \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix} {\cdot} \begin{bmatrix} b_1 \\ b_2 \\ b_3 \end{bmatrix} = a_1 {\cdot} b_1 + a_2 {\cdot} b_2 + a_3 {\cdot} b_3 $ \\
+
+			\text{...} & $ \overrightarrow{a} \perp \overrightarrow{b}$ & $\Leftrightarrow \overrightarrow{a} {\cdot} \overrightarrow{b} = 0 $ \\
+
+			\text{Kommutativgesetz:} & $ \overrightarrow{a} {\cdot} \overrightarrow{b}$ &= $\overrightarrow{b} {\cdot} \overrightarrow{a}$ \\
+
+			\text{Assoziativgesetz:} & $(\lambda {\cdot} \overrightarrow{a}) {\cdot} \overrightarrow{b}$ &= $\lambda {\cdot} (\overrightarrow{a} {\cdot} \overrightarrow{b})$ \\
+
+			\text{Distributivgesetz:} &	$\overrightarrow{a} {\cdot} (\overrightarrow{b} + \overrightarrow{c})$ &= $\overrightarrow{a} {\cdot} \overrightarrow{b} + \overrightarrow{a} {\cdot} \overrightarrow{c}$
+		\end{tabular}
 	\end{emphbox}
 
 	Kreuzprodukt (Vektorprodukt, äusseres Produkt)
 	\begin{emphbox}
-		\begin{align*}
-			\overrightarrow{a} \times \overrightarrow{b} &= |\overrightarrow{a}| \cdot |\overrightarrow{b}| \cdot \sin \alpha
-			\cdot \overrightarrow{n} \\
-			\overrightarrow{a} \times \overrightarrow{b} &= \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix} \times \begin{bmatrix} b_1 \\ b_2 \\ b_3 \end{bmatrix} = \begin{bmatrix} a_2 \cdot b_3 - a_3 \cdot b_2 \\ a_3 \cdot b_1 - a_1 \cdot b_3 \\ a_1 \cdot b_2 - a_2 \cdot b_1 \end{bmatrix}
-		\end{align*}
-		\begin{tabular}{lc}
-			\text{nicht kommutativ!:} &	\overrightarrow{a} \times \overrightarrow{b} = -(\overrightarrow{b} \times \overrightarrow{a}) \\
-			\text{Distributivgesetz:} &	\overrightarrow{a} \times (\overrightarrow{b} + \overrightarrow{c}) = \overrightarrow{a} \times \overrightarrow{b} + \overrightarrow{a} \times \overrightarrow{c}\\
-			\text{Alt. Schreibweisen:} & \overrightarrow{a} \times \overrightarrow{b} \equiv \overrightarrow{a} \wedge \overrightarrow{b} \equiv	[\overrightarrow{a}, \overrightarrow{b}]
+		\begin{tabular}{lcl}
+			\text{Geom. Form:} & 
+			$\overrightarrow{a} \times \overrightarrow{b}$ &= $|\overrightarrow{a}| {\cdot} |\overrightarrow{b}| {\cdot} \sin \alpha
+			{\cdot} \overrightarrow{n}$ \\
 
+			\text{Koord.form:} & $\overrightarrow{a} \times \overrightarrow{b}$ &= $\begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix} \times \begin{bmatrix} b_1 \\ b_2 \\ b_3 \end{bmatrix} = \begin{bmatrix} a_2 {\cdot} b_3 - a_3 {\cdot} b_2 \\ a_3 {\cdot} b_1 - a_1 {\cdot} b_3 \\ a_1 {\cdot} b_2 - a_2 {\cdot} b_1 \end{bmatrix}$ \\
+
+			\text{nicht kommutativ!:} &	$\overrightarrow{a} \times \overrightarrow{b}$ & $= -(\overrightarrow{b} \times \overrightarrow{a})$ \\
+
+			\text{Distributivgesetz:} &	$\overrightarrow{a} \times (\overrightarrow{b} + \overrightarrow{c})$ &= $\overrightarrow{a} \times \overrightarrow{b} + \overrightarrow{a} \times \overrightarrow{c}$ \\
+
+			\text{Alt. Schreibweisen:} & $\overrightarrow{a} \times \overrightarrow{b}$ & $\equiv \overrightarrow{a} \wedge \overrightarrow{b} \equiv	[\overrightarrow{a}, \overrightarrow{b}]$
 		\end{tabular}
 		
 	\end{emphbox}
