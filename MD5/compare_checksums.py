@@ -12,7 +12,13 @@
 # If considering the LHS file as the older list, and the RHS file as the newer one respectively,
 # then LHS only files are files were deleted, and RHS only files were added.
 
-import sys,re,os.path, chardet, helpers
+import sys,re,os.path, chardet
+
+# custom modules
+import pathlib
+mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
+sys.path.insert(0, str(mod_path))
+import helpers
 
 def print_usage_and_die():
 	print('Error: Invalid number of arguments.')
