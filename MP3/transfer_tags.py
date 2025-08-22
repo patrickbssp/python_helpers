@@ -3,9 +3,9 @@
 import argparse
 import os, re
 import sys
+import pathlib
 from mutagen.id3 import ID3
 from mutagen.flac import FLAC
-import pathlib
 
 # custom modules
 mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
@@ -61,7 +61,7 @@ def transfer_tags(mp3_path, flac_path, dry_run=False, verbose=False):
         vorbis_field = FRAME_MAP.get(frame_id, frame_id.lower())
         if verbose:
             print(f'{frame_id:10} -> {vorbis_field:12}: {frame_data}')
-            
+
         val = frame_data.text[0]
         if vorbis_field == 'comment' and val == 'Digital Qual. 9':
             continue
@@ -76,7 +76,7 @@ def transfer_tags(mp3_path, flac_path, dry_run=False, verbose=False):
             flac_file['artist'][0],
             flac_file['date'][0],
             flac_file['genre'][0]))
-  
+
     if not dry_run:
         try:
             flac_file.save()
@@ -85,9 +85,9 @@ def transfer_tags(mp3_path, flac_path, dry_run=False, verbose=False):
     flac_size_new, flac_md5_new = helpers.file_size(flac_path), helpers.file_md5(flac_path)
     if flac_size_new != flac_size:
         print(f'Filesize has changed from {flac_size} to {flac_size_new}')
-    print('{:14} {:9} {}'.format('FLAC before', flac_size, flac_md5))
-    print('{:14} {:9} {}'.format('FLAC after', helpers.file_size(flac_path), helpers.file_md5(flac_path)))
-    print('{:14} {:9} {}'.format('MP3', helpers.file_size(mp3_path), helpers.file_md5(mp3_path)))
+    print(f'FLAC before {flac_size:9} {flac_md5}')
+    print(f'FLAC after  {flac_size_new:9} {flac_md5_new}')
+    print(f'MP3         {helpers.file_size(mp3_path):9} {helpers.file_md5(mp3_path)}')
 
 def transfer_tags_dir(mp3_dir, flac_dir,dry_run=False, verbose=False):
     # Collect MP3 files
@@ -147,9 +147,9 @@ if __name__ == "__main__":
     parser.add_argument('-v', action='store_true', help='Verbose logging.')
     parser.add_argument('mp3_dir', help='MP3 folder.')
     parser.add_argument('flac_dir', help='FLAC folder.')
-    
+
     args = parser.parse_args()
-    
+
     if not os.path.isdir(args.mp3_dir) or not os.path.isdir(args.flac_dir):
         print("Both arguments must be directories.")
         sys.exit(1)
