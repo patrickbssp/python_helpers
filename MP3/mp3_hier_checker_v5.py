@@ -717,20 +717,20 @@ def analyse_csv(csv_file):
     ### Dump unique artists to file
     with open(unique_artists_file, "w", encoding='utf8') as f:
         for artist in sorted(unique_artists):
-            f.write('{}\n'.format(artist))
+            f.write(f'{artist}\n')
     
     ### Dump unique albums to file
     with open(unique_albums_file, "w", encoding='utf8') as f:
         for album in sorted(unique_albums):
-            f.write('{}\n'.format(album))
+            f.write(f'{album}\n')
 
     if enable_report_substitutions:
         with open(substitutions_file, "w", encoding='utf8') as f:
             for line in sorted(substitutions_done):
-                f.write('{}\n'.format(line))
+                f.write(f'{line}\n')
 
     my_print('----------------------------------------------------')
-    my_print('Path (max): {} {}'.format(len(file_longest), file_longest))
+    my_print(f'Path (max): {len(file_longest)} {file_longest}')
     my_print('Artist (max):')
     my_print('  Tag:  {:3d}   {}'.format(len(stats_max['t_artist']), stats_max['t_artist']))
     my_print('  File: {:3d}   {}'.format(len(stats_max['f_artist']), stats_max['f_artist']))
