@@ -13,7 +13,8 @@
 #	2023-03-16	Improved file import
 #	2025-06-04	Use improved file list generation
 
-import sys,glob,os.path
+import sys
+import os.path
 import argparse
 import pathlib
 
@@ -24,25 +25,25 @@ import helpers
 
 def sort_file(in_fname, out_fname):
 
-	out_f = open(out_fname, 'w', encoding='utf-8')
+	with open(out_fname, 'w', encoding='utf-8') as out_f:
 
-	table = [];
-	data = helpers.open_and_decode_file(in_fname)
-	for line in data.splitlines():
+		table = []
+		data = helpers.open_and_decode_file(in_fname)
+		for line in data.splitlines():
 
-		item = helpers.split_hash_filename(line)
-		if item:
-			table.append(item)
-		else:
-			### line does not match, copy verbatim
-			out_f.write(line+'\n')
+			item = helpers.split_hash_filename(line)
+			if item:
+				table.append(item)
+			else:
+				### line does not match, copy verbatim
+				out_f.write(line+'\n')
 
-	### sort table in place by key 'file'
-	table.sort(key=lambda tup: tup['file'])
+		### sort table in place by key 'file'
+		table.sort(key=lambda tup: tup['file'])
 
-	### append sorted list to out file
-	for item in table:
-		out_f.write(item['hash']+item['ws']+item['file']+'\n')
+		### append sorted list to out file
+		for item in table:
+			out_f.write(item['hash']+item['ws']+item['file']+'\n')
 
 if __name__ == '__main__':
 
@@ -54,8 +55,8 @@ if __name__ == '__main__':
 	filelist = helpers.create_filelist(args.path)
 
 	# Process files
-	for in_fname in filelist:
-		(root, ext) = os.path.splitext(in_fname);
-		out_fname = root+"_sorted"+ext;
+	for in_filename in filelist:
+		(root, ext) = os.path.splitext(in_filename)
+		out_filename = root+"_sorted"+ext
 
-		sort_file(in_fname, out_fname)
+		sort_file(in_filename, out_filename)
