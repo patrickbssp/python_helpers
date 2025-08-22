@@ -30,10 +30,8 @@ The script creates the following directories:
 
 '''
 
-import sys, os, glob, shutil
+import sys, os, shutil
 import re
-import shlex
-import subprocess
 import pathlib
 
 # custom modules
@@ -45,7 +43,7 @@ wav_pattern = r'.*\.wav'
 mp3_pattern = r'.*\.mp3'
 
 def print_error_and_exit(msg, exit_code=1):
-    print('Error: {}, exitting now'.format(msg))
+    print(f'Error: {msg}, exitting now')
     sys.exit(exit_code)
 
 def collect_hashes(dir, pattern):
@@ -60,7 +58,7 @@ def collect_hashes(dir, pattern):
 def dump_hashes(md5_file, hashes):
     with open(md5_file, mode='w+', encoding='utf-8') as f:
         for k in sorted(hashes.keys()):
-            f.write("{}  {}\n".format(hashes[k], k))
+            f.write(f'{hashes[k]}  {k}\n')
 
 def move_files(dest_dir, src_dir, pattern):
     files = [f for f in os.listdir(src_dir) if re.match(pattern, f)]
@@ -69,7 +67,7 @@ def move_files(dest_dir, src_dir, pattern):
         shutil.move(os.path.join(src_dir, f), dest_dir)
 
 def delete_directory(dir):
-    print('Deleting directory {}'.format(dir))
+    print(f'Deleting directory {dir}')
     shutil.rmtree(dir)
 
 if len(sys.argv) != 2:
@@ -84,13 +82,13 @@ hashes = []
 for f in ['Take1','Take2']:
     dir = os.path.join(cwd, f)
     if not os.path.exists(dir):
-        print_error_and_exit('{} does not exist'.format(dir))
+        print_error_and_exit(f'{dir} does not exist')
     new_hashes = collect_hashes(dir, mp3_pattern)
     if len(new_hashes) == 0:
-        print_error_and_exit('No files in {}'.format(dir))
+        print_error_and_exit(f'No files in {dir}')
     hashes.append(new_hashes)
 
-if(hashes[0] != hashes[1]):
+if hashes[0] != hashes[1]:
     print('Hashes T1 ({} files):'.format(len(hashes[0])))
     print(hashes[0])
     print('Hashes T2 ({} files):'.format(len(hashes[1])))
@@ -119,27 +117,27 @@ if len(cwd_split[-1]) == 0:
 print('CWD: {}'.format(cwd_split))
 artist = cwd_split[-2]
 album = cwd_split[-1]
-print('Artist: {}, Album: {}'.format(artist,album))
+print(f'Artist: {artist}, Album: {album}')
 
 work_dir = os.path.join(*cwd_split[:-2])
-print('work_dir: {}'.format(work_dir))
+print('work_dir: {work_dir}')
 
 wav_dir = os.path.join(work_dir, '_wave')
 wave_admin_dir = os.path.join(wav_dir, '_admin')
 md5sum_dir = os.path.join(work_dir, 'md5sum')
 
-print('wav_dir: {}'.format(wav_dir))
-print('wave_admin_dir: {}'.format(wave_admin_dir))
-print('md5sum_dir: {}'.format(md5sum_dir))
+print(f'wav_dir: {wav_dir}')
+print(f'wave_admin_dir: {wave_admin_dir}')
+print(f'md5sum_dir: {md5sum_dir}')
 
 ### check whether all required directories exist
 
 if not os.path.exists(wav_dir):
-    print_error_and_exit('Wave dir does not exist: {}'.format(wav_dir))
+    print_error_and_exit(f'Wave dir does not exist: {wav_dir}')
 if not os.path.exists(wave_admin_dir):
-    print_error_and_exit('Wave admin dir does not exist: {}'.format(wave_admin_dir))
+    print_error_and_exit(f'Wave admin dir does not exist: {wave_admin_dir}')
 if not os.path.exists(md5sum_dir):
-    print_error_and_exit('md5sum dir does not exist: {}'.format(md5sum_dir))
+    print_error_and_exit(f'md5sum dir does not exist: {md5sum_dir}')
 
 ### Check number of hashes
 num_mp3_hashes = len(hashes[0])
