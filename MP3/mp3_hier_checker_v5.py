@@ -25,8 +25,8 @@
 # - Track number containing letter O instead of digit 0
 # - Double spaces
 # - File suffix mixed or all upper-case
-# - Empty Artist folder 
-# - Empty Album folder 
+# - Empty Artist folder
+# - Empty Album folder
 # - Files in Artist folder
 # - Non-MP3-Files in any folder
 #
@@ -38,13 +38,10 @@
 # / (slash) -> U+29F8   ⧸   e2 a7 b8  BIG SOLIDUS     (page Misc. Mathematical Symbols-B)
 # / (slash) -> U+2215   ∕   e2 88 95  DIVISION SLASH) (page Mathematical Operators)
 # : (colon) -> U+2236   ∶   e2 88 b6  RATIO           (page Mathematical Operators)
- 
 
 import sys
 import re
 import os.path
-import shlex
-import subprocess
 import pathlib
 import mutagen
 import csv
@@ -334,7 +331,7 @@ def report_substitution(reason, orig, sub):
 def is_mismatch(f_item, t_item, item):
     return True if f_item != t_item and report_mismatch_flags[item] else False
 
-def match_artist(tag, item):
+def match_artist(tag):
     """
     (Try to) match artist.
 
@@ -361,7 +358,7 @@ def match_artist(tag, item):
     ### Still not matching -> error
     return False
 
-def match_album_artist(tag, item):
+def match_album_artist(tag):
     """
     (Try to) match album artist.
 
@@ -537,7 +534,7 @@ def check_cdm(str):
     chars = [b'\xcc', b'\xcd']
 
     ba = str.encode('utf-8')
-    for i,v in enumerate(ba):
+    for i,_ in enumerate(ba):
         for c in chars:
             d = (ba[i]).to_bytes(1, 'big')
             if d == c:
@@ -610,7 +607,7 @@ def check_tag(tag):
 
         c = check_cdm(v)
         if c:
-            my_print('CDM {} found: {} in {}'.format(c, k, full_path))
+            my_print(f'CDM {c} found: {k} in {full_path}')
 
     ### Check tags
 
@@ -622,11 +619,11 @@ def check_tag(tag):
         report_mismatch(full_path, "Track number", tag['f_track'], tag['t_track'])
 
     ### Artist may not match exactly due to folder name restrictions
-    if not match_artist(tag, 'artist'):
+    if not match_artist(tag):
         report_mismatch(full_path, "Artist", tag['f_artist'], tag['t_artist'])
 
     ### Album artist may not match exactly due to compilations/missing fields
-    if not match_album_artist(tag, 'album_artist'):
+    if not match_album_artist(tag):
         report_mismatch(full_path, "Album artist", tag['f_artist'], tag['t_album_artist'])
 
     if not match_album(tag, 'album'):
@@ -650,7 +647,7 @@ def parse_dir(top_dir, md5_fh, csv_wh):
         for fname in filenames:
             num_files += 1
             p = pathlib.PurePath(dirpath)
-            print("checking: {}".format(fname))
+            print(f"checking: {fname}")
             print(top_dir, dirpath, fname)
             print(p, p.parts, len(p.parts))
             if len(p.parts) == 0:
@@ -688,10 +685,10 @@ def generate_list(top_dir, csv_file=None, md5_file=None):
 
     if md5_file:
         md5_fh.write('-------------------------------------------------------------\n')
-        md5_fh.write("Top folder: {}\n".format(top_dir))
-        md5_fh.write("{} file(s) checked\n".format(num_files))
-        md5_fh.write("{} MP3 file(s) found\n".format(num_mp3))
-        md5_fh.write("{} violation(s) found\n".format(violations.get_violations()))
+        md5_fh.write(f"Top folder: {top_dir}\n")
+        md5_fh.write(f"{num_files} file(s) checked\n")
+        md5_fh.write(f"{num_mp3} MP3 file(s) found\n")
+        md5_fh.write(f"{violations.get_violation()} violation(s) found\n")
 
     if md5_file:
         md5_fh.close()
@@ -732,14 +729,14 @@ def analyse_csv(csv_file):
     my_print('----------------------------------------------------')
     my_print(f'Path (max): {len(file_longest)} {file_longest}')
     my_print('Artist (max):')
-    my_print('  Tag:  {:3d}   {}'.format(len(stats_max['t_artist']), stats_max['t_artist']))
-    my_print('  File: {:3d}   {}'.format(len(stats_max['f_artist']), stats_max['f_artist']))
+    my_print(f'  Tag:  {len(stats_max['t_artist']):3d}   {stats_max['t_artist']}')
+    my_print(f'  File: {len(stats_max['f_artist']):3d}   {stats_max['f_artist']}')
     my_print('Album (max):')
-    my_print('  Tag:  {:3d}   {}'.format(len(stats_max['t_album']), stats_max['t_album']))
-    my_print('  File: {:3d}   {}'.format(len(stats_max['f_album']), stats_max['f_album']))
+    my_print(f'  Tag:  {len(stats_max['t_album']):3d}   {stats_max['t_album']}')
+    my_print(f'  File: {len(stats_max['f_album']):3d}   {stats_max['f_album']}')
     my_print('Title (max):')
-    my_print('  Tag:  {:3d}   {}'.format(len(stats_max['t_title']), stats_max['t_title']))
-    my_print('  File: {:3d}   {}'.format(len(stats_max['f_title']), stats_max['f_title']))
+    my_print(f'  Tag:  {len(stats_max['t_title']):3d}   {stats_max['t_title']}')
+    my_print(f'  File: {len(stats_max['f_title']):3d}   {stats_max['f_title']}')
 
 def print_usage_and_die():
     print("""Usage:
