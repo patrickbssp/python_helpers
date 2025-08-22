@@ -523,9 +523,6 @@ def match_title(tag, item):
         ### Standard replacement
         return True
 
-        ### Standard replacement
-        return True
-
     ### Still not matching -> error
     return False
 
@@ -592,7 +589,7 @@ def check_tag(tag):
     global file_shortest
 
 
-    full_path = '{}/{}/{} - {}.mp3'.format(tag['f_artist'], tag['f_album'], tag['f_track'], tag['f_title'])
+    full_path = f"{tag['f_artist']}/{tag['f_album']}/{tag['f_track']} - {tag['f_title']}.mp3"
 
     l = len(full_path)
     
@@ -647,7 +644,7 @@ def parse_dir(top_dir, md5_fh, csv_wh):
         dirnames.sort()
         filenames.sort()
         if (len(dirnames) == 0) and (len(filenames) == 0):
-            violations.add_violation("violation: rule_xx: empty folder detected: {}".format(dirpath))
+            violations.add_violation(f"violation: rule_xx: empty folder detected: {dirpath}")
 
         ### then, iterate over files
         for fname in filenames:
@@ -657,11 +654,12 @@ def parse_dir(top_dir, md5_fh, csv_wh):
             print(top_dir, dirpath, fname)
             print(p, p.parts, len(p.parts))
             if len(p.parts) == 0:
-                violations.add_violation("violation: rule_1a: no files are allowed in level 1: {}".format(fname))
+                violations.add_violation(f"violation: rule_1a: no files are allowed in level 1: {fname}")
             elif len(p.parts) == 1:
-                violations.add_violation("violation: rule_1a: no files are allowed in level 1: {}".format(fname))
+                # TODO check whether this should not be rule_1b / level 2
+                violations.add_violation(f"violation: rule_1a: no files are allowed in level 1: {fname}")
             else:
-                num_v, tag = parse_file(top_dir, os.path.join(dirpath, fname), md5_fh, csv_wh)
+                _, tag = parse_file(top_dir, os.path.join(dirpath, fname), md5_fh, csv_wh)
                 if tag:
                     num_mp3 += 1
             violations.report_violations()
