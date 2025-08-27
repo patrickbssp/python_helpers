@@ -3,6 +3,7 @@
 import argparse
 import os, re
 import sys
+import glob
 import pathlib
 from mutagen.id3 import ID3
 from mutagen.flac import FLAC
@@ -28,6 +29,11 @@ FRAME_MAP = {
 }
 
 def get_track_numbers(file_list):
+    '''Get track numbers from file list.
+
+    This function detects, whether the file list contains MP3 files in the format xx - Title.mp3,
+    or FLAC files in the format Trackxx.flac.
+    '''
     nr_set = set()
     for file in file_list:
         m = re.search(r'^([0-9]*).*mp3', file)
@@ -90,19 +96,27 @@ def transfer_tags(mp3_path, flac_path, dry_run=False, verbose=False):
     print(f'MP3         {helpers.file_size(mp3_path):9} {helpers.file_md5(mp3_path)}')
 
 def transfer_tags_dir(mp3_dir, flac_dir,dry_run=False, verbose=False):
+    '''Transfer tags from MP3 files to FLAc files.
+
+    This function expects a path to a folder containing MP3 files, where the last 2 directory components
+    are expected to be Artist and Album. The same applies for the FLAC folder. The function checks,
+    whether the number of tracks is the same as a simple safe-guard to mismatches.
+
+    Behaviour can be controlled by switches dry_run, and verbose.
+    '''
     # Collect MP3 files
     mp3_files = []
     mp3_track_nr = set()
     flac_files = []
     flac_track_nr = set()
-    for root, _, files in os.walk(mp3_dir):
+    for _, _, files in os.walk(mp3_dir):
         for file in files:
             if file.lower().endswith(".mp3"):
                 mp3_files.append(file)
             else:
                 print(f"Found non-conforming file {file}")
 
-    for root, _, files in os.walk(flac_dir):
+    for _, _, files in os.walk(flac_dir):
         for file in files:
             if file.lower().endswith(".flac"):
                 flac_files.append(file)
@@ -115,14 +129,20 @@ def transfer_tags_dir(mp3_dir, flac_dir,dry_run=False, verbose=False):
     mp3_files = sorted(mp3_files)
     flac_files = sorted(flac_files)
 
+    print(mp3_files)
+    print(flac_files)
+
+    print(mp3_dir)
+    print(flac_dir)
+
     mp3_cnt = len(mp3_files)
     flac_cnt = len(flac_files)
 
-    mp3_track_nr = get_track_numbers(mp3_files)
-    flac_track_nr = get_track_numbers(flac_files)
+    mp3_track_nr = sorted(get_track_numbers(mp3_files))
+    flac_track_nr = sorted(get_track_numbers(flac_files))
 
     if mp3_track_nr != flac_track_nr:
-        print('Track numbers do not match')
+        print(f'Track numbers do not match. MP3: {mp3_track_nr}, FLAC: {flac_track_nr}')
         return
 
     track_cnt = len(mp3_track_nr)
@@ -140,9 +160,29 @@ def transfer_tags_dir(mp3_dir, flac_dir,dry_run=False, verbose=False):
         flac_path = os.path.join(flac_dir, flac_files[i])
         transfer_tags(mp3_path, flac_path, dry_run, verbose)
 
+
+def compile_worklist(mp3_dir, flac_dir):
+    
+    all_dirs = set()
+    # Search for all MP3s and extract their Artist/Album path parts
+    for filename in glob.glob(mp3_dir+'/**/*.mp3', recursive=True):
+        p_dir = pathlib.PurePath(filename).parts[-3:-1]
+        all_dirs.add(pathlib.PurePosixPath(*p_dir))
+
+    work_list = []
+
+    for dir in all_dirs:
+        # Create FLAC path and check whether it exists
+        flac_p = f'{flac_dir}/{dir}'
+        mp3_p = f'{mp3_dir}/{dir}'
+        if os.path.exists(flac_p):
+            work_list.append((mp3_p, flac_p))
+    return work_list
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-c', action='store_true', help='Collection mode.')
     parser.add_argument('-d', action='store_true', help='Dry-run only, do not change any files.')
     parser.add_argument('-v', action='store_true', help='Verbose logging.')
     parser.add_argument('mp3_dir', help='MP3 folder.')
@@ -154,5 +194,18 @@ if __name__ == "__main__":
         print("Both arguments must be directories.")
         sys.exit(1)
 
-    transfer_tags_dir(args.mp3_dir, args.flac_dir, args.d, args.v)
-
+    if args.c:
+        # Collection mode, assume that folders are start points for collections,
+        # i.e. below the start point there will be two folders Artist and Album
+        # below each other, and then containing either MP3 or FLAC files.
+        #
+        work_list = compile_worklist(args.mp3_dir, args.flac_dir)
+        
+        print(work_list)
+        for p in work_list:
+            print(f'{p[0]}\n{p[1]}\n')
+            transfer_tags_dir(p[0], p[1], args.d, args.v)
+    else:
+        # Single album mode
+        transfer_tags_dir(args.mp3_dir, args.flac_dir, args.d, args.v)
+        
