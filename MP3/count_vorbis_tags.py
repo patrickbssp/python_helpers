@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 import os, sys, glob
 from mutagen.flac import FLAC
@@ -11,5 +11,5 @@ if __name__ == "__main__":
         if len(f) == 0:
             path = os.path.dirname(filename)
             empty_tags.add(path)
-    for item in empty_tags:
+    for item in sorted(empty_tags):
         print(item)

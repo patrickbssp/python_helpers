@@ -75,12 +75,16 @@ def transfer_tags(mp3_path, flac_path, dry_run=False, verbose=False):
         flac_file[vorbis_field] = str(val)
 
     if not verbose:
+        try:
+            date = flac_file['date'][0]
+        except KeyError:
+            date = ''
         print('{};{};{};{};{};{}'.format(
             flac_file['tracknumber'][0],
             flac_file['title'][0],
             flac_file['album'][0],
             flac_file['artist'][0],
-            flac_file['date'][0],
+            date,
             flac_file['genre'][0]))
 
     if not dry_run:
