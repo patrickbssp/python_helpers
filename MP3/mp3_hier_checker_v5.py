@@ -41,21 +41,16 @@
 
 import sys
 import re
+import glob
 import os.path
 import pathlib
-import mutagen
 import csv
+import argparse
 
 # custom modules
 mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
 sys.path.insert(0, str(mod_path))
-import helpers
-
-file_shortest = None
-file_longest = None
-
-stats_max={}
-stats_min={}
+import helpers, extract_tags
 
 enable_report_substitutions = True
 
@@ -66,16 +61,18 @@ num_mp3 = 0
 
 class ViolationCounter:
     _num_violations = 0
+    _violations = []
 
     def add_violation(self, text):
-        self._num_violations += 1
-        print(text)
+        self._violations.append(text)
 
     def report_violations(self):
-        print("num. violations: {}".format(self._num_violations))
+        print(f'num. violations: {self.get_violation_cnt()}')
+        for v in self._violations:
+            print(v)
 
-    def get_violations(self):
-        return self._num_violations
+    def get_violation_cnt(self):
+        return len(self._violations)
 
 violations = ViolationCounter()
 
@@ -84,12 +81,43 @@ field_names = [
     'f_album',          # album (from filename)
     'f_title',          # title (from filename)
     'f_track',          # track number (from filename)
+    'f_type',           # file type (from filename)
     't_artist',         # artist (from tag, TPE1)
     't_album_artist',   # album artist (from tag, TPE2)
     't_album',          # album (from tag, TALB)
     't_title',          # title (from tag, TIT2)
     't_track',          # track number (from tag, TRCK)
 ]
+
+class LengthTracker:
+    
+    file_longest = ''
+    file_shortest = ''
+    stats_max={}
+    stats_min={}
+    for f in field_names:
+        stats_max[f] = None
+        stats_min[f] = None
+
+    def check_length(self, full_path):
+        l = len(full_path)
+    
+        if self.file_shortest and l < len(self.file_shortest) or not self.file_shortest:
+            self.file_shortest = full_path
+
+        if self.file_longest and l > len(self.file_longest) or not self.file_longest:
+            self.file_longest = full_path
+
+    def check_tag(self, k, v):
+        
+        l = len(v)
+        if self.stats_max[k] and l > len(self.stats_max[k]) or not self.stats_max[k]:
+            self.stats_max[k] = v
+        if self.stats_min[k] and l < len(self.stats_min[k]) or not self.stats_min[k]:
+            self.stats_min[k] = v
+
+len_tracker = LengthTracker()
+
 
 unique_artists = set()
 unique_albums = set()
@@ -295,30 +323,55 @@ def my_print(str):
     if 'uni_stdout' in globals():
         print(str, file=uni_stdout)
 
-def parse_file(top_dir, full_path, md5_fh, csv_wh):
+def tag_from_fileinfo(fi, field_names):
+    # Create a dict with keys from field_names and values from fileinfo
+    tag = {t : fi[t] for t in field_names}
+    return tag
+
+def parse_file(top_dir, full_path, md5_fh):
 
     path_rel = pathlib.PurePath(full_path).relative_to(top_dir)
 
     if len(path_rel.parts) != 3:
-        my_print('violation: invalid file: {}'.format(full_path))
+        my_print(f'violation: invalid file: {full_path}')
         return 1, None
 
     fname = path_rel.parts[2]
     if not is_valid_mp3_filename(fname):
-        violations.add_violation("violation: rule_3b: filenames must have format 'xx - Trackname.mp3'")
-        print("file: {}".format(fname))
+        violations.add_violation(f"violation: rule_3b: filenames must have format 'xx - Trackname.mp3', but got: {path_rel.parts[-3:]}")
         return 1, None
     
+    md5 = helpers.file_md5(full_path)
+    str = f'{md5}  {path_rel}\n'
     if md5_fh:
-        md5 = helpers.file_md5(full_path)
-        md5_fh.write('{}  {}\n'.format(md5, path_rel))
-    if csv_wh:
-        # Extract tag only if required. In testcase, no ID3 info is available
-        tag = extract_tag(full_path)
-        csv_wh.writerow(tag)
-        return 0, tag
+        md5_fh.write(str)
+    else:
+        print(str, end='')
 
     return 0, None
+
+
+def extract_tags_to_csv(top_dir, csv_file):
+    files = []
+    # compile file list, note: glob will also catch folders with dots somewhere in the name
+    for filename in glob.glob(top_dir+'/**/*.*', recursive=True):
+        _, ext = os.path.splitext(filename)
+        if ext in ['.mp3', '.flac']:
+            files.append(filename)
+    # 
+    if len(files) == 0:
+        print('No files found')
+        return
+
+    ### Open CSV file
+    with open(csv_file, mode='w+', encoding='utf-8', errors='surrogateescape') as csv_fh:
+        csv_wh = csv.DictWriter(csv_fh, fieldnames=field_names, dialect='mp3_csv')
+        csv_wh.writeheader()
+
+        for full_path in files:
+            fi = extract_tags.FileInfo(full_path)
+            tag = tag_from_fileinfo(fi, field_names)
+            csv_wh.writerow(tag)
 
 def report_mismatch(fname, item, f_item, t_item):
     violations.add_violation('Mismatch in {}, file: {} tag: {} (file: {})'.format(item, f_item, t_item, fname))
@@ -429,7 +482,7 @@ def std_repl(cat, f_item, t_item):
         for i,v in enumerate(subs):
             for sub in subs[v]:
                 if f_item == t_item.replace(v, sub):
-                    report_substitution('{}{}'.format(cat, i), t_item, f_item)
+                    report_substitution(f'{cat}{i}', t_item, f_item)
                     return True
 
     ### Multiple substitutions
@@ -440,7 +493,7 @@ def std_repl(cat, f_item, t_item):
             for sub in subs[v]:
                 t_item_mod = t_item_mod.replace(v, sub)
                 if f_item == t_item_mod:
-                    report_substitution('{}{}'.format(cat, i+10), t_item_mod, f_item)
+                    report_substitution(f'{cat}{i*10}', t_item_mod, f_item)
                     return True
 
     if cat in ['AL', 'AR']:
@@ -544,7 +597,9 @@ def check_cdm(str):
 # Extract track number and title from filename
 # Returns either a tuple of track and title or None
 def get_track_title(fname):
-    m = re.match(r"^(\d\d) - (.*)\.mp3", fname)
+    # Title must not contain leading or trailing white-space, but may contain spaces
+    # in between. Also, title may contain a single character.
+    m = re.match(r"^(\d\d) - (\S[\S ]*\S|\S)\.mp3", fname)
     if m and len(m.groups()) == 2:
         return m.group(1), m.group(2)
 
@@ -552,27 +607,6 @@ def get_track_title(fname):
 def is_valid_mp3_filename(filename):
     return True if get_track_title(filename) else False
 
-# Extract info from file identified by path
-def extract_tag(full_path):
-
-    path = pathlib.PurePath(full_path)
-    
-    track, title = get_track_title(path.parts[-1])
-    if track and title:
-        ### Extract info from file and path
-        tag = {}
-        tag['f_artist'] = path.parts[-3]
-        tag['f_album']  = path.parts[-2]
-        tag['f_track'] = track
-        tag['f_title'] = title
-
-        ### Extract info from ID3 tag
-        f = mutagen.File(full_path)
-        if f:
-            for k,v in tag_mapping.items():
-                tag[v] = f[k].text[0] if k in f else ''
-            
-        return tag
 
 def check_tag(tag):
     """
@@ -580,31 +614,19 @@ def check_tag(tag):
 
         Return value: Tag entry if no errors occured; None otherwise
     """
+    if tag['f_type'] == 'mp3':
+        full_path = f"{tag['f_artist']}/{tag['f_album']}/{tag['f_track']} - {tag['f_title']}.mp3"
+    elif tag['f_type'] == 'flac':
+        # If filename does not contain title, just take the one from the tag
+        title = tag['f_title'] if len(tag['f_title']) > 0 else tag['t_title']
+        full_path = f"{tag['f_artist']}/{tag['f_album']}/{tag['f_track']} - {title}.flac"
 
-    global num_mp3
-    global file_longest
-    global file_shortest
-
-
-    full_path = f"{tag['f_artist']}/{tag['f_album']}/{tag['f_track']} - {tag['f_title']}.mp3"
-
-    l = len(full_path)
-    
-    if file_shortest and l < len(file_shortest) or not file_shortest:
-        file_shortest = full_path
-
-    if file_longest and l > len(file_longest) or not file_longest:
-        file_longest = full_path
+    len_tracker.check_length(full_path)
 
     ### Scan for unwanted combining diacritical marks
     for k,v in tag.items():
 
-        l = len(v)
-        if stats_max[k] and l > len(stats_max[k]) or not stats_max[k]:
-            stats_max[k] = v
-        if stats_min[k] and l < len(stats_min[k]) or not stats_min[k]:
-            stats_min[k] = v
-
+        len_tracker.check_tag(k, v)
         c = check_cdm(v)
         if c:
             my_print(f'CDM {c} found: {k} in {full_path}')
@@ -633,7 +655,7 @@ def check_tag(tag):
         report_mismatch(full_path, "Title", tag['f_title'], tag['t_title'])
     return tag
 
-def parse_dir(top_dir, md5_fh, csv_wh):
+def parse_dir(top_dir, md5_fh):
     num_files = 0
     num_mp3 = 0
 
@@ -647,63 +669,47 @@ def parse_dir(top_dir, md5_fh, csv_wh):
         for fname in filenames:
             num_files += 1
             p = pathlib.PurePath(dirpath)
-            print(f"checking: {fname}")
-            print(top_dir, dirpath, fname)
-            print(p, p.parts, len(p.parts))
             if len(p.parts) == 0:
                 violations.add_violation(f"violation: rule_1a: no files are allowed in level 1: {fname}")
             elif len(p.parts) == 1:
                 # TODO check whether this should not be rule_1b / level 2
                 violations.add_violation(f"violation: rule_1a: no files are allowed in level 1: {fname}")
             else:
-                _, tag = parse_file(top_dir, os.path.join(dirpath, fname), md5_fh, csv_wh)
+                _, tag = parse_file(top_dir, os.path.join(dirpath, fname), md5_fh)
                 if tag:
                     num_mp3 += 1
-            violations.report_violations()
     return num_files, num_mp3
 
 # Generate report.
 # Depending on the options chosen, either MD5 hashes are calculated, CSV entries
 # are generated, or both
 # This function returns the number of violations for testability
-def generate_list(top_dir, csv_file=None, md5_file=None):
+def generate_list(top_dir, md5_file=None):
 
     md5_fh = None
-    csv_wh = None
 
     ### Open MD5 file
     if md5_file:
         md5_fh = open(md5_file, mode='w+', encoding='utf-8')
 
-    ### Open CSV file
-    if csv_file:
-        csv_fh = open(csv_file, mode='w+', encoding='utf-8', errors='surrogateescape')
-        csv_wh = csv.DictWriter(csv_fh, fieldnames=field_names, dialect='mp3_csv')
-        csv_wh.writeheader()
+    num_files, num_mp3 = parse_dir(str(pathlib.PurePath(top_dir)), md5_fh)
 
-    num_files, num_mp3 = parse_dir(str(pathlib.PurePath(top_dir)), md5_fh, csv_wh)
+    report = f'''-------------------------------------------------------------\n
+        Top folder: {top_dir}\n
+        {num_files} file(s) checked\n
+        {num_mp3} MP3 file(s) found\n
+        {violations.get_violation_cnt()} violation(s) found\n'''
+
+    violations.report_violations()
 
     if md5_file:
-        md5_fh.write('-------------------------------------------------------------\n')
-        md5_fh.write(f"Top folder: {top_dir}\n")
-        md5_fh.write(f"{num_files} file(s) checked\n")
-        md5_fh.write(f"{num_mp3} MP3 file(s) found\n")
-        md5_fh.write(f"{violations.get_violation()} violation(s) found\n")
-
+        md5_fh.write(report)
     if md5_file:
         md5_fh.close()
 
-    if csv_file:
-        csv_fh.close()
-
-    return violations.get_violations()
+    return violations.get_violation_cnt()
 
 def analyse_csv(csv_file):
-
-    for f in field_names:
-        stats_max[f] = None
-        stats_min[f] = None
-
     ### Open and parse CSV file
     with open(csv_file, mode='r', encoding='utf-8', errors='surrogateescape') as f:
         reader = csv.DictReader(f, fieldnames=field_names, dialect='mp3_csv')
@@ -727,25 +733,16 @@ def analyse_csv(csv_file):
                 f.write(f'{line}\n')
 
     my_print('----------------------------------------------------')
-    my_print(f'Path (max): {len(file_longest)} {file_longest}')
+    my_print(f'Path (max): {len(len_tracker.file_longest)} {len_tracker.file_longest}')
     my_print('Artist (max):')
-    my_print(f'  Tag:  {len(stats_max['t_artist']):3d}   {stats_max['t_artist']}')
-    my_print(f'  File: {len(stats_max['f_artist']):3d}   {stats_max['f_artist']}')
+    my_print(f'  Tag:  {len(len_tracker.stats_max['t_artist']):3d}   {len_tracker.stats_max['t_artist']}')
+    my_print(f'  File: {len(len_tracker.stats_max['f_artist']):3d}   {len_tracker.stats_max['f_artist']}')
     my_print('Album (max):')
-    my_print(f'  Tag:  {len(stats_max['t_album']):3d}   {stats_max['t_album']}')
-    my_print(f'  File: {len(stats_max['f_album']):3d}   {stats_max['f_album']}')
+    my_print(f'  Tag:  {len(len_tracker.stats_max['t_album']):3d}   {len_tracker.stats_max['t_album']}')
+    my_print(f'  File: {len(len_tracker.stats_max['f_album']):3d}   {len_tracker.stats_max['f_album']}')
     my_print('Title (max):')
-    my_print(f'  Tag:  {len(stats_max['t_title']):3d}   {stats_max['t_title']}')
-    my_print(f'  File: {len(stats_max['f_title']):3d}   {stats_max['f_title']}')
-
-def print_usage_and_die():
-    print("""Usage:
-    -m <top_dir> <md5_file>             Check file hierarchy, naming rules etc. and dump MD5 hashes.
-    -e <top_dir> <csv_file>             Extract MP3 tags starting from folder <top_dir> and dump tags to CSV file.
-    -c <top_dir> <csv_file> <md5_file>  Combines options -m and -e.
-    -a <csv_file>                  Analyse CSV file.
-    """.format(sys.argv[0]))
-    sys.exit(1)
+    my_print(f'  Tag:  {len(len_tracker.stats_max['t_title']):3d}   {len_tracker.stats_max['t_title']}')
+    my_print(f'  File: {len(len_tracker.stats_max['f_title']):3d}   {len_tracker.stats_max['f_title']}')
 
 def main():
     global uni_stdout
@@ -758,19 +755,41 @@ def main():
     ###         over SSH.
     uni_stdout = open(1, 'w', encoding='utf-8', closefd=False)
 
-    # Require at least one argument
-    if len(sys.argv) < 2:
-        print_usage_and_die()
-    if sys.argv[1] == '-a' and len(sys.argv) == 3:
-        analyse_csv(sys.argv[2])
-    elif sys.argv[1] == '-e' and len(sys.argv) == 4:
-        generate_list(sys.argv[2], csv_file=sys.argv[3])
-    elif sys.argv[1] == '-m' and len(sys.argv) == 4:
-        generate_list(sys.argv[2], md5_file=sys.argv[3])
-    elif sys.argv[1] == '-c' and len(sys.argv) == 5:
-        generate_list(sys.argv[2], csv_file=sys.argv[3], md5_file=sys.argv[4])
-    else:
-        print_usage_and_die()
+    parser = argparse.ArgumentParser(
+
+        usage = """
+        -m DIR [MD5_FILE]         Check file hierarchy, naming rules etc. starting from DIR,
+                                  and dumping MD5 hashes to stdout.
+                                  If MD5_FILE is provided, MD5 hashes are dumped to this file
+                                  instead of stdout.
+        -e DIR CSV_FILE           Extract MP3 tags starting from DIR and dump them to CSV_FILE.
+        -c DIR MD5_FILE CSV_FILE  Combines options -m and -e.
+        -a CSV_FILE               Analyse CSV file.
+        """
+    )
+
+    # Create a mutually exclusive group
+    group = parser.add_mutually_exclusive_group(required=True)
+
+    group.add_argument('-m', nargs='+', help='Check file hierarchy, naming rules etc. and dump MD5 hashes.')
+    group.add_argument('-e', nargs=2, help='Extract MP3 tags starting from DIR and dump tags to CSV_FILE.')
+    group.add_argument('-c', nargs=3, help='Combines options -m and -e.')
+    group.add_argument('-a', nargs=1, help='Analyse CSV file.')
+    args = parser.parse_args()
+
+    if args.m and (1 <= len(args.m) <= 2):
+        if len(args.m) == 2:
+            md5_file = args.m[1]
+        else:
+            md5_file = None
+        generate_list(args.m[0], md5_file=md5_file)
+    elif args.e:
+        extract_tags_to_csv(args.e[0], csv_file=args.e[1])
+    elif args.c:
+        generate_list(args.c[0], md5_file=args.c[1])
+        extract_tags_to_csv(args.c[0], csv_file=args.c[2])
+    elif args.a:
+        analyse_csv(args.a[0])
 
     sys.exit(0)
 
