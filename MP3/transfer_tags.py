@@ -11,7 +11,7 @@ from mutagen.flac import FLAC
 # custom modules
 mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
 sys.path.insert(0, str(mod_path))
-import helpers
+import helpers, extract_tags
 
 # Mapping from ID3 frame to Vorbis comment field
 FRAME_MAP = {
@@ -55,14 +55,16 @@ def transfer_tags(mp3_path, flac_path, dry_run=False, verbose=False):
         print(f"Error reading {mp3_path}: {e}")
         return
 
-    try:
-        flac_file = FLAC(flac_path)
-    except Exception as e:
-        print(f"Error reading {flac_path}: {e}")
-        return
+    mp3_file = extract_tags.FileInfo(mp3_path)
+    flac_file = extract_tags.FileInfo(flac_path)
 
     print(f"Transferring tags\nfrom: {mp3_path}\nto:   {flac_path}")
     flac_size, flac_md5 = helpers.file_size(flac_path), helpers.file_md5(flac_path)
+
+    # Copy fields from MP3 file to FLAC file
+    for id in extract_tags.FileInfo.tags:
+        print(f'Copying {id}: {mp3_file[id]}')
+    
     for frame_id, frame_data in mp3_tags.items():
         vorbis_field = FRAME_MAP.get(frame_id, frame_id.lower())
         if verbose:
