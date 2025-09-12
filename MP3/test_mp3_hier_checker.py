@@ -5,6 +5,10 @@ import mp3_hier_checker_v5 as hc
 
 def test_is_valid_mp3_filename():
     assert hc.is_valid_mp3_filename("01 - Test_Song.mp3") == True
+    assert hc.is_valid_mp3_filename("01 - Test Song.mp3") == True
+    assert hc.is_valid_mp3_filename("01 - T.mp3") == True
+    assert hc.is_valid_mp3_filename("01 -  Test Song.mp3") == False # leading space
+    assert hc.is_valid_mp3_filename("01 - Test Song .mp3") == False # trailing space
     assert hc.is_valid_mp3_filename("01 -- Test_Song.mp3") == False
     assert hc.is_valid_mp3_filename("AA - Test_Song.mp3") == False
     assert hc.is_valid_mp3_filename("Test_Song.mp3") == False
