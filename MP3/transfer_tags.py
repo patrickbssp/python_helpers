@@ -62,7 +62,7 @@ def transfer_tags(mp3_path, flac_path, dry_run=False, verbose=False):
     flac_size, flac_md5 = helpers.file_size(flac_path), helpers.file_md5(flac_path)
 
     # Copy fields from MP3 file to FLAC file
-    for id in extract_tags.FileInfo.tags:
+    for id in extract_tags.FileInfo.t_tags:
         print(f'Copying {id}: {mp3_file[id]}')
     
     for frame_id, frame_data in mp3_tags.items():
@@ -82,12 +82,12 @@ def transfer_tags(mp3_path, flac_path, dry_run=False, verbose=False):
         except KeyError:
             date = ''
         print('{};{};{};{};{};{}'.format(
-            flac_file['tracknumber'][0],
-            flac_file['title'][0],
-            flac_file['album'][0],
-            flac_file['artist'][0],
+            flac_file['tracknumber'],
+            flac_file['title'],
+            flac_file['album'],
+            flac_file['artist'],
             date,
-            flac_file['genre'][0]))
+            flac_file['genre']))
 
     if not dry_run:
         try:
