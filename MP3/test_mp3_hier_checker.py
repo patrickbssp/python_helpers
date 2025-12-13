@@ -15,6 +15,19 @@ def test_is_valid_mp3_filename():
     assert hc.is_valid_mp3_filename("001 - Test_Song.mp3") == False
     assert hc.is_valid_mp3_filename("001 - Test_Song.MP3") == False
 
+def test_remove_dots_and_spaces():
+    assert hc.remove_dots_and_spaces("Test") == "Test"
+    assert hc.remove_dots_and_spaces("!Test") == "!Test"
+    assert hc.remove_dots_and_spaces("Test!") == "Test!"
+    assert hc.remove_dots_and_spaces(".Test") == "Test"
+    assert hc.remove_dots_and_spaces("..Test.") == "Test"
+    assert hc.remove_dots_and_spaces("Test.") == "Test"
+    assert hc.remove_dots_and_spaces(".Test..") == "Test"
+    assert hc.remove_dots_and_spaces(" .Test") == "Test"
+    assert hc.remove_dots_and_spaces(". Test") == "Test"
+    assert hc.remove_dots_and_spaces(". Test .") == "Test"
+    assert hc.remove_dots_and_spaces("Test. .") == "Test"
+
 class HelpersTest(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
