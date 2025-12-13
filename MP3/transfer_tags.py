@@ -8,6 +8,12 @@ import pathlib
 from mutagen.id3 import ID3
 from mutagen.flac import FLAC
 
+# Todo
+#
+# Write function to extract tags from CSV file instead of a file.
+# Then, provide functions to identify file info instances based on search criteria
+# like Album, Artist, Track number etc.
+
 # custom modules
 mod_path = pathlib.Path(__file__).resolve().parents[1]/'helpers'
 sys.path.insert(0, str(mod_path))
@@ -63,7 +69,9 @@ def transfer_tags(mp3_path, flac_path, dry_run=False, verbose=False):
 
     # Copy fields from MP3 file to FLAC file
     for id in extract_tags.FileInfo.t_tags:
-        print(f'Copying {id}: {mp3_file[id]}')
+        print(id)
+        id3_tag = extract_tags.FileInfo.t_tags[id]['id3']
+        print(f'Copying {id}: {mp3_file[id]} ({id3_tag})')
     
     for frame_id, frame_data in mp3_tags.items():
         vorbis_field = FRAME_MAP.get(frame_id, frame_id.lower())

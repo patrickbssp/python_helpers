@@ -113,6 +113,40 @@ class FileInfo():
     def get_tags(self):
         return self.t_tags
 
+    def save(self):
+        if self.f_type == 'mp3':
+            print('Not implemented yet.')
+        elif self.f_type == 'flac':
+            try:
+                flac_tags = FLAC(self.file_name)
+            except MutagenError as e:
+                print(f"Error reading {self.file_name}: {e}")
+                return
+
+#            print(self.t_tags)
+#            print(self.t_tags.items())
+            for tag, vals in self.t_tags.items():
+                print(f'tag: {tag}, v: {vals}')
+                v = self[tag]
+                if len(v) > 0:
+                    print(f'got tag: {tag}, v: {v}')
+             #       flac_tags[tag][0] = v
+            print(f'Saving file: {self.file_name}')
+    #        flac_tags.save()
+            
+def read_csv(csv_file):
+    '''Read CSV file and store contents in FileInfo objects
+    '''
+    ### Open CSV file
+    with open(csv_file, mode='r', encoding='utf-8', errors='surrogateescape') as csv_fh:
+        csv_wh = csv.DictReader(csv_fh, fieldnames=field_names, dialect='mp3_csv')
+        csv_wh.writeheader()
+
+        for full_path in files:
+            fi = extract_tags.FileInfo(full_path)
+            tag = tag_from_fileinfo(fi, field_names)
+            csv_wh.writerow(tag)
+    
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
