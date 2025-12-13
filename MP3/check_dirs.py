@@ -36,9 +36,6 @@ def compile_worklist(mp3_dir, flac_dir):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', action='store_true', help='Collection mode.')
-    parser.add_argument('-d', action='store_true', help='Dry-run only, do not change any files.')
-    parser.add_argument('-v', action='store_true', help='Verbose logging.')
     parser.add_argument('mp3_dir', help='MP3 folder.')
     parser.add_argument('flac_dir', help='FLAC folder.')
 
