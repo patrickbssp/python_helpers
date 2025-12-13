@@ -309,7 +309,83 @@ mit
 
 \begin{sectionbox}
 	
+	\subsection{Scheitelfaktor}
+	Verhältnis Scheitelwert zu Effektivwert einer Wechselgrösse, auch: Crestfaktor
+	\begin{emphbox}
+		Scheitelfaktor: $k_s = \frac{\abs{X}_{max}}{X_{eff}}$
+	\end{emphbox}
+
+	Verhältnis Spitzenleistung zur mittleren Leistung eines Signals, auch: PAPR (Peak-to-Average Power Ratio)
+
+	\begin{emphbox}
+		PAPR: = $ {k_s}^2 = \frac{\abs{X}^2_{max}}{X^2_{eff}} $ 
+	\end{emphbox}
 
 
+
+
+Logarithmische Masseinheiten:
+
+	Bel
+	dB
+	Neper
+	dBm etc.
+Dekade +10 bzw. /10 
+Oktave (bei Frequenzverhältnissen) = *2 bzw. /2
+	Logarithmische Verhältnisse:
+
+	\begin{tabular}{c|c|c|c|c|c}
+		Q & $ P_1/P_2 $ & $ F_1/F_2 $ & Q & $ P_1/P_2 $ & $ F_1/F_2 $\\
+		40 dB & 10000 & 100 & -40 dB & 0.0001 & 0.01 \\
+		20 dB & 100 & 10 & -20 dB& 0.01 & 0.1 \\
+		10 dB & 10 & $\approx$3.16 & -10 dB& 0.1 & $\approx$0.32 \\
+		6 dB & $\approx$4 & $\approx$2 & -6 dB &$\approx$0.25 & $\approx$0.5\\
+		3 dB & $\approx$2 & $\approx$1.41 & -3 dB & $\approx$0.5&$\approx$0.71 \\
+		1 dB & $\approx$1.26 & $\approx$1.12 & -1 dB & $\approx$0.79&$\approx$0.89\\
+		0 dB & 1 & 1 & & & \\
+	\end{tabular}
+
+\end{sectionbox}
+
+
+Übertragungsfunktion
+Kontinuierliche LTI-Systeme:
+
+G(s) = \frac{Y(s)}{X(s)} bzw. Y(s) = G(s) * X(s)
+
+\subsection{Analoge Filter}
+$\underline{H}$
+
+\subsubsection{RC-Filter}
+
+$ H_C(s) = V_C(s) / V_{in}(s) = 1 / (1 + RCs) $
+
+$ H_R(s) = V_R(s) / V_{in}(s) = RCs / (1 + RCs) $
+
+Single pole at $ s = - \frac{1}{RC} $
+
+Gtrenzfrequenz: $ f_c = \frac{1}{2 \pi RC} $
+
+\subsection{Digitale Filter}
+\subsubsection{FIR-Filter}
+Finite impulse filter, auch Transversalfilter.
+Eigenschaften:
+- nicht schwingungsfähig, daher stabil
+- normalerweise nicht rekursiv
+- meistens digital
+- Polverteilung: n-fache Polstelle im Ursprung
+- bei rekursiven FIR-Filtern fallen Nullstellen mit Polstellen zusammen -> stabil
+- Koeffizientenzahl = Ordnung + 1
+
+	\subsubsection{Impulsantwort}
+
+	$g(t) = \begin{cases}
+		0 & t < 0 \\
+		\frac{K}{T}\cdot e^{-\frac{t}{T}} & t \ge 0
+	\end{cases}$
+	$g(t) = \rho(t)$
+g(t) Impulsantwort auf Einheitsimpuls \delta(t)
+
+\begin{sectionbox}
 
 \end{sectionbox}
