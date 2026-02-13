@@ -322,6 +322,39 @@ mit
 	\end{emphbox}
 
 
+\begin{sectionbox}
+	
+		\subsection{Impedanz}
+		
+		Komplexer Widerstand
+
+		\begin{emphbox}
+			\begin{align*}
+				\text{Polarform}: {\underline {Z}} &= |{\underline {Z}}|\cdot e^{\mathrm {j} \varphi } \\
+				\text{kart. Form}: \underline {Z} &= R + \mathrm {j} X \\
+				\text{Wirkwiderstand (Resistanz)}: R &= \Re(\underline{Z}) = Z \cos \varphi \\
+				\text{Blindwiderstand (Reaktanz)}: X &= \Im(\underline{Z}) = Z \sin \varphi \\
+				\text{Scheinwiderstand}: Z &= |{\underline {Z}}| = \frac{\hat{u}}{\hat{\i}} = \frac{U_{eff}}{I_{eff}}
+			\end{align*}
+		\end{emphbox}
+%	{\displaystyle {\underline {Z}}} 	  	Impedanz (komplexe Impedanz)
+%	
+		\subsection{Admittanz}
+	
+		Komplexer Leitwert, Kehrwert der Impedanz \underline {Z}
+		\begin{emphbox}
+			\begin{align*}
+				\text{Admittanz}: {\underline {Y}} &= \underline {Z}^{-1} \\
+				\text{kart. Form}: {\underline {Y}} &= G + \mathrm {j} B \\
+				\text{Wirkleitwert (Konduktanz)}: G &= \Re(\underline {Y}) \\
+				\text{Blindleitwert (Suszeptanz)}: B &= \Im(\underline {Y}) \\
+				\text{Scheinleitwert}: Y &= |{\underline {Y}}| = \sqrt{G^2 + B^2}
+			\end{align*}
+		\end{emphbox}
+	
+\end{sectionbox}
+
+
 
 
 Logarithmische Masseinheiten:
@@ -351,41 +384,7 @@ Oktave (bei Frequenzverhältnissen) = *2 bzw. /2
 Übertragungsfunktion
 Kontinuierliche LTI-Systeme:
 
-G(s) = \frac{Y(s)}{X(s)} bzw. Y(s) = G(s) * X(s)
-
-\subsection{Analoge Filter}
-$\underline{H}$
-
-\subsubsection{RC-Filter}
-
-$ H_C(s) = V_C(s) / V_{in}(s) = 1 / (1 + RCs) $
-
-$ H_R(s) = V_R(s) / V_{in}(s) = RCs / (1 + RCs) $
-
-Single pole at $ s = - \frac{1}{RC} $
-
-Gtrenzfrequenz: $ f_c = \frac{1}{2 \pi RC} $
-
-\subsection{Digitale Filter}
-\subsubsection{FIR-Filter}
-Finite impulse filter, auch Transversalfilter.
-Eigenschaften:
-- nicht schwingungsfähig, daher stabil
-- normalerweise nicht rekursiv
-- meistens digital
-- Polverteilung: n-fache Polstelle im Ursprung
-- bei rekursiven FIR-Filtern fallen Nullstellen mit Polstellen zusammen -> stabil
-- Koeffizientenzahl = Ordnung + 1
-
-	\subsubsection{Impulsantwort}
-
-	$g(t) = \begin{cases}
-		0 & t < 0 \\
-		\frac{K}{T}\cdot e^{-\frac{t}{T}} & t \ge 0
-	\end{cases}$
-	$g(t) = \rho(t)$
-g(t) Impulsantwort auf Einheitsimpuls \delta(t)
-
-\begin{sectionbox}
-
-\end{sectionbox}
+	\begin{emphbox}
+		$ G(s) = \frac{Y(s)}{X(s)} bzw. Y(s) = G(s) * X(s) $
+	\end{emphbox}
+	

@@ -1,0 +1,88 @@
+	
+\section{Analoge Filter}
+
+	\begin{symbolbox}
+		$ f_c = \text{Grenzfrequenz (cutoff frequency)} $ \\
+		$ \omega = \text{Kreisfrequenz}, 2\pi f $
+	\end{symbolbox}
+
+$\underline{H}$
+
+
+\subsection{Passive Filter 1. Ordnung}
+
+	6dB/Oktave bzw. 20dB/Dekade
+
+	\subsection{RC-Filter}
+	
+	
+	\begin{emphbox}
+		\begin{align*}
+			U_{2} &=U_{1}\cdot {\frac {\vert X_{C}\vert }{\sqrt {R^{2}+X_{C}^{2}}}}={\frac {U_1}{\sqrt {1+({\frac {f}{f}}_{c})^{2}}}} \\
+		\end{align*}
+	\end{emphbox}
+	
+	
+		\begin{emphbox}
+			Grenzfrequenz: $ f_c = \frac{1}{2 \pi RC} $ \\
+			Pol: $ s = - \frac{1}{RC} $ \\
+			$ H(s) = \frac{U_2}{U_1} $ \\
+
+			\begin{tabular}{l|l}
+				Tiefpass: & Hochpass : \\
+				\subfile{circuits/rc_low_pass.tikz.tex} & 
+				\subfile{circuits/rc_high_pass.tikz.tex} \\
+				$ \frac{U_2}{U_1} = \frac{1}{\sqrt{1+(\omega RC)^2}} $ &
+				$ \frac{U_2}{U_1} = \frac{R}{\sqrt{R^2+(\frac{1}{\omega C})^2}} $ \\
+				$ H(s) = \frac{1}{1 + RCs} $ &
+				$ H(s) = \frac{RCs}{1 + RCs} $
+			\end{tabular}
+		\end{emphbox}
+
+	\subsection{RL-Filter}
+
+
+
+		\begin{emphbox}
+			
+			
+			Grenzfrequenz: $ f_c = \frac{R}{2 \pi L} $ \\
+			Pol: $ s = - \frac{R}{L} $ \\
+			Nullstelle: $ Origin $	\\
+			$ H(s) = \frac{U_2}{U_1} $ \\
+			
+			\begin{tabular}{l|l}
+				Tiefpass: & Hochpass: \\
+				\subfile{circuits/rl_low_pass.tikz.tex} & 
+				\subfile{circuits/rl_high_pass.tikz.tex} \\
+				$ \frac{U_2}{U_1} = \frac{1}{\sqrt{1+(\frac{\omega L}{R})^2}} $ &
+				$ \frac{U_2}{U_1} = \frac{1}{\sqrt{1+(\frac{R}{\omega L})^2}} $ \\
+				$ H(s) = \frac{R}{R + Ls} $ &
+				$ H(s) = \frac{Ls}{R + Ls} $
+			\end{tabular}
+		\end{emphbox}
+
+\subsection{Digitale Filter}
+\subsubsection{FIR-Filter}
+Finite impulse filter, auch Transversalfilter.
+Eigenschaften:
+- nicht schwingungsfähig, daher stabil
+- normalerweise nicht rekursiv
+- meistens digital
+- Polverteilung: n-fache Polstelle im Ursprung
+- bei rekursiven FIR-Filtern fallen Nullstellen mit Polstellen zusammen -> stabil
+- Koeffizientenzahl = Ordnung + 1
+
+	\subsubsection{Impulsantwort}
+
+	$g(t) = \begin{cases}
+		0 & t < 0 \\
+		\frac{K}{T}\cdot e^{-\frac{t}{T}} & t \ge 0
+	\end{cases}$
+	$g(t) = \rho(t)$
+	
+%g(t) Impulsantwort auf Einheitsimpuls \delta(t)
+
+\begin{sectionbox}
+
+\end{sectionbox}

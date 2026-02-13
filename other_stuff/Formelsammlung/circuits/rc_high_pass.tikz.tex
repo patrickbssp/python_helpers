@@ -1,0 +1,17 @@
+\documentclass[border = 5pt, tikz]{standalone}
+\usepackage{circuitikz}
+
+\begin{document}
+	
+	\begin{circuitikz}
+		[scale = 0.5, transform shape]
+		% Paths, nodes and wires:
+		\coordinate (I) at (0, 1);
+		\draw (I) to[capacitor, l=$C$, o-*] ++(2,0) coordinate(N) -- ++(1,0) coordinate(O) node[ocirc]{};
+		\draw (N) to[european resistor, l=$R$] ++(0,-2) coordinate(N2) node[circ]{};
+		\draw (I|-N2) to[short,o-o] (O|-N2);
+		\draw (I) to[open,v^=$U_1$, voltage=straight] (I|-N2);
+		\draw (O) to[open,v^=$U_2$, voltage=straight] (O|-N2);
+	\end{circuitikz}
+	
+\end{document}

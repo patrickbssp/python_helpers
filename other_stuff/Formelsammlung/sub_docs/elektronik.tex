@@ -94,14 +94,3 @@ Der invertierende Verstärker ist ein Spezialfall des inv. Addierers mit einem e
 	\end{emphbox}
 \subsubsection{Integrierer}
 \subsubsection{Differenzierer}
-\subsubsection{Tiefpass 1. Ordnung}
-
-	\begin{circuitikz}
-		% Paths, nodes and wires:
-		\coordinate (I) at (0, 1);
-		\draw (I) to[european resistor, l=$R$, o-*] ++(2,0) coordinate(N) -- ++(1,0) coordinate(O) node[ocirc]{};
-		\draw (N) to[capacitor] ++(0,-2) coordinate(N2) node[ocirc]{};
-		\draw (I|-N2) to[short,o-o] (O|-N2);
-		\draw (I) to[open,v^=$U_1$, voltage=straight] (I|-N2);
-		\draw (O) to[open,v^=$U_2$, voltage=straight] (O|-N2);
-	\end{circuitikz}

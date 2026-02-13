@@ -153,3 +153,52 @@
 %	\end{emphbox}
 	
 \end{sectionbox}
+
+
+\subsection{Komplexe Zahlen}
+
+\begin{sectionbox}
+	\begin{emphbox}
+		\begin{tabular}{lc}	
+			Definition: & $ j^2 = -1, j = \sqrt{-1} $ \\
+			Komplexe Zahl: & $z = a+j \cdot b $\\
+			Realteil: & $Re(z) = a$ \\
+			Imaginärteil: & $Im(z) = b$ \\
+			Betrag: & $ \vert z \vert = \sqrt{a^2 + b^2} $ \\
+			trigonometrische Form: &  $ z = r(\cos \varphi + j\sin \varphi) $ \\
+			Exponentialform: &  $ z = r(\cos \varphi + j\sin \varphi) $ \\
+			Phasordarstellung: & $\underline{\hat{a}} = \hat{a} \cdot e^{j\varphi}$ \\
+			Addition: & $u+v = (a+c)+j(b+d)$ \\ 
+			& mit $u = a+jb, v = c+jd$ \\
+			Subtraktion: & u-v = (a-c)+(b-d)j \\
+		\end{tabular}
+	\end{emphbox}
+	Darstellung einer komplexen Grösse z manchmal mit Unterstrich, d.h. \underline{z} \\
+	mit: \\
+	$\hat{a}$ = Amplitude \\
+	$\varphi$ = Nullphasenwinkel
+	
+\subsubsection{Konjugiert komplexe Zahlen}
+\begin{sectionbox}
+	\begin{emphbox}
+		\begin{tabular}{lc}
+			Konjugiert komplexe Zahl: & $\overline{z} = a - bj$, mit $z = a + bj$ \\
+			Alternative Darstellung: & $\overline{z} = z^\ast$ \\
+			Multiplikation: & $ z \cdot \overline{z} = |z|^2 $ \\
+			Addition: & $ z + \overline{z} = 2 \cdot a = 2 Re(z) $ \\
+			Subtraktion: & $ z - \overline{z} = 2 \cdot bj = 2j Im(z) $
+		\end{tabular}
+	\end{emphbox}
+\end{sectionbox}
+	
+	
+\begin{tikzpicture}
+		% Axes:
+		% Are simply drawn using line with the `->` option to make them arrows:
+		% The main labels of the axes can be places using `node`s:
+		\draw [->] (-1,0) -- (5,0) node [above left]  {$\Re\{z\}$};
+		\draw [->] (0,-5) -- (0,5) node [below right] {$\Im\{z\}$};
+\end{tikzpicture}
+
+\end{sectionbox}
+

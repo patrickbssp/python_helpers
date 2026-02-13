@@ -22,8 +22,10 @@
 \ctikzset{voltage/distance from node=.2}% defines arrow's distance from nodes
 \ctikzset{voltage/distance from line=.02}% defines arrow's distance from wires
 \ctikzset{voltage/bump b/.initial=.1}% defines arrow's curvature
+\usepackage{subfiles}
 \usepackage{bodegraph}
 \usepackage{tabularx}
+\usepackage{physics}
 
 \def\centerarc[#1](#2)(#3:#4:#5)
 % Syntax: [draw options] (center) (initial angle:final angle:radius)
@@ -55,6 +57,8 @@
 \input{sub_docs/allgemein}
 \input{sub_docs/mathematik}
 \input{sub_docs/elektrotechnik}
+\newpage
+\input{sub_docs/analoge_filter}
 \input{sub_docs/elektronik}
 \input{sub_docs/trigonometrie}
 \input{sub_docs/physik}
