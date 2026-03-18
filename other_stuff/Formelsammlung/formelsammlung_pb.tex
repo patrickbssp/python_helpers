@@ -17,12 +17,17 @@
 \usepackage{amsmath}
 \usepackage{gensymb}
 \usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
 \usetikzlibrary{arrows.meta,calc,angles,positioning}
 \usepackage{circuitikz}
 \ctikzset{voltage/distance from node=.2}% defines arrow's distance from nodes
 \ctikzset{voltage/distance from line=.02}% defines arrow's distance from wires
 \ctikzset{voltage/bump b/.initial=.1}% defines arrow's curvature
 \usepackage{subfiles}
+\usepackage{standalone}% requires -shell-escape
+%\usepackage[subpreambles=true]{standalone}
+%\usepackage{import}
 \usepackage{bodegraph}
 \usepackage{tabularx}
 \usepackage{physics}
@@ -53,6 +58,20 @@
 
 % Section
 % ----------------------------------------------------------------------
+
+% Referenzen Formelsammlung
+%
+% Elementgleichungen RLC		125
+% SI-Einheiten					144
+% Harm. Wechselspannungen		170
+% Spule							206
+% RL							208
+% Wechselstromlehre				216
+% Kompl. Zeitfunktionen			219-221
+% Admittanz/Impedanz			222
+% Frequenzgänge					229
+% Vektoren						274
+% Transversalfilter				324
 
 \input{sub_docs/allgemein}
 \input{sub_docs/mathematik}

@@ -6,7 +6,27 @@
 		$ \omega = \text{Kreisfrequenz}, 2\pi f $
 	\end{symbolbox}
 
-$\underline{H}$
+Induktiver Blindwiderstand:
+
+$ u(t) = L \cdot \frac{\dd{i(t)}}{\dd{t}} $
+
+\begin{emphbox}
+	
+	
+	Allgemeine Übertragungsfunktion:
+	% de.wikipedia.org/wiki/Tiefpass
+	$\underline{H}(\omega) = \frac{\underline{U}_2}{\underline{U}_1} = \frac{\underline{Z}_2}{\underline{Z}_1+\underline{Z}_2} $
+	
+	
+	\begin{tabular}{lcc}
+		& C & L \\
+		Blindwiderstand: & 		$ {X}_C = -\frac{1}{\omega C} $ & $ {X}_L = \omega L $ \\
+		Impedanz: & $ \underline{Z}_C = \frac{1}{j \omega C} $ & $ \underline{Z}_L = j \omega L $ \\
+		& $ = jX_C $ & $ = j X_L $
+	\end{tabular}
+\end{emphbox}
+
+Impedanz (Wechselstromwiderstand): $ \underline{Z} = \frac{\underline{U}(j\omega)}{\underline{I}(j\omega)} = \frac{-j}{\omega C} = j \omega L $
 
 
 \subsection{Passive Filter 1. Ordnung}
@@ -41,11 +61,7 @@ $\underline{H}$
 
 	\subsection{RL-Filter}
 
-
-
 		\begin{emphbox}
-			
-			
 			Grenzfrequenz: $ f_c = \frac{R}{2 \pi L} $ \\
 			Pol: $ s = - \frac{R}{L} $ \\
 			Nullstelle: $ Origin $	\\
@@ -61,6 +77,32 @@ $\underline{H}$
 				$ H(s) = \frac{Ls}{R + Ls} $
 			\end{tabular}
 		\end{emphbox}
+
+
+
+	\subsection{RLC-Filter}
+
+		\begin{emphbox}
+		%	Grenzfrequenz: $ f_c = \frac{R}{2 \pi L} $ \\
+		%	Pol: $ s = - \frac{R}{L} $ \\
+		%	Nullstelle: $ Origin $	\\
+		%	$ H(s) = \frac{U_2}{U_1} $ \\
+	
+			\begin{tabular}{l|l}
+				Tiefpass: & Hochpass: \\
+				\subfile{circuits/rlc_low_pass.tikz.tex} & 
+				\subfile{circuits/rlc_high_pass.tikz.tex} \\
+%				$ \frac{U_2}{U_1} = \frac{1}{\sqrt{1+(\frac{\omega L}{R})^2}} $ &
+%				$ \frac{U_2}{U_1} = \frac{1}{\sqrt{1+(\frac{R}{\omega L})^2}} $ \\
+				$ H(\omega) = \frac{X_C}{X_C - X_L +jR} $ &
+				$ H(\omega) = \frac{jX_L}{R+j(X_L + X_C)} $
+			\end{tabular}
+		\end{emphbox}
+
+\subsection{Passive Filter 2. Ordnung}
+
+\subsection{Tiefpass 2. Ordnung}
+
 
 \subsection{Digitale Filter}
 \subsubsection{FIR-Filter}

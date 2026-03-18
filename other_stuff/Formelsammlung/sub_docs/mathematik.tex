@@ -1,5 +1,92 @@
 \section{Mathematik}
 
+\subsection{Zahlenbereiche}
+
+	\begin{emphbox}
+
+	$\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q} \subset \mathbb{R} \subset \mathbb{C} $
+
+		\begin{tabular}{lll}
+%			Bereich & Beschreibung & Beispiele \\
+%			\hline
+			$\mathbb{N} $& Natürliche (ganze) Zahlen & (0),1,2,3,... \\
+			$\mathbb{N}_0 $& Nat. Zahlen, explizit mit 0 & 0,1,2,3,...  \\
+			$\mathbb{N}^\ast $& Nat. Zahlen, explizit ohne 0 & 1,2,3,... \\
+			$\mathbb{Z}$ \\
+			$\mathbb{Q}$ & Rationale Zahlen & \\
+			& (alle als Bruch darstellbare Zahlen) & \\
+			$\mathbb{R}$ & Reelle Zahlen & $\e, \pi, \sqrt 2 $\\
+			$\mathbb{C}$ & Komplexe Zahlen & 
+		\end{tabular}
+	\end{emphbox}
+
+	Achtung: je nach Definition enthält $\N $die 0 oder nicht.
+
+\subsection{Potenzen}
+
+	\begin{emphbox}
+		\begin{tabular}{ll}
+
+		Multiplikation: & $ a^m \cdot a^n = a^{m+n} $ \\
+		Multiplikation: & $ a^m \cdot b^m = (a \cdot b)^m $ \\
+		Division: & $ \frac{a^m}{a^n} = a^{m-n} $ \\
+		Division: & $ \frac{a^m}{b^m} = (\frac{a}{b})^m $ \\
+		Potenz: & $ (a^m)^n = (a^n)^m = a^{mn} $ \\
+		Wurzel: & $ \sqrt[n]{a^m} = a^\frac{m}{n} $ \\
+		Wurzel: & $ \sqrt[n]{a} = a^\frac{1}{n} $ \\
+		Kehrwert: & $ \frac{1}{a^n} = a^{-n} $ \\
+		\end{tabular}
+	\end{emphbox}
+
+
+
+
+
+	\begin{emphbox}
+%	\subfile{figures/exp_function.tikz.tex}		
+%	\import{figures/}{exp_function.tikz.tex}
+	\end{emphbox}
+	
+\subsection{Logarithmen}
+
+	\begin{emphbox}
+		\begin{tabular}{ll}
+		Definition: & $ x = {\log_{b}}^r \Leftrightarrow b^x = r $\\
+		Multiplikation: & $ \log_b (xy) = \log_b x + \log_b y $ \\
+		Division: & $ \log_b (\frac{x}{y}) = \log_b x - \log_b y $ \\
+		Basiswechsel: & $ \log_b r = \frac{\log_a r}{\log_a b} = \log_a r \log_b a$ \\
+		???: & $ \log_b c^k = k \cdot \log_b c $ \\
+		???: & $ \log_b \frac{1}{c} = - \log_b c $ \\
+		???: & $ \log_b(\sqrt[n]{c}) = \frac{1}{n} \log_b c $ \\
+		natürlicher Log.: & $ \ln a = \log_e a $ \\
+		dekadischer Log.: & $ \lg a = \log_{10} a $ (auch Zehnerlog.) \\
+		binärer Log.: & $ \text{lb} a = \log_{2} a $ (auch: ld a, logarithmus dualis)
+		\end{tabular}
+	\end{emphbox}
+	r: Numerus $(r > 0)$ \\
+	b: Basis $(b > 0, b \neq 1)$
+	
+\subsection{Polynom}
+
+	\begin{emphbox}
+	
+		$ P(x) = \sum\limits _{i=0}^{n}a_ix^i = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n, n \in \N_0 $ \\
+	\end{emphbox}
+
+	Alle Exponenten sind natürliche Zahlen
+
+	Grad des Polynoms ist der höchste Exponent i für den $ a_i \neq 0 $ (Leitkoeffizient)
+	Grad des Polynoms f = deg f bzw. grad f bzw. Grad f
+	Wenn Leitkoeffizient = 1 -> normiertes Polynom, bzw. monisches Polynom
+	Absolutglied: $ a_0 $
+	Lineares Glied: $a_1x$
+	Quadratisches Glied: $a_2x^2$
+	Kubisches Glied: $a_3x^3$
+
+	\subsubsection{Nullstellen}
+	Nullstellen einer Polynomfunktion bzw. Lösungen einer Polynomgleichung gelten für x, bei denen P(x) = 0
+	
+	
 \subsection{Vektoren}
 
 \begin{sectionbox}
@@ -196,8 +283,30 @@
 		% Axes:
 		% Are simply drawn using line with the `->` option to make them arrows:
 		% The main labels of the axes can be places using `node`s:
-		\draw [->] (-1,0) -- (5,0) node [above left]  {$\Re\{z\}$};
-		\draw [->] (0,-5) -- (0,5) node [below right] {$\Im\{z\}$};
+		\draw [->] (-0.2,0) -- (1.2,0) node [above right]  {$\Re(z)$};
+		\draw [->] (0,-1.2) -- (0,1.2) node [right] {$\Im (z)$};
+		
+		
+		\draw (1,0) arc[start angle=0, end angle=90, radius=1];
+		\draw (1,0) arc[start angle=0, end angle=-90, radius=1];
+
+		% complex number in polar form and its conjugate
+		\coordinate (a) at ({1 *(cos(60)},0);
+		\coordinate (z1) at (60:1);
+		\coordinate (z2) at (-60:1);
+		\coordinate (b1) at (0, {1 * sin(60)});
+		\coordinate (b2) at (-30:1);
+		
+		\draw[thin, blue] (0,0) -- (z1) node [right] {z=a+jb};
+		\draw[thin, dashed, blue] (a) -- (z1) -- (b1);
+		
+		
+	%	\draw[thin, blue] (0,0) -> (z1) node [right] {z=a+jb} -- (a);
+
+		\draw[thin, red] (0,0) -- (z2) node [right] {z=a-jb};
+		\draw[thin, dashed, red] (a) -- (z2) -- (b2);
+
+		
 \end{tikzpicture}
 
 \end{sectionbox}

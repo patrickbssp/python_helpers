@@ -1,0 +1,3 @@
+*.tikz.aux
+*.tikz.pdf
+*.synctex.gz

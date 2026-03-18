@@ -206,6 +206,13 @@
 	\end{emphbox}
 
 
+Strom-/Spannungsverlauf
+
+
+\includestandalone{figures/c_ui_diagram.tikz}
+%\subfile{figures/c_ui_diagram.tikz.tex}
+%\subfile{circuits/rlc_low_pass.tikz.tex}
+
 
 
 \begin{emphbox}
@@ -380,11 +387,39 @@ Oktave (bei Frequenzverhältnissen) = *2 bzw. /2
 
 \end{sectionbox}
 
+\subsection{Übertragungsfunktion}
 
-Übertragungsfunktion
+\begin{sectionbox}
 Kontinuierliche LTI-Systeme:
-
 	\begin{emphbox}
-		$ G(s) = \frac{Y(s)}{X(s)} bzw. Y(s) = G(s) * X(s) $
+		$ H(s) = \frac{Y(s)}{X(s)} = \frac{\mathcal{L}\{y(t)\}}{\mathcal{L}\{x(t)\}} $ bzw. $ Y(s) = H(s) \cdot X(s) $
 	\end{emphbox}
-	
+\end{sectionbox}
+\begin{sectionbox}
+	Zeitdiskrete LTI-Systeme:
+	\begin{emphbox}
+		$ H(z) = \frac{Y(z)}{X(z)} = \frac{\mathcal{Z}\{y[k]\}}{\mathcal{Z}\{x[k]\}} $
+	\end{emphbox}
+\end{sectionbox}
+
+
+Laplace: $ s = \sigma + j \omega $ (transient and steady state)
+
+Fourier: $ s = j \omega $ mit $\sigma = 0$ (steady state only)
+
+
+Laplace-Transformation:
+
+$ x(t) \rightarrow X(s) $
+
+
+\begin{tikzpicture}
+	\node (OL) [draw=black] {Signale im kont. Zeitbereich};
+	\node (OR) [draw=black,right=3cm of OL,align=center] {Spektralbereich\\ Laplace-Bildbereich};
+	\node (UL) [draw=black,below=of OL] {Signale im diskr. Zeitbereich};
+	\node (UR) [draw=black,right=3cm of UL,align=center] {Spektralbereich\\ z-Bildbereich};
+	\draw (OL) edge[->] node[above,align=center] {Laplace-Transformation\\Abtastung} (OR);
+	\draw (OL) edge[->] node[right,align=center] {Diskretisierung\\Abtastung} (UL);
+	\draw (UL) edge[->] node[above,align=center] {z-Transformation} (UR);
+\end{tikzpicture}
+
