@@ -17,6 +17,8 @@
 \usepackage{amsmath}
 \usepackage{gensymb}
 \usepackage{tikz}
+\usetikzlibrary{math}
+\usepackage{ifthen}
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
 \usetikzlibrary{arrows.meta,calc,angles,positioning}
@@ -30,11 +32,20 @@
 %\usepackage{import}
 \usepackage{bodegraph}
 \usepackage{tabularx}
+\usepackage{pgf}
+%prevent redefinition of \erf
+\let\erf\relax
 \usepackage{physics}
 
 \def\centerarc[#1](#2)(#3:#4:#5)
 % Syntax: [draw options] (center) (initial angle:final angle:radius)
 { \draw[#1] ($(#2)+({#5*cos(#3)},{#5*sin(#3)})$) arc (#3:#4:#5); }
+
+% binomial function (do not remove the trailing % chars!!!!)
+\pgfmathdeclarefunction{binomial}{2}{%
+	\pgfmathparse{factorial(#1)/(factorial(#2)*factorial(#1-#2))}%
+}
+
 
 \makeatletter
 \newcommand\currentcoordinate{\the\tikz@lastxsaved,\the\tikz@lastysaved}
