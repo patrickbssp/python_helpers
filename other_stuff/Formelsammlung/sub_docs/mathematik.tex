@@ -312,65 +312,53 @@
 \end{sectionbox}
 
 
-\subsection{Fakultät}
+
 \begin{sectionbox}
+\subsection{Fakultät}
 	\begin{emphbox}
-
-		n Fakultät: $ n! = 1 \cdot 2 \cdot 3 \cdot ... \cdot n $ \\
-		Spezialfall: $0! = 1$	 \\
+		n Fakultät: $ n! = \prod\limits_{k=1}^{n}k = 1 \cdot 2 \cdot 3 \cdot ... \cdot n $ \hfill Spezialfall: $0! = 1$	 \\
+		Rekursive Definition: $n! = \begin{cases}
+			1 & n=0 \\
+			n \cdot (n-1)! & n > 0
+		\end{cases}$
 		$(n+1)! = (n+1) \cdot n!$
+
 	\end{emphbox}
-
-
 \end{sectionbox}
 
-
-\subsection{Binominalkoeffizienten}
 \begin{sectionbox}
+\subsection{Binominalkoeffizienten}
 	
 	Aussprache: n tief k (Englisch: n choose k) \\
 	$ \binom{n}{k} = \frac{\text{k Faktoren, beginnend mit n, fallend}}{\text{k Faktoren, beginnend mit k, fallend}} $ \\
 	$ \binom{n}{k} = \frac{n!}{k! \cdot (n-k)!} $ mit: $ n \geq k \geq 0 $ \\
-	$ \binom{n}{k} = \binom{n}{n-k} $ \\
-	$ \binom{n}{0} = \binom{n}{n} = 1 $
+	$ \binom{n}{k} = \binom{n}{n-k}, \binom{n}{0} = \binom{n}{n} = 1 $
 
 	Pascalsches Dreieck:
 	\begin{emphbox}
-
+	\scalebox{0.75}{
 		\begin{tikzpicture}
 			\foreach \n in {0, ..., 5} { 
 				\foreach \k in {0, ..., \n} {
 					% calc binom value
 					\node at (\k-\n/2, -\n) {$\binom{\n}{\k}$};	
-					
-				% on last row
-%				\ifnum\n=5
-%					\node at (\k-\n/2, -\n-0.5) {$k=\k$};
-%				\fi
 
 					\ifnum\n=5
 						\ifnum\k=0
-	
-						%\node at (0, 0) {$ k=\k$};
 							\node at (\k-\n/2, -\n-0.5) {$k=\k$};
 						\else
 							\node at (\k-\n/2, -\n-0.5) {$\k$};
 						\fi
 					\fi
-					
-					
 				}
 			    \pgfmathsetmacro{\ylabel}{ifthenelse(\n==0,"n=0",\n)}
-				\node at (3, -\n) {\ylabel};
-
-
-
+				\node at (3, -\n) {$\ylabel$};
 			}
-	%		\node at (-0.2, -1) {$1$};
-	%		\node at (0.2, -1) {$1$};
 		\end{tikzpicture}
-
-%	\hline
+	} %scalebox
+	\end{emphbox}
+	
+	\begin{emphbox}
 
 	\scalebox{0.75}{
 	\begin{tikzpicture}
@@ -385,6 +373,8 @@
 %		\foreach \n in {0, ..., 5} {
 %			\node at (-3, -\n) {\n};
 %		}
+		\node[circle,draw=black,minimum size=0.5cm] at (0, 0) {};
+
 		\node[circle,draw=red,minimum size=0.5cm] at (-0.5, -1) {};
 		\node[circle,draw=red,minimum size=0.3cm] at (0, -2) {};
 		\node[circle,draw=red,minimum size=0.5cm] at (0.5, -3) {};
@@ -416,11 +406,11 @@
 		\node[text=green] at (-0.5, -2.5) {=};
 	\end{tikzpicture}
 }
+	\end{emphbox}
+	\begin{emphbox}
 
-
-	$a^n$ -> n entspricht Anzahl Zeilen im P. Dreieck (erste Zeile = 0) \\
+	n entspricht Anzahl Zeilen im P. Dreieck (erste Zeile = 0) \\
 	Summe der Koeffizienten der Zeile n:  $2^n$
-
 
 	$\binom{n}{k+1} = \binom{n}{k} \cdot \frac{n-k}{k+1} $ \\
 
@@ -435,7 +425,7 @@
 		$\binom{k+n+1}{n} = \binom{k}{0} + \binom{k+1}{1} + ... + \binom{k+n}{n}$
 	}
 	
-	$ (x + y)^n = \sum_{k=0}^{n} \binom{n}{k} x^{n-k}y^k = \sum_{k=0}^{n} \binom{n}{k} x^{k}y^{n-k} $ \\
+	$ (x + y)^n = \sum\limits_{k=0}^{n} \binom{n}{k} x^{n-k}y^k = \sum\limits_{k=0}^{n} \binom{n}{k} x^{k}y^{n-k} $ \\
 	
 	% needs verification
 	$ = \binom{n}{0} x^n y^0 + \binom{n}{1} x^{n-1} y^1 + ... + \binom{n}{n-1} x^1 y^{n-1} + \binom{n}{n} x^{0}y^{n} $
