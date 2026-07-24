@@ -104,8 +104,8 @@ Impedanz (Wechselstromwiderstand): $ \underline{Z} = \frac{\underline{U}(j\omega
 \subsection{Tiefpass 2. Ordnung}
 
 
-\subsection{Digitale Filter}
-\subsubsection{FIR-Filter}
+\section{Digitale Filter}
+\subsection{FIR-Filter}
 Finite impulse filter, auch Transversalfilter.
 Eigenschaften:
 - nicht schwingungsfähig, daher stabil
@@ -124,6 +124,43 @@ Eigenschaften:
 	$g(t) = \rho(t)$
 	
 %g(t) Impulsantwort auf Einheitsimpuls \delta(t)
+
+\subsection{IIR-Filter}
+
+	\begin{emphbox}	
+	\begin{tabular}{ll}
+		
+		& $ y[n] = \sum\limits_{i=0}^{P} b_i x[n-i] + \sum\limits_{i=1}^{Q} a_i y[n-i]$
+		
+	\end{tabular}
+\end{emphbox}
+
+mit:
+
+	\begin{symbolbox}
+		\begin{tabular}{ll}
+			$ P $    & Feedforward Filterordnung \\
+			$ b_i $  & Feedforward Filterkoeff. \\
+			$ Q $    & Feedback Filterordnung \\
+			$ a_i $  & Feedback Filterkoeff. \\
+			$ x[n] $ & Eingangssignal \\
+			$ y[n] $ & Ausgangssignal
+		\end{tabular}
+	\end{symbolbox}
+
+	Formen:
+	Direktform 1
+	Direktform 2
+	Lattice-Filter
+
+\subsubsection{Biquad}
+
+	\begin{emphbox}	
+		\begin{tabular}{ll}
+			Transferfunktion: & $ H(z) = \frac{b_0 + b_1 z^{-1} + b_2 z^{-2}}{a_0 + a_1 z^{-1} + a_2 z^{-2}} $ \\
+			mit $ a_0 = 1$ : & $ H(z) = \frac{b_0+b_1 z^{-1}+b_2 z^{-2}}{a_1 z^{-1}+a_2 z^{-2}} $
+		\end{tabular}
+	\end{emphbox}
 
 \begin{sectionbox}
 
