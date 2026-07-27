@@ -1,0 +1,63 @@
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{dsp_blocks}
+
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+
+\tikzset{
+	>=Latex,
+	signal/.style={
+		->,
+		thick
+	},
+	ellipsis/.style={
+		thick,
+		dotted
+	},
+	delay/.style={
+		draw,
+		rectangle,
+		minimum width=6mm,
+		minimum height=6mm,
+		font=\small
+	},
+	gain/.style={
+    	draw,
+		isosceles triangle,
+		isosceles triangle apex angle=60,
+		shape border rotate=0,
+		minimum height=6mm,
+		minimum width=6mm,
+		inner sep=1pt,
+		font=\small,
+		align=center
+	},
+	summer/.style={
+		draw,
+		circle,
+		minimum size=5mm,
+		inner sep=0pt,
+		font=\small
+	},
+		coeff/.style={
+		font=\small
+	}
+}
+
+% Delay block
+\newcommand{\DSPDelay}[2][]{%
+	\node[delay,#1] (#2) {$z^{-1}$};
+}
+
+% Summer
+\newcommand{\DSPSummer}[2][]{%
+	\node[summer,#1] (#2) {$+$};
+}
+
+% Gain block
+\newcommand{\DSPGain}[3][]{%
+	\node[gain,#1,label=above:{$#3$}] (#2) {};
+}
+
+\endinput

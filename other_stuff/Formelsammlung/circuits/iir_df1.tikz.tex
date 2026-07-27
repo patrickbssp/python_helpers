@@ -23,9 +23,7 @@
 	\DSPGain[left=3mm of S3]{GB3}{b_{N-1}};
 	\DSPDelay[below left=5mm and 10mm of S3] {DB2};	
 	\DSPGain[left=3mm of S4]{GB4}{b_{N}};
-	
-	
-	% Input and LHS
+	% Input and LHS signals
 	\draw[signal] (-2,0) node[left]{$x[n]$} -- (GB0);
 	\draw[signal] (GB0) -- (S0);
 	\draw[signal] (-1.5,0) -- (DB0);
@@ -37,35 +35,36 @@
 	% LHS Ellipsis
 	\draw[thick] (DB1) -- (-1.5,-4.5);
 	\draw[thick,dotted] (-1.5,-4.5) -- (-1.5,-5);
+	% Remaining LHS signals
 	\draw[signal] (-1.5,-5) |- (GB3);
 	\draw[signal] (-1.5,-5) -- (DB2);
 	\draw[signal] (DB2) |- (GB4);
 	\draw[signal] (GB3) -- (S3);
 	\draw[signal] (GB4) -- (S4);
-
 	% RHS
 	\DSPDelay[below right=5mm and 10mm of S0] {DA0};
 	\DSPGain[right=3mm of S1, shape border rotate=180]{GA1}{-a_1};
 	\DSPDelay[below right=5mm and 10mm of S1] {DA1};
 	\DSPGain[right=3mm of S2, shape border rotate=180]{GA2}{-a_2};
-	\DSPDelay[below right=5mm and 10mm of S2] {DA2};
+	% RHS ellipsis
 	\DSPGain[right=3mm of S3, shape border rotate=180]{GA3}{-a_{M-1}};
-	\DSPDelay[below right=5mm and 10mm of S3] {DA3};
+	\DSPDelay[below right=5mm and 10mm of S3] {DA2};
 	\DSPGain[right=3mm of S4, shape border rotate=180]{GA4}{-a_{M}};
-	% RHS Ellipsis
-	\draw[thick] (DA1) -- (1.5,-4.5);
-	\draw[thick,dotted] (1.5,-4.5) -- (1.5,-5);
-	\draw[signal] (1.5,-5) |- (GA3);
-	\draw[signal] (1.5,-5) -- (DA2);
-	\draw[signal] (DA2) |- (GA4);
-	\draw[signal] (GA3) -- (S3);
-	\draw[signal] (GA4) -- (S4);
-	% Output and RHS
+	% Output and RHS signals
 	\draw[signal] (S0) -- (2,0) node[right]{$y[n]$};
 	\draw[signal] (1.5,0) -- (DA0);
 	\draw[signal] (DA0) |- (GA1);
+	\draw[signal] (GA1) -- (S1);
 	\draw[signal] (DA0) -- (DA1);
 	\draw[signal] (DA1) |- (GA2);
-	\draw[signal] (GA1) -- (S1);
 	\draw[signal] (GA2) -- (S2);	
+	% RHS Ellipsis
+	\draw[thick] (DA1) -- (1.5,-4.5);
+	\draw[thick,dotted] (1.5,-4.5) -- (1.5,-5);
+	% Remaining RHS signals
+	\draw[signal] (1.5,-5) |- (GA3);
+	\draw[signal] (GA3) -- (S3);
+	\draw[signal] (1.5,-5) -- (DA2);
+	\draw[signal] (DA2) |- (GA4);	
+	\draw[signal] (GA4) -- (S4);
 \end{tikzpicture}
