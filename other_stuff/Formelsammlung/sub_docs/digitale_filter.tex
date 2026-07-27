@@ -1,0 +1,96 @@
+\section{Digitale Filter}
+
+\subsection{FIR-Filter}
+Finite impulse filter, auch Transversalfilter.
+Eigenschaften:
+- nicht schwingungsfähig, daher stabil
+- normalerweise nicht rekursiv
+- meistens digital
+- Polverteilung: n-fache Polstelle im Ursprung
+- bei rekursiven FIR-Filtern fallen Nullstellen mit Polstellen zusammen -> stabil
+- Koeffizientenzahl = Ordnung + 1
+
+	\subsubsection{Impulsantwort}
+
+	$g(t) = \begin{cases}
+		0 & t < 0 \\
+		\frac{K}{T}\cdot e^{-\frac{t}{T}} & t \ge 0
+	\end{cases}$
+	$g(t) = \rho(t)$
+	
+%g(t) Impulsantwort auf Einheitsimpuls \delta(t)
+
+\subsection{IIR-Filter}
+
+	\begin{emphbox}	
+	\begin{tabular}{ll}
+		
+		& $ y[n] = \sum\limits_{i=0}^{P} b_i x[n-i] + \sum\limits_{i=1}^{Q} a_i y[n-i]$
+		
+	\end{tabular}
+\end{emphbox}
+
+mit:
+
+	\begin{symbolbox}
+		\begin{tabular}{ll}
+			$ P $    & Feedforward Filterordnung \\
+			$ b_i $  & Feedforward Filterkoeff. \\
+			$ Q $    & Feedback Filterordnung \\
+			$ a_i $  & Feedback Filterkoeff. \\
+			$ x[n] $ & Eingangssignal \\
+			$ y[n] $ & Ausgangssignal
+		\end{tabular}
+	\end{symbolbox}
+
+	Formen:
+	
+\subsubsection{Direktform 1}
+	
+	\begin{sectionbox}
+	\includestandalone{circuits/iir_df1.tikz}
+\end{sectionbox}
+
+	
+	Direktform 2
+	Lattice-Filter
+
+\subsubsection{Biquad}
+
+	\begin{emphbox}
+		\begin{tabular}{ll}
+			Transferfunktion: & $ H(z) = \frac{b_0 + b_1 z^{-1} + b_2 z^{-2}}{a_0 + a_1 z^{-1} + a_2 z^{-2}} $ \\
+			mit $ a_0 = 1$ : & $ H(z) = \frac{b_0+b_1 z^{-1}+b_2 z^{-2}}{1+a_1 z^{-1}+a_2 z^{-2}} $
+		\end{tabular}
+	\end{emphbox}
+
+
+\subsubsection{Biquad - Direct Form 1}
+
+	%\usepackage{amsmath}
+	\newcommand{\idx}[1]{[#1]} %
+	
+	\begin{emphbox}
+		Differenzengleichung: \\
+		$ {\scriptstyle y[n]=\frac {1}{a_{0}}(b_0x[n]+b_1x[n\!-\!1]+b_2x[n\!-\!2]-a_1y[n\!-\!1]-a_2y[n\!-\!2])} $ \\
+		Normalisiert: \\
+		$ {\scriptstyle y[n]=b_{0}x[n]+b_{1}x[n-1]+b_{2}x[n-2]-a_{1}y[n-1]-a_{2}y[n-2]} $
+
+		$ b_0 .. b_2$ : \text{Nullstellen} \\
+		$ a_1, a_2$ : \text{Pole}
+	\end{emphbox}
+
+	\begin{sectionbox}
+		\includestandalone{circuits/biquad_df1.tikz}
+	\end{sectionbox}
+	
+\subsubsection{Biquad - Direct Form 2}
+
+	\begin{emphbox}
+		$ y[n]=b_{0}w[n]+b_{1}w[n-1]+b_{2}w[n-2] $ \\
+		$ w[n]=x[n]-a_{1}w[n-1]-a_{2}w[n-2].} $
+	\end{emphbox}
+
+	\begin{sectionbox}
+		\includestandalone{circuits/biquad_df2.tikz}
+	\end{sectionbox}

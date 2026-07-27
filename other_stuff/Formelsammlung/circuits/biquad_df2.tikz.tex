@@ -1,0 +1,36 @@
+	\begin{tikzpicture}[node distance=14mm]
+	% Biquad Direct Form 2
+	% Middle
+	\coordinate (O) at (0,0);
+	\DSPDelay[below=7mm of O] {D0};
+	\DSPDelay[below=of D0] {D1};
+	\draw[signal] (O) -- (D0);
+	\draw[signal] (D0) -- (D1);
+	% LHS
+	\DSPSummer[left=15mm of O] {SA0};
+	\DSPSummer[below=of SA0] {SA1};
+	\DSPGain[right=3mm of SA1, shape border rotate=180] {GA1} {-a_1};
+	\DSPGain[below=of GA1, shape border rotate=180] {GA2} {-a_2};
+	% Input and LHS
+	\draw[signal] (-2.5,0) node[left]{$x[n]$} -- (SA0);
+	\draw[signal] (SA1) -- (SA0);
+	\draw[signal] (GA1) -- (SA1);
+	\draw[signal] (GA2) -| (SA1);
+	\draw[signal] (D0) |- (GA1);
+	\draw[signal] (D1) |- (GA2);
+	% RHS
+	\DSPSummer[right=15mm of O] {SB0};
+	\DSPSummer[below=of SB0] {SB1};
+	\DSPGain[right=3mm of O] {GB0} {b_0};
+	\DSPGain[below=of GB0] {GB1} {b_1};
+	\DSPGain[below=of GB1] {GB2} {b_2};
+	% Output and RHS signals
+	\draw[signal] (SB0) -- (2.5,0) node[right]{$y[n]$};
+	\draw[signal] (SA0) node[above right]{$w[n]$} -- (GB0);
+	\draw[signal] (D0) |- (GB1);
+	\draw[signal] (D1) |- (GB2);
+	\draw[signal] (GB0) -- (SB0);
+	\draw[signal] (GB1) -- (SB1);
+	\draw[signal] (GB2) -| (SB1);
+	\draw[signal] (SB1) -- (SB0);
+\end{tikzpicture}
