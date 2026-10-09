@@ -1,5 +1,8 @@
 #!/bin/python3
 
+# Note: on Ubuntu, install a virtual environment and start the script from within with:
+# python3 <scriptname>
+
 import numpy as np
 import matplotlib.pyplot as plt
 import control
