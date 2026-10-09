@@ -1,0 +1,14 @@
+| Name    | Upper | Lower | Name    | Upper | Lower |
+| ------- | ----- | ----- | ------- | ----- | ----- |
+| Alpha   | Α     | α     | Nu      | Ν     | ν     |
+| Beta    | Β     | β     | Xi      | Ξ     | ξ     |
+| Gamma   | Γ     | γ     | Omicron | Ο     | ο     |
+| Delta   | Δ     | δ     | Pi      | Π     | π     |
+| Epsilon | Ε     | ε     | Rho     | Ρ     | ρ     |
+| Zeta    | Ζ     | ζ     | Sigma   | Σ     | σς    |
+| Eta     | Η     | η     | Tau     | Τ     | τ     |
+| Theta   | Θ     | θ     | Upsilon | Υ     | υ     |
+| Iota    | Ι     | ι     | Phi     | Φ     | φ     |
+| Kappa   | Κ     | κ     | Chi     | Χ     | χ     |
+| Lambda  | Λ     | λ     | Psi     | Ψ     | ψ     |
+| Mu      | Μ     | μ     | Omega   | Ω     | ω     |
